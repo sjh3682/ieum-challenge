@@ -806,14 +806,14 @@ input,select,textarea{ font-family:inherit; }
         <div class="verify-flow-title">사망 사실 확인 절차</div>
         <div class="verify-step" id="vf1"><span class="v-dot">1</span><span>수령자 확인 요청 접수</span><span class="v-status" id="vfs1">대기</span></div>
         <div class="verify-step" id="vf2"><span class="v-dot">2</span><span>공인기관 전자문서 검증</span><span class="v-status" id="vfs2">대기</span></div>
-        <div class="verify-step" id="vf3"><span class="v-dot">3</span><span>검증 완료</span><span class="v-status" id="vfs3">대기</span></div>
+        <div class="verify-step" id="vf3"><span class="v-dot">3</span><span>확인 완료</span><span class="v-status" id="vfs3">대기</span></div>
       </div>
 
       <div class="note">
-        <b>프로토타입 검증 방식</b> · 정부24 사망신고 데이터·병원 발급 전자문서 연동은 시뮬레이션으로 표현합니다. <b>검증이 완료된 결과만</b> 실제 Sepolia 블록체인에 기록합니다.
+        <b>프로토타입 안내</b> · 정부24 사망신고 데이터·병원 발급 전자문서 연동은 시뮬레이션으로 구현되어 있습니다. 확인된 결과만 안전하게 반영되어 정보 열람 조건에 사용됩니다.
       </div>
       <div class="pre-reveal-guide"><b>열람 전 안내</b><br>지금 확인하는 정보는 고인이 남긴 금융정보의 ‘위치’입니다.<br>이음은 돈을 직접 지급하지 않으며, 실제 수령은 각 금융기관의 상속 절차를 통해 진행됩니다.</div>
-      <button class="btn btn-primary btn-block mt16" id="revealBtn" onclick="doReveal()" disabled>검증 완료 후 정보 열람하기</button>
+      <button class="btn btn-primary btn-block mt16" id="revealBtn" onclick="doReveal()" disabled>확인 후 정보 열람하기</button>
     </div>
   </div>
 </section>
@@ -1134,7 +1134,7 @@ function setVerifyStep(n,state,status){
   st.textContent=status;
 }
 async function uploadCert(){
-  if(S.cert){ toast('이미 사망 사실 검증이 완료되었습니다.'); return; }
+  if(S.cert){ toast('이미 확인 절차가 완료되었습니다.'); return; }
 
   const uz=document.getElementById('uz'), uTxt=document.getElementById('uTxt');
   const flow=document.getElementById('verifyFlow');
@@ -1150,13 +1150,13 @@ async function uploadCert(){
 
   // 프로토타입: 정부24/병원 전자문서 검증 과정을 시뮬레이션
   await new Promise(r=>setTimeout(r,1600));
-  setVerifyStep(2,'done','검증 완료');
-  setVerifyStep(3,'active','블록체인 반영 중');
-  uTxt.innerHTML='<span class="spinner"></span> 검증 완료 결과를 Sepolia에 기록 중…';
+  setVerifyStep(2,'done','확인 완료');
+  setVerifyStep(3,'active','반영 중');
+  uTxt.innerHTML='<span class="spinner"></span> 확인 결과를 안전하게 반영하고 있어요';
 
   try{
     if(BC.vaultId===null || !BC.accessToken || !BC.registrationTx){
-      throw new Error('등록된 블록체인 금고 정보가 없습니다.');
+      throw new Error('등록 정보를 확인할 수 없습니다.');
     }
 
     const r = await apiCall('/api/confirm-death', {
@@ -1169,13 +1169,13 @@ async function uploadCert(){
     S.cert=true;
     uz.classList.add('done');
     setVerifyStep(3,'done','완료');
-    uTxt.textContent='✓ 사망 사실 검증 완료';
+    uTxt.textContent='✓ 확인 절차가 완료되었습니다';
     document.getElementById('revealBtn').disabled=false;
-    toast('검증 결과가 안전하게 반영되었습니다.');
+    toast('확인 절차가 완료되었습니다.');
   }catch(e){
     setVerifyStep(3,'','재시도 필요');
-    uTxt.textContent='공인기관 검증 완료 · 반영을 다시 시도해 주세요';
-    toast('검증 결과 반영 실패: '+(e.message||'서버 연결을 확인해 주세요.'));
+    uTxt.textContent='공인기관 확인 완료 · 반영을 다시 시도해 주세요';
+    toast('확인 결과 반영 실패: '+(e.message||'서버 연결을 확인해 주세요.'));
   }finally{
     uz.style.pointerEvents='auto';
   }
@@ -1184,12 +1184,12 @@ async function uploadCert(){
 /* ============ 개봉 ============ */
 async function doReveal(){
   if(BC.vaultId===null || !BC.accessToken || !BC.registrationTx){
-    toast('등록된 블록체인 금고 정보가 없습니다.');
+    toast('등록 정보를 확인할 수 없습니다.');
     return;
   }
 
   const btn=document.getElementById('revealBtn');
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> 블록체인에서 열람 조건 확인 중…';
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> 정보 열람 조건을 확인하고 있어요';
 
   try{
     const r = await apiCall('/api/open', {
@@ -1201,12 +1201,12 @@ async function doReveal(){
     S.openedURI=r.dataURI || null;
     S.txOpen=r.openTxHash || null;
   }catch(e){
-    btn.disabled=false; btn.innerHTML='검증 완료 후 정보 열람하기';
-    toast('아직 열 수 없습니다: '+(e.message||'사망 사실 검증이 필요합니다.'));
+    btn.disabled=false; btn.innerHTML='확인 후 정보 열람하기';
+    toast('아직 열 수 없습니다: '+(e.message||'확인 절차가 필요합니다.'));
     return;
   }
 
-  btn.disabled=false; btn.innerHTML='검증 완료 후 정보 열람하기';
+  btn.disabled=false; btn.innerHTML='확인 후 정보 열람하기';
   go('revealed');
 }
 function renderReveal(){
@@ -1258,7 +1258,7 @@ function resetAll(){
   const vf=document.getElementById('verifyFlow'); if(vf) vf.classList.remove('show');
   [1,2,3].forEach(i=>setVerifyStep(i,'','대기'));
   document.getElementById('revealBtn').disabled=true;
-  document.getElementById('revealBtn').textContent='검증 완료 후 정보 열람하기';
+  document.getElementById('revealBtn').textContent='확인 후 정보 열람하기';
   document.getElementById('msgBody').value='';
   S.theme={bg:'#FFFCF5',bd:'#F3E8D0'};
   const mp=document.querySelector('.msg-paper'); if(mp){ mp.style.background='#FFFFFF'; mp.style.borderColor='#F3E8D0'; }
