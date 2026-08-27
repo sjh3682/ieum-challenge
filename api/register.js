@@ -14,11 +14,25 @@ export default async function handler(req, res){
     const { wallet, contract } = getChain();
     const dataURI = "ieum://prototype/" + Date.now();
 
+    // Competition prototype: the server test wallet acts as the blockchain recipient identity.
     const tx = await contract.registerVault(dataHash, dataURI, [wallet.address]);
     const receipt = await tx.wait();
 
-    const count = await contract.vaultCount();
-    const vaultId = Number(count) - 1;
+    let vaultId = null;
+    for(const log of receipt.logs || []){
+      try{
+        const parsed = contract.interface.parseLog(log);
+        if(parsed?.name === "VaultRegistered"){
+          vaultId = Number(parsed.args.vaultId);
+          break;
+        }
+      }catch(_){ }
+    }
+    if(vaultId === null){
+      const count = await contract.vaultCount();
+      vaultId = Number(count) - 1;
+    }
+
     const accessToken = makeAccessToken(vaultId, tx.hash);
 
     return res.status(200).json({

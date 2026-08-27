@@ -14,7 +14,16 @@ export default async function handler(req, res){
       return res.status(403).json({ error:"이 금고를 변경할 권한을 확인할 수 없습니다." });
     }
 
-    const { contract } = getChain();
+    const { wallet, contract } = getChain();
+    const verifier = await contract.verifier();
+    if(verifier.toLowerCase() !== wallet.address.toLowerCase()){
+      return res.status(403).json({
+        error:"현재 서버 지갑이 이 컨트랙트의 사망 검증 권한자가 아닙니다.",
+        serverWallet:wallet.address,
+        contractVerifier:verifier
+      });
+    }
+
     const tx = await contract.confirmDeath(Number(vaultId));
     const receipt = await tx.wait();
 

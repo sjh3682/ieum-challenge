@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { getChain, CONTRACT_ADDRESS, sendError } from "./_chain.js";
+import { getChain, sendError } from "./_chain.js";
 
 export default async function handler(req, res){
   if(req.method !== "GET"){
@@ -7,9 +7,10 @@ export default async function handler(req, res){
   }
 
   try{
-    const { provider, wallet } = getChain();
+    const { provider, wallet, contract, contractAddress } = getChain();
     const network = await provider.getNetwork();
     const balance = await provider.getBalance(wallet.address);
+    const verifier = await contract.verifier();
 
     return res.status(200).json({
       ok:true,
@@ -17,7 +18,9 @@ export default async function handler(req, res){
       chainId:Number(network.chainId),
       walletAddress:wallet.address,
       balanceETH:ethers.formatEther(balance),
-      contractAddress:CONTRACT_ADDRESS
+      contractAddress,
+      contractVerifier:verifier,
+      verifierMatchesWallet:verifier.toLowerCase() === wallet.address.toLowerCase()
     });
   }catch(e){
     return sendError(res,e);

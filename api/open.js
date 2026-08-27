@@ -15,9 +15,21 @@ export default async function handler(req, res){
     }
 
     const { contract } = getChain();
+
+    // 1) 먼저 조건을 읽기 방식으로 검증
     const [dataHash, dataURI] = await contract.openVault.staticCall(Number(vaultId));
 
-    return res.status(200).json({ ok:true, dataHash, dataURI });
+    // 2) 실제 열람 사실도 Sepolia 트랜잭션으로 남김
+    const tx = await contract.recordOpen(Number(vaultId));
+    const receipt = await tx.wait();
+
+    return res.status(200).json({
+      ok:true,
+      dataHash,
+      dataURI,
+      openTxHash:tx.hash,
+      blockNumber:receipt.blockNumber
+    });
   }catch(e){
     return sendError(res,e);
   }

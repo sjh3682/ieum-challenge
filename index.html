@@ -700,7 +700,7 @@ input,select,textarea{ font-family:inherit; }
     </div>
 
     <div class="note warn" style="margin-top:18px;">
-      <b>이 메시지도 함께 잠깁니다.</b> 생전에는 누구도 열어볼 수 없고, 사망이 확인된 뒤 지정한 가족에게만 전달됩니다. 남긴 내용은 블록체인에 기록되어 위·변조할 수 없습니다.
+      <b>이 메시지도 함께 잠깁니다.</b> 생전에는 누구도 열어볼 수 없고, 사망이 확인된 뒤 지정한 가족에게만 전달됩니다. 메시지 원문은 블록체인에 공개하지 않으며, 금융정보 등록 지문과 공개 조건은 블록체인 기록으로 무결성을 확인합니다.
     </div>
   </div>
 </section>
@@ -822,7 +822,7 @@ input,select,textarea{ font-family:inherit; }
 
     <!-- 블록체인 증빙 (실제 기록된 경우만 표시) -->
     <div class="note mt16" id="bcProof" style="display:none;background:var(--teal-pale);border-color:var(--teal-soft);">
-      <b>⛓ 블록체인 기록 확인</b> · 등록과 사망 확인 결과가 실제 Sepolia 테스트넷에 기록되었습니다.
+      <b>⛓ 블록체인 기록 확인</b> · 등록, 사망 확인, 열람 기록이 실제 Sepolia 테스트넷에 남습니다.
       <div id="bcProofLinks" style="margin-top:8px;font-size:12.5px;"></div>
     </div>
 
@@ -885,7 +885,7 @@ const S = {
   owner:'김하늘', linked:false, assets:[], rcps:[],
   msg:'', msgSaved:false, filter:'all', verified:false, cert:false,
   theme:{bg:'#FFFCF5',bd:'#F3E8D0'},
-  txRegister:null, txDeath:null, openedHash:null, openedURI:null, dataHash:null
+  txRegister:null, txDeath:null, txOpen:null, openedHash:null, openedURI:null, dataHash:null
 };
 const SEED = [
   {t:'예금',  c:'bank', inst:'iM뱅크(대구은행)', d:'입출금 예금 · 정기예금', n:2},
@@ -1177,6 +1177,7 @@ async function doReveal(){
     });
     S.openedHash=r.dataHash || null;
     S.openedURI=r.dataURI || null;
+    S.txOpen=r.openTxHash || null;
   }catch(e){
     btn.disabled=false; btn.innerHTML='검증 완료 후 정보 열람하기';
     toast('아직 열 수 없습니다: '+(e.message||'사망 사실 검증이 필요합니다.'));
@@ -1209,11 +1210,12 @@ function renderReveal(){
 
   // 블록체인 증빙 (실제 기록된 경우)
   const proof=document.getElementById('bcProof');
-  if(S.txRegister || S.txDeath){
+  if(S.txRegister || S.txDeath || S.txOpen){
     proof.style.display='block';
     let links='';
     if(S.txRegister) links+='등록 기록: <a href="'+BC.SCAN+S.txRegister+'" target="_blank">Etherscan ↗</a>　';
-    if(S.txDeath)    links+='사망 확인 기록: <a href="'+BC.SCAN+S.txDeath+'" target="_blank">Etherscan ↗</a>';
+    if(S.txDeath)    links+='사망 확인 기록: <a href="'+BC.SCAN+S.txDeath+'" target="_blank">Etherscan ↗</a>　';
+    if(S.txOpen)     links+='열람 기록: <a href="'+BC.SCAN+S.txOpen+'" target="_blank">Etherscan ↗</a>';
     document.getElementById('bcProofLinks').innerHTML=links;
   }else{
     proof.style.display='none';
@@ -1223,7 +1225,7 @@ function renderReveal(){
 /* ============ 초기화 ============ */
 function resetAll(){
   S.linked=false; S.assets=[]; S.rcps=[]; S.msg=''; S.msgSaved=false; S.verified=false; S.cert=false; S.filter='all';
-  S.txRegister=null; S.txDeath=null; S.openedHash=null; S.openedURI=null; S.dataHash=null; BC.vaultId=null; BC.accessToken=null; BC.registrationTx=null;
+  S.txRegister=null; S.txDeath=null; S.txOpen=null; S.openedHash=null; S.openedURI=null; S.dataHash=null; BC.vaultId=null; BC.accessToken=null; BC.registrationTx=null;
   const b=document.getElementById('linkBtn'); b.style.display='flex'; b.disabled=false;
   document.getElementById('linkTxt').textContent='마이데이터 연동하기';
   document.getElementById('verifyCard').style.display='block';
