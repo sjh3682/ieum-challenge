@@ -1,0 +1,9 @@
+{
+  "name": "ieum-sepolia-submit",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "ethers": "^6.13.4"
+  }
+}

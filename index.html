@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>이음 — 떠난 뒤에도, 당신의 마음과 금융정보를 안전하게 잇다</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
+
+<!-- 블록체인 트랜잭션은 제출용 서버 API를 통해 Sepolia에 기록됩니다. -->
+
+<style>
+/* =========================================================
+   이음(Ieum) — 디자인 가이드 적용판
+   COLOR : Forsythia Yellow #FFD84D / Warm Black #24211D / BG #FFFDF7 / Card #FFF
+   개나리 노랑+따뜻한 검정 중심, 코랄 포인트로 마음/가족 감성 강조
+   RULE  : 둥근 모서리 16~24px, 8px 간격 체계, 큰 글씨, 라인 아이콘
+   ========================================================= */
+:root{
+  /* === 메인: 노랑/연노랑 (따뜻함·편지 감성) === */
+  --gold:#FFD84D;        /* 메인 골드 (버튼·강조) */
+  --gold-deep:#F5B800;   /* 진한 골드 (텍스트·호버, 흰배경 대비 확보) */
+  --gold-soft:#FFF1A8;   /* 연한 골드 (칩·테두리) */
+  --gold-pale:#FFFBEA;   /* 아주 연한 크림 배경 */
+  --amber-text:#765A00;  /* 골드 계열 텍스트 (대비용) */
+
+  /* === 보조: 따뜻한 검정 (보안·금융·블록체인 신뢰) === */
+  --teal:#24211D;        /* 따뜻한 검정 메인 */
+  --teal-deep:#171512;   /* 더 진한 검정 */
+  --teal-soft:#E9E6E0;   /* 연한 중성 회색 */
+  --teal-pale:#F5F3EF;   /* 아주 연한 중성 배경 */
+
+  --bg:#FFFDF7;          /* 전체 배경: 아주 옅은 크림 */
+  --card:#FFFFFF;
+  --text:#3A3630;        /* 본문: 웜 그레이 */
+  --text-sub:#8A837A;    /* 보조 텍스트 */
+  --line:#EFE6D2;        /* 구분선 */
+  --ok:#D59A00;
+  --danger:#C0563E;
+  --heart:#FFB4A2;      /* 마음·가족 포인트 */
+
+  /* 메시지(편지) 영역 — 노랑 계열이라 메인과 자연스럽게 이어짐 */
+  --cream:#FFFBEA;
+  --beige:#F1E1B8;
+  --brown:#665442;
+
+  --r-lg:24px; --r-md:16px; --r-sm:12px;
+  --sh:0 4px 20px rgba(36,33,29,.06);
+  --sh-lift:0 8px 28px rgba(255,216,77,.20);
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scrollbar-gutter:stable; }
+body{
+  font-family:'Pretendard Variable',Pretendard,-apple-system,sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+button{ font-family:inherit; cursor:pointer; border:none; }
+input,select,textarea{ font-family:inherit; }
+
+/* ===================== 로고 ===================== */
+.logo{ display:flex; align-items:center; gap:10px; }
+.logo svg{ width:38px; height:auto; flex-shrink:0; }
+.logo .name{ font-family:'Jua','Pretendard Variable',Pretendard,sans-serif; font-size:24px; font-weight:400; color:#24211D; letter-spacing:-.035em; line-height:1; }
+.logo .name small{ font-family:'Pretendard Variable',Pretendard,sans-serif; display:block; font-size:8.5px; letter-spacing:.32em; color:#8A837A; font-weight:700; margin-top:2px; padding-left:2px; }
+
+/* ===================== 상단바 ===================== */
+.topbar{
+  position:sticky; top:0; z-index:60;
+  display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+  min-height:64px;
+  padding:14px 28px; background:rgba(255,253,247,.92);
+  backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+}
+.topbar .logo{ justify-self:start; }
+.topnav{ display:flex; align-items:center; gap:28px; justify-self:center; }
+.topbar .role-chip{ justify-self:end; min-width:86px; text-align:center; }
+.topnav a{ font-size:14.5px; color:var(--text-sub); text-decoration:none; font-weight:500; }
+.topnav a:hover{ color:var(--gold-deep); }
+.role-chip{ font-size:12.5px; color:var(--amber-text); background:var(--gold-pale); border:1px solid var(--gold-soft); border-radius:20px; padding:6px 14px; font-weight:600; }
+
+/* ===================== 데모 이동 바 (프로토타입 조작용 — 최종본에선 숨김) ===================== */
+.demo-nav{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding:8px 28px; background:#24211D; color:#D8D3CB; font-size:11.5px; border-bottom:1px solid #171512; box-shadow:0 4px 14px rgba(36,33,29,.12); }
+.demo-nav b{ color:#FFD84D; font-weight:800; margin-right:6px; letter-spacing:.08em; font-size:10.5px; }
+.demo-nav button{ font-size:11.5px; background:#34302B; color:#F5F1E9; border:1px solid #4A453E; border-radius:16px; padding:3px 11px; transition:.15s; }
+.demo-nav button:hover{ background:#454038; border-color:#5B554C; }
+.demo-nav button.active{ background:#FFD84D; color:#24211D; border-color:#FFD84D; font-weight:800; }
+.demo-nav .hide-demo{ margin-left:auto; background:none; border:none; color:#B9B2A8; font-size:11px; text-decoration:underline; }
+.demo-nav.hidden{ display:none; }
+.demo-show{ position:fixed; left:12px; bottom:12px; z-index:150; background:#24211D; color:#FFD84D; border:1px solid #3A3630; border-radius:20px; padding:7px 14px; font-size:11.5px; display:none; box-shadow:0 5px 16px rgba(36,33,29,.22); }
+.demo-show:hover{ background:#171512; }
+.demo-show.on{ display:block; }
+
+/* ===================== 화면 전환 ===================== */
+.screen{ display:none; }
+.screen.active{ display:block; animation:fade .35s ease; }
+@keyframes fade{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
+.wrap{ max-width:760px; margin:0 auto; padding:40px 24px 90px; }
+.wrap.wide{ max-width:1080px; }
+
+/* ===================== 공통 카드 ===================== */
+.card{ background:var(--card); border:1px solid var(--line); border-radius:var(--r-lg); padding:28px; box-shadow:var(--sh); }
+.card + .card{ margin-top:20px; }
+.card-h{ display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+.card-h .num{ width:30px; height:30px; border-radius:10px; background:var(--gold-soft); color:var(--amber-text); display:grid; place-items:center; font-size:14px; font-weight:700; flex-shrink:0; }
+.card-h h2{ font-size:20px; font-weight:700; color:#24211D; letter-spacing:-.02em; }
+.card .sub{ font-size:14.5px; color:var(--text-sub); margin-bottom:22px; }
+
+/* ===================== 버튼 ===================== */
+.btn{ border-radius:14px; padding:15px 28px; font-size:16px; font-weight:600; transition:.18s; display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:52px; }
+.btn-primary{ background:var(--gold); color:#3A2E0A; box-shadow:0 4px 14px rgba(245,184,65,.32); }
+.btn-primary:hover{ background:var(--gold-deep); color:#fff; transform:translateY(-1px); box-shadow:var(--sh-lift); }
+.btn-secondary{ background:#fff; color:var(--amber-text); border:1.5px solid var(--gold); }
+.btn-secondary:hover{ background:var(--gold-pale); border-color:var(--gold-deep); }
+.btn-ghost{ background:#F3EEE3; color:var(--text-sub); }
+.btn-ghost:hover{ background:#EAE3D4; }
+.btn-block{ width:100%; }
+.btn:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+
+/* ===================== 랜딩 ===================== */
+.hero{ display:grid; grid-template-columns:1.05fr .95fr; gap:44px; align-items:center; max-width:1080px; margin:0 auto; padding:64px 24px 40px; }
+.hero h1{ font-size:clamp(29px,3.7vw,42px); font-weight:800; line-height:1.34; color:#24211D; letter-spacing:-.03em; word-break:keep-all; }
+.hero h1 .accent{ color:var(--gold-deep); }
+.hero p{ margin:20px 0 30px; font-size:16.5px; color:var(--text-sub); max-width:440px; }
+.hero .cta-row{ display:flex; gap:12px; flex-wrap:wrap; }
+.trust-row{ display:flex; gap:20px; flex-wrap:wrap; margin-top:28px; padding-top:22px; border-top:1px solid var(--line); }
+.trust-row span{ display:flex; align-items:center; gap:7px; font-size:13.5px; color:var(--text-sub); font-weight:500; }
+.trust-row svg{ width:17px; height:17px; flex-shrink:0; }
+
+/* 히어로 일러스트: 잠긴 금고 + 잇는 선 */
+.hero-art{ position:relative; }
+.hero-art svg{ width:100%; height:auto; }
+@keyframes float{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-9px);} }
+.hero-art .floaty{ animation:float 5s ease-in-out infinite; transform-origin:center; }
+@keyframes drawflow{ to{ stroke-dashoffset:0; } }
+.hero-art .infpath.flow{ stroke-dasharray:520; stroke-dashoffset:520; animation:drawflow 3.4s ease-out forwards; }
+
+/* 핵심 기능 4개 */
+.features{ max-width:1080px; margin:0 auto; padding:20px 24px 70px; }
+.features h3{ text-align:center; font-size:22px; font-weight:700; color:#24211D; margin-bottom:26px; letter-spacing:-.02em; }
+.feat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.feat{ background:var(--card); border:1px solid var(--line); border-radius:var(--r-md); padding:24px 20px; text-align:center; transition:.2s; }
+.feat:hover{ transform:translateY(-3px); box-shadow:var(--sh-lift); border-color:var(--gold-soft); }
+.feat .ico{ width:46px; height:46px; margin:0 auto 12px; border-radius:14px; background:var(--gold-soft); display:grid; place-items:center; }
+.feat b{ display:block; font-size:15.5px; color:#24211D; margin-bottom:6px; font-weight:700; }
+.feat span{ font-size:13px; color:var(--text-sub); line-height:1.55; }
+
+/* 차별점 배너 */
+.compare{ max-width:1080px; margin:0 auto 70px; padding:0 24px; }
+.compare-inner{ background:linear-gradient(120deg,#FFFBEA,#FBF2DE); border:1px solid var(--gold-soft); border-radius:var(--r-lg); padding:30px 34px; }
+.compare-inner h4{ font-size:18px; font-weight:700; color:var(--teal); margin-bottom:10px; }
+.compare-inner p{ font-size:15px; color:var(--text); }
+.compare-inner b{ color:var(--gold-deep); }
+
+
+/* ===================== 문제 정의 — 금융정보 단절 ===================== */
+.problem{ max-width:1080px; margin:0 auto; padding:6px 24px 58px; }
+.problem-inner{ background:#fff; border:1px solid var(--line); border-radius:var(--r-lg); padding:32px 34px; box-shadow:var(--sh); }
+.problem-kicker{ font-size:12px; font-weight:800; color:var(--gold-deep); letter-spacing:.12em; margin-bottom:8px; }
+.problem h3{ font-size:22px; line-height:1.4; color:#24211D; margin-bottom:10px; letter-spacing:-.025em; }
+.problem .lead{ font-size:15px; color:var(--text-sub); margin-bottom:20px; }
+.problem-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.problem-card{ background:var(--gold-pale); border:1px solid var(--gold-soft); border-radius:16px; padding:18px; }
+.problem-card b{ display:block; color:#24211D; font-size:14.5px; margin-bottom:5px; }
+.problem-card span{ display:block; color:#6F665E; font-size:13px; line-height:1.6; }
+
+/* ===================== 왜 블록체인 신원 인프라인가 ===================== */
+.blockchain{ max-width:1080px; margin:0 auto 64px; padding:0 24px; }
+.blockchain-inner{ background:#24211D; border-radius:var(--r-lg); padding:34px; box-shadow:0 12px 34px rgba(36,33,29,.16); }
+.blockchain .kicker{ color:#FFD84D; font-size:12px; font-weight:800; letter-spacing:.14em; margin-bottom:8px; }
+.blockchain h3{ color:#fff; font-size:23px; line-height:1.4; letter-spacing:-.025em; margin-bottom:8px; }
+.blockchain .intro{ color:#D8D3CB; font-size:14.5px; margin-bottom:22px; max-width:760px; }
+.block-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.block-card{ background:#302C27; border:1px solid #47423B; border-radius:16px; padding:20px; }
+.block-card .num{ width:34px; height:34px; border-radius:11px; background:#FFD84D; color:#24211D; display:grid; place-items:center; font-size:12px; font-weight:900; margin-bottom:13px; }
+.block-card b{ display:block; color:#fff; font-size:15px; margin-bottom:6px; }
+.block-card span{ display:block; color:#CFC9C0; font-size:13px; line-height:1.65; }
+.blockchain-note{ margin-top:18px; padding-top:16px; border-top:1px solid #47423B; color:#F2EEE7; font-size:13.5px; }
+.blockchain-note strong{ color:#FFD84D; }
+
+/* ===================== 대시보드 ===================== */
+.dash{ display:grid; grid-template-columns:210px 1fr; gap:26px; max-width:1080px; margin:0 auto; padding:32px 24px 80px; }
+.side{ background:var(--card); border:1px solid var(--line); border-radius:var(--r-lg); padding:14px; height:fit-content; position:sticky; top:96px; }
+.side a{ display:flex; align-items:center; gap:11px; padding:12px 14px; border-radius:var(--r-sm); font-size:14.5px; color:var(--text-sub); text-decoration:none; font-weight:500; margin-bottom:2px; cursor:pointer; }
+.side a:hover{ background:#F7F2E8; color:var(--text); }
+.side a.on{ background:var(--gold-soft); color:var(--amber-text); font-weight:700; }
+.side a svg{ width:18px; height:18px; flex-shrink:0; }
+
+.greet{ padding:6px 4px 20px; }
+.greet h2{ font-size:23px; font-weight:800; color:#24211D; letter-spacing:-.025em; }
+.greet p{ font-size:14.5px; color:var(--text-sub); margin-top:4px; }
+
+/* 잠금 상태 카드 (핵심 시각화) — 그라데이션 약하게, 장식 얌전하게 */
+.lockcard{ background:linear-gradient(120deg,#171512,#24211D); border-radius:var(--r-lg); padding:30px; color:#fff; margin-bottom:18px; position:relative; overflow:hidden; }
+.lockcard::after{ content:''; position:absolute; right:-30px; bottom:-40px; width:160px; height:160px; border-radius:50%; background:rgba(255,255,255,.045); }
+.lockcard .state-label{ font-size:13px; opacity:.85; letter-spacing:.04em; font-weight:600; }
+.lockcard .state{ display:flex; align-items:center; gap:14px; margin:10px 0 6px; }
+.lockcard .state .ico{ width:54px; height:54px; border-radius:18px; background:rgba(255,255,255,.18); display:grid; place-items:center; flex-shrink:0; }
+.lockcard .state b{ font-size:26px; font-weight:800; letter-spacing:-.02em; }
+.lockcard .state small{ display:block; font-size:13.5px; opacity:.9; font-weight:400; margin-top:2px; }
+.lockcard.opened{ background:linear-gradient(120deg,#F5B800,#FFD84D); color:#24211D; }
+
+.stat-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
+.stat{ background:var(--card); border:1px solid var(--line); border-radius:var(--r-md); padding:18px 16px; text-align:center; }
+.stat .n{ font-size:26px; font-weight:800; color:var(--teal); letter-spacing:-.02em; }
+.stat .l{ font-size:12.5px; color:var(--text-sub); margin-top:2px; }
+
+.act-list .act{ display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--line); font-size:14px; }
+.act-list .act:last-child{ border-bottom:none; }
+.act .dot{ width:7px; height:7px; border-radius:50%; background:var(--gold); margin-top:8px; flex-shrink:0; }
+.act .when{ color:var(--text-sub); font-size:12.5px; }
+
+/* ===================== 자산 목록 ===================== */
+.tabs{ display:flex; gap:6px; margin-bottom:18px; flex-wrap:wrap; }
+.tab{ padding:9px 18px; border-radius:20px; font-size:14px; background:#F3EEE3; color:var(--text-sub); font-weight:600; transition:.15s; }
+.tab.on{ background:var(--gold); color:#3A2E0A; }
+.tab:hover:not(.on){ background:#EAE3D4; }
+
+.asset-sum{ background:var(--teal-pale); border:1px solid var(--teal-soft); border-radius:var(--r-md); padding:16px 20px; margin-bottom:16px; }
+.asset-sum b{ font-size:17px; color:var(--teal); font-weight:700; }
+.asset-sum span{ display:block; font-size:13px; color:var(--text-sub); margin-top:2px; }
+
+.assets{ display:flex; flex-direction:column; gap:10px; }
+.asset{ display:flex; align-items:center; gap:14px; background:var(--card); border:1px solid var(--line); border-radius:var(--r-md); padding:16px 18px; transition:.15s; animation:pop .4s ease; }
+.asset:hover{ border-color:var(--gold-soft); box-shadow:var(--sh); }
+@keyframes pop{ from{opacity:0; transform:scale(.97);} to{opacity:1; transform:none;} }
+.asset .ic{ width:44px; height:44px; border-radius:14px; display:grid; place-items:center; flex-shrink:0; }
+.ic.bank{ background:#FFF1A8; } .ic.insu{ background:#FFF6D6; } .ic.debt{ background:#FBE5DE; } .ic.inv{ background:#F2EEE6; }
+.asset .info{ flex:1; min-width:0; }
+.asset .info b{ font-size:15.5px; color:#24211D; font-weight:700; display:block; }
+.asset .info span{ font-size:13px; color:var(--text-sub); }
+.badge{ font-size:11.5px; padding:5px 11px; border-radius:14px; font-weight:600; background:#F1F5F9; color:var(--text-sub); white-space:nowrap; }
+.badge.sync{ background:var(--teal-soft); color:var(--teal); }
+.badge.new{ background:var(--gold-deep); color:#fff; animation:blink 1.5s ease 3; }
+.badge.debt{ background:#F6E7E7; color:#A15C5C; }
+@keyframes blink{ 50%{opacity:.45;} }
+.empty{ text-align:center; padding:36px; color:var(--text-sub); font-size:14.5px; border:2px dashed var(--line); border-radius:var(--r-md); }
+
+/* ===================== 폼 ===================== */
+.field{ display:block; margin-bottom:18px; }
+.field span{ display:block; font-size:14px; color:var(--text); margin-bottom:7px; font-weight:600; }
+.input{ width:100%; font-size:16px; color:var(--text); background:#fff; border:1.5px solid var(--line); border-radius:var(--r-sm); padding:14px 16px; transition:.15s; }
+.input:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 4px rgba(255,216,77,.20); }
+.row{ display:flex; gap:12px; } .row > *{ flex:1; }
+
+.recipient{ display:flex; align-items:center; gap:13px; background:#F8FAFC; border:1px solid var(--line); border-radius:var(--r-md); padding:14px 16px; margin-bottom:10px; }
+.recipient .av{ width:40px; height:40px; border-radius:50%; background:var(--gold); color:#3A2E0A; display:grid; place-items:center; font-size:15px; font-weight:700; flex-shrink:0; }
+.recipient .info{ flex:1; } .recipient .info b{ font-size:15px; font-weight:700; color:#24211D; display:block; } .recipient .info span{ font-size:13px; color:var(--text-sub); }
+.recipient .del{ background:none; color:var(--text-sub); font-size:20px; padding:4px 8px; }
+.recipient .del:hover{ color:var(--danger); }
+
+/* ===================== 안내 박스 ===================== */
+.note{ font-size:13.5px; color:var(--text); background:var(--gold-pale); border:1px solid var(--gold-soft); border-radius:var(--r-sm); padding:14px 16px; margin-top:16px; line-height:1.6; }
+.note b{ color:var(--gold-deep); }
+.note.warn{ background:var(--cream); border:1px solid var(--beige); } .note.warn b{ color:var(--brown); }
+.data-share-highlight{margin-top:16px;background:#FFF6C9;border:1px solid #FFD84D;border-radius:14px;padding:16px 18px;color:#3A3630;font-size:14px;line-height:1.65;}
+.data-share-highlight b{color:#24211D;}
+.pre-reveal-guide{margin-top:18px;background:#FFFBEA;border:1px solid #EFE6D2;border-left:4px solid #FFD84D;border-radius:14px;padding:16px 18px;color:#5F574F;font-size:14px;line-height:1.7;}
+.pre-reveal-guide b{color:#24211D;}
+.verify-flow{display:none;margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;}
+.verify-flow.show{display:block;animation:fade .25s ease;}
+.verify-flow-title{font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--text-sub);margin-bottom:10px;}
+.verify-step{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #F3EEE3;font-size:13.5px;color:var(--text-sub);}
+.verify-step:last-child{border-bottom:none;}
+.verify-step .v-dot{width:22px;height:22px;border-radius:50%;background:#E9E6E0;color:#8A837A;display:grid;place-items:center;font-size:11px;font-weight:800;flex-shrink:0;}
+.verify-step.active{color:#24211D;font-weight:700;}
+.verify-step.active .v-dot{background:#FFF1A8;color:#765A00;}
+.verify-step.done{color:#24211D;}
+.verify-step.done .v-dot{background:#24211D;color:#FFD84D;}
+.verify-step .v-status{margin-left:auto;font-size:11.5px;color:var(--text-sub);white-space:nowrap;}
+.verify-step.active .v-status{color:#B27C00;font-weight:700;}
+.verify-step.done .v-status{color:#24211D;font-weight:700;}
+
+/* ===================== 메시지(감성) 영역 ===================== */
+.msg-zone{ background:var(--cream); border:1px solid var(--beige); border-radius:var(--r-lg); padding:28px; transition:background .25s, border-color .25s; }
+.msg-zone .card-h .num{ background:var(--beige); color:var(--brown); }
+.msg-zone .card-h h2{ color:var(--brown); }
+.msg-zone .sub{ color:var(--brown); opacity:.85; }
+.msg-paper{ background:#fff; border:1px solid var(--beige); border-radius:var(--r-md); padding:22px; transition:border-color .25s; }
+.msg-paper textarea{ width:100%; border:none; outline:none; resize:vertical; min-height:120px; font-size:15.5px; line-height:1.9; color:var(--brown); background:transparent; }
+.msg-paper textarea::placeholder{ color:#B8AA92; }
+.theme-row{ display:flex; gap:11px; margin-top:14px; }
+.theme{ width:46px; height:46px; border-radius:13px; border:1.5px solid var(--beige); cursor:pointer; transition:.15s; position:relative; }
+.theme:hover{ transform:translateY(-2px); }
+.theme.on{ box-shadow:0 0 0 2.5px var(--brown); border-color:transparent; }
+.theme.on::after{ content:'✓'; position:absolute; inset:0; display:grid; place-items:center; color:var(--brown); font-size:17px; font-weight:700; }
+.btn-msg{ background:var(--gold); color:#3A2E0A; box-shadow:0 4px 14px rgba(245,184,65,.3); }
+.btn-msg:hover{ background:var(--gold-deep); color:#fff; }
+
+/* ===================== 문자 시연 ===================== */
+.phone{ max-width:340px; margin:0 auto; background:#0F172A; border-radius:38px; padding:14px; box-shadow:0 20px 50px rgba(15,23,42,.22); }
+.phone .scr{ background:#EEF2F6; border-radius:26px; padding:22px 14px 34px; min-height:330px; }
+.sms{ background:#fff; border-radius:18px 18px 18px 5px; padding:16px 18px; font-size:14.5px; box-shadow:0 2px 10px rgba(0,0,0,.07); line-height:1.65; }
+.sms .from{ font-size:12px; color:var(--teal); font-weight:700; margin-bottom:7px; }
+.sms .link{ color:var(--teal); text-decoration:underline; word-break:break-all; }
+.sms-time{ text-align:center; font-size:11.5px; color:var(--text-sub); margin:14px 0; }
+
+/* ===================== 잠금/열람 ===================== */
+.locked-hero{ text-align:center; padding:40px 20px; }
+.locked-hero .big-ico{ width:96px; height:96px; margin:0 auto 20px; border-radius:30px; background:linear-gradient(135deg,var(--teal-deep),var(--teal)); display:grid; place-items:center; box-shadow:0 10px 30px rgba(47,93,89,.28); }
+.locked-hero h2{ font-size:24px; font-weight:800; color:#24211D; letter-spacing:-.02em; }
+.locked-hero p{ font-size:15px; color:var(--text-sub); margin-top:8px; }
+
+.upload{ border:2px dashed var(--line); border-radius:var(--r-md); padding:30px; text-align:center; cursor:pointer; background:#fff; transition:.15s; margin-top:18px; }
+.upload:hover{ border-color:var(--gold); background:var(--gold-pale); }
+.upload.done{ border-color:var(--teal); border-style:solid; background:var(--teal-pale); }
+.upload .u-ico{ width:52px; height:52px; margin:0 auto 10px; border-radius:16px; background:var(--teal-soft); display:grid; place-items:center; }
+.upload b{ font-size:15px; color:var(--text); font-weight:600; }
+
+/* PASS 인증 */
+.btn-pass{ background:#fff; color:var(--text); border:1.5px solid var(--line); box-shadow:var(--sh); }
+.btn-pass:hover{ border-color:#E24934; }
+.pass-logo{ font-weight:800; color:#E24934; letter-spacing:.01em; }
+
+/* ===================== 모달 ===================== */
+.modal-bg{ position:fixed; inset:0; background:rgba(15,23,42,.55); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; z-index:200; padding:20px; }
+.modal-bg.show{ display:flex; animation:fade .22s; }
+.sheet{ background:#fff; border-radius:var(--r-lg); width:100%; max-width:400px; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,.3); max-height:88vh; display:flex; flex-direction:column; }
+.sheet-h{ padding:20px 24px; color:#fff; }
+.sheet-h.mint{ background:var(--teal); }
+.sheet-h.pass{ background:#E24934; }
+.sheet-h b{ font-size:17px; font-weight:700; }
+.sheet-h small{ display:block; font-size:12.5px; opacity:.88; margin-top:2px; }
+.sheet-b{ padding:22px 24px; overflow-y:auto; }
+.sheet-f{ display:flex; border-top:1px solid var(--line); }
+.sheet-f button{ flex:1; padding:16px; font-size:15px; font-weight:600; }
+.sheet-f .cancel{ background:#F8FAFC; color:var(--text-sub); }
+.sheet-f .go{ background:var(--gold); color:#3A2E0A; flex:1.5; }
+
+.cs-item{ padding:12px 0; border-bottom:1px solid var(--line); }
+.cs-item .k{ font-size:12px; color:var(--teal); font-weight:700; letter-spacing:.02em; margin-bottom:3px; }
+.cs-item .v{ font-size:14.5px; color:var(--text); line-height:1.55; }
+.cs-hl{ background:var(--teal-pale); border:1px solid var(--teal-soft); border-radius:var(--r-sm); padding:15px 17px; font-size:13.5px; line-height:1.65; margin:16px 0; }
+.cs-hl b{ color:var(--teal); }
+.chk{ display:flex; align-items:flex-start; gap:11px; padding:10px 0; font-size:14px; cursor:pointer; line-height:1.5; }
+.chk input{ width:20px; height:20px; margin-top:1px; accent-color:var(--teal); flex-shrink:0; cursor:pointer; }
+
+.spinner{ width:18px; height:18px; border:2.5px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; display:inline-block; }
+.spinner.dark{ width:36px; height:36px; border-width:3px; border-color:rgba(226,73,52,.22); border-top-color:#E24934; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* ===================== 결과/토스트 ===================== */
+.legacy-open{ background:var(--cream); border:1px solid var(--beige); border-radius:var(--r-lg); padding:26px 28px; }
+.legacy-open .q{ font-size:16.5px; color:var(--brown); line-height:2; }
+.legacy-open .sign{ text-align:right; font-size:14px; color:var(--brown); margin-top:12px; font-weight:600; }
+
+.toast{ position:fixed; left:50%; bottom:34px; transform:translateX(-50%) translateY(20px); background:#0F172A; color:#fff; padding:14px 24px; border-radius:14px; font-size:14.5px; font-weight:500; box-shadow:0 10px 30px rgba(0,0,0,.25); opacity:0; pointer-events:none; transition:.28s; z-index:300; }
+.toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+.eyebrow{ font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--amber-text); font-weight:700; margin-bottom:12px; }
+.center{ text-align:center; } .mt24{ margin-top:24px; } .mt16{ margin-top:16px; }
+.progress{ display:flex; align-items:center; gap:0; margin-bottom:28px; }
+.pstep{ display:flex; align-items:center; flex:1; }
+.pstep .n{ width:30px; height:30px; border-radius:50%; background:#E2E8F0; color:var(--text-sub); display:grid; place-items:center; font-size:13px; font-weight:700; flex-shrink:0; }
+.pstep.on .n{ background:var(--gold); color:#3A2E0A; }
+.pstep.done .n{ background:var(--gold-deep); color:#fff; }
+.pstep .bar{ flex:1; height:2px; background:#E2E8F0; }
+.pstep.done .bar{ background:var(--gold-deep); }
+.pstep .lb{ font-size:12px; color:var(--text-sub); margin-left:8px; margin-right:8px; white-space:nowrap; }
+.pstep.on .lb{ color:var(--amber-text); font-weight:700; }
+
+@media(max-width:860px){
+  .hero{ grid-template-columns:1fr; gap:28px; }
+  .feat-grid{ grid-template-columns:repeat(2,1fr); }
+  .problem-grid,.block-grid{ grid-template-columns:1fr; }
+  .dash{ grid-template-columns:1fr; }
+  .side{ position:static; display:flex; overflow-x:auto; gap:4px; }
+  .side a{ white-space:nowrap; margin-bottom:0; }
+  .stat-row{ grid-template-columns:repeat(2,1fr); }
+  .topbar{ grid-template-columns:1fr auto; }
+  .topnav{ display:none; }
+  .topbar .role-chip{ grid-column:2; }
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- ===== 상단바 ===== -->
+<div class="topbar">
+  <div class="logo">
+    <svg viewBox="0 0 64 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lg" x1="6" y1="34" x2="58" y2="6">
+          <stop offset="0" stop-color="#F5B800"/><stop offset="1" stop-color="#FFD84D"/>
+        </linearGradient>
+      </defs>
+      <!-- ∞ : 주인공 — 사람과 사람, 현재와 미래, 자산과 가족의 연결 -->
+      <path d="M19 28c-6 0-10.5-3.6-10.5-8s4.5-8 10.5-8c7.5 0 10.5 16 18 16 6 0 10.5-3.6 10.5-8s-4.5-8-10.5-8c-7.5 0-10.5 16-18 16z"
+            stroke="url(#lg)" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+      <!-- 작은 하트 : 보조 — 사랑하는 사람에게 남기는 마음 -->
+      <path d="M54 10.5c-4.2-2.8-6.4-4.8-6.4-7.2 0-1.9 1.5-3.3 3.4-3.3 1.3 0 2.4.6 3 1.6.7-1 1.8-1.6 3.1-1.6 1.9 0 3.4 1.4 3.4 3.3 0 2.4-2.3 4.4-6.5 7.2z" fill="#FFB4A2"/>
+    </svg>
+    <div class="name">이음<small>IEUM</small></div>
+  </div>
+  <div class="topnav">
+    <a onclick="go('landing')">서비스 소개</a>
+    <a onclick="goLandingAnchor('feat')">이용 방법</a>
+    <a onclick="goLandingAnchor('blockchain')">데이터 보호</a>
+    <a onclick="go('notify')">수령자 안내</a>
+  </div>
+  <div class="role-chip" id="roleChip">남기는 사람</div>
+</div>
+
+<!-- ===== 데모 이동 ===== -->
+<div class="demo-nav hidden" id="demoNav">
+  <b>PROTOTYPE</b>
+  <button data-go="landing" class="active">소개</button>
+  <button data-go="dash">대시보드</button>
+  <button data-go="assets">금융정보 등록</button>
+  <button data-go="message">전달 메시지</button>
+  <button data-go="bank">외부은행(동기화)</button>
+  <button data-go="notify">수령자 통지</button>
+  <button data-go="unlock">수령자 열람</button>
+  <button class="hide-demo" onclick="toggleDemo(false)">시연바 숨기기</button>
+</div>
+<button class="demo-show on" id="demoShow" onclick="toggleDemo(true)">시연바 표시</button>
+<div id="serverChainMode" style="position:fixed;right:12px;bottom:12px;z-index:149;background:#24211D;color:#FFD84D;border:1px solid #3A3630;border-radius:20px;padding:7px 12px;font-size:11px;box-shadow:0 5px 16px rgba(36,33,29,.18);">실제 Sepolia · 서버 연결</div>
+
+<!-- ============ ① 랜딩 ============ -->
+<section id="landing" class="screen active">
+  <div class="hero">
+    <div>
+      <div class="eyebrow">마이데이터 기반 금융정보 안심 전달 서비스</div>
+      <h1>떠난 뒤에도,<br>당신의 <span class="accent">마음과 금융정보</span>를 잇다</h1>
+      <p>흩어지고, 잊히고, 사라지는 금융정보.<br>이음은 살아 있을 때 남겨, 꼭 필요한 사람에게만 전합니다.</p>
+      <div class="cta-row">
+        <button class="btn btn-primary" onclick="go('dash')">지금 시작하기 →</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('feat').scrollIntoView({behavior:'smooth'})">어떻게 작동하나요</button>
+      </div>
+      <div class="trust-row">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="#F5B800" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>생전엔 아무도 못 봄</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="#F5B800" stroke-width="2.2" stroke-linecap="round"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/><path d="M9.5 12l2 2 3.5-4"/></svg>블록체인 기록</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="#F5B800" stroke-width="2.2" stroke-linecap="round"><path d="M20 7L9 18l-5-5"/></svg>마이데이터 자동 갱신</span>
+      </div>
+    </div>
+
+    <!-- 히어로: 잠긴 금고에서 가족으로 이어지는 흐름 -->
+    <div class="hero-art">
+      <svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="inf" x1="40" y1="230" x2="380" y2="70">
+            <stop offset="0" stop-color="#F5B800"/><stop offset=".5" stop-color="#FFD84D"/><stop offset="1" stop-color="#FFE996"/>
+          </linearGradient>
+          <linearGradient id="soft" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#FFF1A8"/><stop offset="1" stop-color="#FFFBEA"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 배경 그림자 -->
+        <ellipse cx="210" cy="262" rx="132" ry="16" fill="url(#soft)" opacity=".9"/>
+
+        <!-- ∞ 하나의 흐름 : 이음의 상징 -->
+        <path class="infpath"
+              d="M128 150c-32 0-56-19-56-42s24-42 56-42c40 0 56 84 96 84 32 0 56-19 56-42s-24-42-56-42"
+              stroke="url(#inf)" stroke-width="7" stroke-linecap="round" fill="none" opacity=".22"
+              transform="translate(0,42)"/>
+        <path class="infpath flow"
+              d="M128 150c-32 0-56-19-56-42s24-42 56-42c40 0 56 84 96 84 32 0 56-19 56-42s-24-42-56-42"
+              stroke="url(#inf)" stroke-width="7" stroke-linecap="round" fill="none"
+              transform="translate(0,42)"/>
+
+        <!-- 왼쪽 고리: 남기는 사람 (금고/자산) -->
+        <g class="floaty">
+          <rect x="88" y="158" width="82" height="72" rx="22" fill="#24211D"/>
+          <rect x="100" y="170" width="58" height="48" rx="15" fill="#fff" opacity=".17"/>
+          <rect x="112" y="185" width="34" height="27" rx="8" fill="#fff"/>
+          <path d="M119 185v-7a10 10 0 0120 0v7" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+          <circle cx="129" cy="197" r="4" fill="#24211D"/>
+          <rect x="127.5" y="197" width="3" height="7" rx="1.5" fill="#24211D"/>
+        </g>
+
+        <!-- 오른쪽 고리: 받는 가족 -->
+        <g class="floaty" style="animation-delay:-2.4s">
+          <circle cx="308" cy="82" r="34" fill="#fff" stroke="#FFF1A8" stroke-width="2.5"/>
+          <circle cx="298" cy="74" r="8.5" fill="#F5B800"/>
+          <circle cx="318" cy="76" r="7" fill="#FFD84D"/>
+          <path d="M285 100c0-7.5 5.8-13 13-13s13 5.5 13 13" fill="#F5B800" opacity=".5"/>
+          <path d="M306 100c0-6.5 5-11.5 12-11.5s12 5 12 11.5" fill="#FFD84D" opacity=".8"/>
+        </g>
+
+        <!-- 흐름 위 요소 1: 금융 카드 -->
+        <g transform="translate(196,112)">
+          <rect x="0" y="0" width="56" height="38" rx="12" fill="#fff" stroke="#E9E6E0" stroke-width="2"/>
+          <rect x="10" y="12" width="24" height="3.5" rx="1.75" fill="#24211D"/>
+          <rect x="10" y="21" width="16" height="3.5" rx="1.75" fill="#94A3B8"/>
+          <rect x="38" y="11" width="9" height="9" rx="2.5" fill="#FFD84D"/>
+        </g>
+
+        <!-- 흐름 위 요소 2: 마음(편지) — 은은한 크림 -->
+        <g transform="translate(238,186)">
+          <rect x="0" y="0" width="52" height="40" rx="12" fill="#FEFBF3" stroke="#F3E4C4" stroke-width="2"/>
+          <path d="M8 12l18 12 18-12" stroke="#F5B800" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          <path d="M26 33c-6.5-4.4-9.5-7.5-9.5-11.3a5.4 5.4 0 019.5-3.3 5.4 5.4 0 019.5 3.3c0 3.8-3 6.9-9.5 11.3z" fill="#FFD66E" opacity=".7"/>
+        </g>
+
+        <!-- 작은 점들 (흐름 강조) -->
+        <circle cx="180" cy="146" r="4" fill="#FFD84D" opacity=".7"/>
+        <circle cx="264" cy="150" r="3" fill="#F5B800" opacity=".7"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 금융정보 단절 문제 -->
+  <div class="problem" id="problem">
+    <div class="problem-inner">
+      <div class="problem-kicker">FINANCIAL INFORMATION GAP</div>
+      <h3>갑작스러운 이별 뒤, 가족이 금융정보를 처음부터 찾아 헤매지 않도록</h3>
+      <p class="lead">계좌·보험·대출 정보가 여러 기관에 흩어져 있으면 남은 가족은 무엇이 어디에 있는지조차 파악하기 어렵습니다. 이음은 그 ‘금융정보 단절’을 생전에 미리 대비합니다.</p>
+      <div class="problem-grid">
+        <div class="problem-card"><b>흩어진 금융정보</b><span>마이데이터로 보유 기관과 상품 정보를 한 번에 연결합니다.</span></div>
+        <div class="problem-card"><b>가족의 탐색 부담</b><span>사후에 가족이 처음부터 찾는 대신, 본인이 미리 수령자를 지정합니다.</span></div>
+        <div class="problem-card"><b>본인이 정하는 공개 조건</b><span>누구에게 언제 공개할지 사용자가 직접 정해 데이터 주권을 지킵니다.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 핵심 기능 4 -->
+  <div class="features" id="feat">
+    <h3>이음의 핵심 기능</h3>
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M5 8l7-5 7 5"/></svg></div>
+        <b>생전 등록</b><span>금융정보와 뜻을<br>미리 등록해요</span>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div>
+        <b>안전한 잠금</b><span>평소엔 잠겨 있어<br>누구도 볼 수 없어요</span>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
+        <b>사망 시 전달</b><span>지정한 가족에게만<br>안전하게 전달돼요</span>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/><path d="M9.5 12l2 2 3.5-4"/></svg></div>
+        <b>위변조 없는 신뢰</b><span>블록체인으로 기록해<br>영구히 보관해요</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 블록체인 신원 인프라 -->
+  <div class="blockchain" id="blockchain">
+    <div class="blockchain-inner">
+      <div class="kicker">DATA PROTECTION · BLOCKCHAIN IDENTITY</div>
+      <h3>왜 블록체인 신원 인프라인가?</h3>
+      <p class="intro">이음은 금융정보 원문을 블록체인에 올리는 서비스가 아닙니다. 공개 조건·수령자 지정·열람 이력처럼 ‘누가, 언제, 어떤 조건으로 열 수 있는지’에 대한 신뢰 기록을 남겨 안전한 마이데이터 공유를 돕습니다.</p>
+      <div class="block-grid">
+        <div class="block-card"><div class="num">01</div><b>조건부 공개</b><span>사망 확인 전에는 잠긴 상태를 유지하고, 조건이 충족된 뒤 지정 수령자에게만 공개합니다.</span></div>
+        <div class="block-card"><div class="num">02</div><b>위변조 방지 기록</b><span>등록·잠금·개봉 같은 핵심 이력을 기록해 사후 임의 변경이나 분쟁 가능성을 줄입니다.</span></div>
+        <div class="block-card"><div class="num">03</div><b>데이터 주권</b><span>수령자와 공개 조건을 본인이 직접 결정하고, 필요한 최소 정보만 안전하게 공유합니다.</span></div>
+      </div>
+      <div class="blockchain-note"><strong>핵심:</strong> 상세 잔액이나 계좌번호가 아니라 ‘어디에 무엇이 있는지’를 중심으로 공유해 개인정보 노출 부담도 낮춥니다.</div>
+    </div>
+  </div>
+
+  <!-- 차별점 -->
+  <div class="compare">
+    <div class="compare-inner">
+      <h4>기존의 ‘사후 조회’와 무엇이 다른가요?</h4>
+      <p>나라의 상속 조회 서비스는 <b>돌아가신 뒤에</b> 가족이 직접 찾아 나서야 합니다. 이음은 <b>살아 계실 때 본인이 직접</b> 무엇을·누구에게 남길지 정해두고, 그 뜻을 위·변조 없이 그대로 전합니다. 자산의 위치가 아니라 <b>고인의 마음까지</b> 전하는 것이 이음입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ② 대시보드 ============ -->
+<section id="dash" class="screen">
+  <div class="dash">
+    <nav class="side">
+      <a class="on" onclick="go('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l8-6 8 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg>대시보드</a>
+      <a onclick="go('assets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>금융정보</a>
+      <a onclick="go('message')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 8l9 6 9-6"/></svg>전달 메시지</a>
+      <a onclick="go('assets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6"/><path d="M17 11h4M19 9v4"/></svg>수령자 관리</a>
+      <a onclick="go('notify')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>기록 조회</a>
+    </nav>
+
+    <div>
+      <div class="greet">
+        <h2>안녕하세요, 김하늘님</h2>
+        <p>당신의 소중한 정보를 안전하게 보관하고 있어요.</p>
+      </div>
+
+      <!-- 잠금 상태 (핵심 시각화) -->
+      <div class="lockcard" id="lockCard">
+        <div class="state-label">현재 상태</div>
+        <div class="state">
+          <div class="ico" id="lockIco">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+          </div>
+          <div>
+            <b id="lockTitle">안전하게 잠겨 있습니다</b>
+            <small id="lockDesc">사망이 확인되기 전까지 지정 수령자도 정보를 볼 수 없습니다.</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat"><div class="n" id="sInst">0</div><div class="l">등록 기관</div></div>
+        <div class="stat"><div class="n" id="sItem">0</div><div class="l">계좌·상품</div></div>
+        <div class="stat"><div class="n" id="sRcp">0</div><div class="l">지정 수령자</div></div>
+        <div class="stat"><div class="n" id="sMsg">0</div><div class="l">남긴 메시지</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h2 style="font-size:18px;">최근 활동</h2></div>
+        <div class="act-list" id="actList">
+          <div class="act"><span class="dot"></span><div>아직 활동이 없습니다. <span class="when">금융정보를 등록해 보세요.</span></div></div>
+        </div>
+        <button class="btn btn-primary btn-block mt16" onclick="go('assets')">금융정보 등록하러 가기</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ③ 금융정보 등록 ============ -->
+<section id="assets" class="screen">
+  <div class="wrap">
+    <div class="progress">
+      <div class="pstep on" id="p1"><span class="n">1</span><span class="lb">정보 등록</span><span class="bar"></span></div>
+      <div class="pstep" id="p2"><span class="n">2</span><span class="lb">수령자 지정</span><span class="bar"></span></div>
+      <div class="pstep" id="p3"><span class="n">3</span><span class="lb">잠금 완료</span></div>
+    </div>
+
+    <!-- 마이데이터 -->
+    <div class="card">
+      <div class="card-h"><span class="num">1</span><h2>내 금융정보 연동</h2></div>
+      <p class="sub">직접 입력할 필요 없이, 한 번 동의하면 흩어진 계좌·보험·대출을 자동으로 불러오고 이후 변동도 스스로 갱신됩니다.</p>
+      <div class="data-share-highlight"><b>상세 잔액이 아니라 ‘어디에 무엇이 있는지’만 안전하게 공유합니다.</b><br>계좌번호나 상세 금액은 이음에 공개하지 않아 개인정보 부담을 줄입니다.</div>
+
+      <button class="btn btn-primary btn-block mt16" id="linkBtn" onclick="openConsent()">
+        <span id="linkTxt">마이데이터 연동하기</span>
+      </button>
+
+      <div id="assetBox" style="margin-top:20px;">
+        <div class="empty" id="assetEmpty">아직 연동된 금융정보가 없습니다.</div>
+        <div class="asset-sum" id="assetSum" style="display:none;"></div>
+        <div class="tabs" id="assetTabs" style="display:none;">
+          <div class="tab on" data-f="all">전체</div>
+          <div class="tab" data-f="bank">은행</div>
+          <div class="tab" data-f="insu">보험</div>
+          <div class="tab" data-f="inv">증권</div>
+          <div class="tab" data-f="debt">대출</div>
+        </div>
+        <div class="assets" id="assetList"></div>
+      </div>
+
+      <div class="note">
+        <b>자동 갱신</b> · 연동 후에는 다른 은행에서 계좌를 새로 만들거나 보험에 가입해도, 직접 고칠 필요 없이 이음의 정보가 자동으로 최신 상태로 유지됩니다.
+      </div>
+    </div>
+
+    <!-- 수령자 -->
+    <div class="card">
+      <div class="card-h"><span class="num">2</span><h2>받을 사람 지정</h2></div>
+      <p class="sub">이 정보를 전할 가족을 최대 5명까지 지정합니다. 실제 열람은 사망이 확인된 뒤에만 가능합니다.</p>
+      <div id="rcpList"></div>
+      <div class="row" style="align-items:flex-end;">
+        <label class="field" style="margin-bottom:0;"><span>이름</span><input class="input" id="rName" placeholder="예: 김민서" /></label>
+        <label class="field" style="margin-bottom:0;"><span>휴대폰 번호</span><input class="input" id="rPhone" placeholder="010-0000-0000" /></label>
+      </div>
+      <button class="btn btn-secondary btn-block mt16" onclick="addRcp()">+ 가족 더 추가하기</button>
+      <p style="font-size:13px;color:var(--text-sub);text-align:center;margin-top:10px;">한 명만 지정한다면 입력 후 아래 ‘등록 마치기’를 누르세요.</p>
+    </div>
+
+    <button class="btn btn-primary btn-block mt24" id="finishBtn" onclick="finish()">등록 마치기</button>
+  </div>
+</section>
+
+<!-- ============ ④ 전달 메시지 (감성 영역) ============ -->
+<section id="message" class="screen">
+  <div class="wrap">
+    <div class="eyebrow" style="color:var(--brown);">전달 메시지</div>
+    <h2 style="font-size:26px;font-weight:800;color:var(--brown);letter-spacing:-.02em;margin-bottom:6px;">마음을 남겨보세요</h2>
+    <p style="color:var(--brown);opacity:.85;font-size:15px;margin-bottom:24px;">자산은 위치를 알려줄 수 있지만, 마음은 당신만이 남길 수 있습니다.</p>
+
+    <div class="msg-zone">
+      <label class="field"><span style="color:var(--brown);">받는 사람</span>
+        <select class="input" id="msgTo" style="border-color:var(--beige);">
+          <option>가족 모두에게</option><option>배우자에게</option><option>자녀에게</option><option>부모님께</option>
+        </select>
+      </label>
+      <label class="field"><span style="color:var(--brown);">제목</span>
+        <input class="input" id="msgTitle" style="border-color:var(--beige);" placeholder="사랑하는 가족에게" />
+      </label>
+      <span style="display:block;font-size:14px;font-weight:600;color:var(--brown);margin-bottom:7px;">내용</span>
+      <div class="msg-paper">
+        <textarea id="msgBody" placeholder="사랑하는 가족에게 남기고 싶은 말을 적어주세요."></textarea>
+      </div>
+      <span style="display:block;font-size:14px;font-weight:600;color:var(--brown);margin:16px 0 7px;">편지지 테마</span>
+      <div class="theme-row">
+        <div class="theme on" data-bg="#FFFCF5" data-bd="#F3E8D0" style="background:#FFFCF5;" onclick="pickTheme(this)"></div>
+        <div class="theme" data-bg="#FDF4F6" data-bd="#F0DDE3" style="background:#FDF4F6;" onclick="pickTheme(this)"></div>
+        <div class="theme" data-bg="#FFF7EF" data-bd="#F1DCCF" style="background:#FFF7EF;" onclick="pickTheme(this)"></div>
+        <div class="theme" data-bg="#F6F5FB" data-bd="#E1DFEE" style="background:#F6F5FB;" onclick="pickTheme(this)"></div>
+      </div>
+      <button class="btn btn-msg btn-block mt24" onclick="saveMsg()">메시지 저장하기</button>
+    </div>
+
+    <div class="note warn" style="margin-top:18px;">
+      <b>이 메시지도 함께 잠깁니다.</b> 생전에는 누구도 열어볼 수 없고, 사망이 확인된 뒤 지정한 가족에게만 전달됩니다. 남긴 내용은 블록체인에 기록되어 위·변조할 수 없습니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ ⑤ 외부 은행 ============ -->
+<section id="bank" class="screen">
+  <div style="background:#1B4B8A;color:#fff;padding:18px 24px;text-align:center;font-weight:700;font-size:18px;">
+    신한은행 · 모바일뱅킹 <span style="font-weight:400;font-size:13px;opacity:.85;">(데모용 가상 화면)</span>
+  </div>
+  <div class="wrap">
+    <div class="eyebrow" style="color:#1B4B8A;">외부 금융기관 — 이음과 별개의 서비스</div>
+    <div class="card">
+      <div class="card-h"><h2>신규 계좌 개설</h2></div>
+      <p class="sub">이곳은 이음이 아닌 <b>다른 은행</b>입니다. 여기서 계좌를 만들면 마이데이터로 연동된 이음에 <b>자동 반영</b>됩니다. 사용자는 이음에 아무것도 입력하지 않습니다.</p>
+      <label class="field"><span>상품</span>
+        <select class="input" id="bankProd">
+          <option>신한 주거래 입출금통장</option>
+          <option>신한 쏠편한 정기예금</option>
+          <option>신한 청년 도약 적금</option>
+        </select>
+      </label>
+      <button class="btn btn-primary btn-block" style="background:#1B4B8A;box-shadow:0 4px 14px rgba(27,75,138,.28);" onclick="openAccount()">계좌 개설하기</button>
+      <div class="note" style="background:#EAF0F8;border-color:#D3E0F0;">개설 후 <b>‘금융정보 등록’</b> 화면으로 돌아가면, 방금 만든 계좌가 이음 목록에 저절로 추가되어 있습니다.</div>
+      <button class="btn btn-secondary btn-block mt16" style="border-color:#1B4B8A;color:#1B4B8A;" onclick="go('assets')">← 이음으로 돌아가 확인하기</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ⑥ 수령자 통지 ============ -->
+<section id="notify" class="screen">
+  <div class="wrap">
+    <div class="eyebrow">받는 사람에게</div>
+    <h2 class="center" style="font-size:25px;font-weight:800;color:#24211D;letter-spacing:-.02em;">이런 안내가 전달됩니다</h2>
+    <p class="center" style="color:var(--text-sub);font-size:15px;margin:8px 0 28px;">등록을 마치면 지정한 가족에게 문자가 갑니다.<br>단, 지금은 <b style="color:var(--teal);">열람이 잠긴 상태</b>입니다.</p>
+
+    <div class="phone">
+      <div class="scr">
+        <div class="sms-time">오늘 오후 2:14</div>
+        <div class="sms">
+          <div class="from">[이음]</div>
+          <span id="smsBody">○○님이 회원님을 ‘이음’ 금융정보 수령자로 지정하셨습니다.</span><br><br>
+          지금은 열람할 수 없으며, 향후 필요한 때가 되면 아래 링크에서 본인 확인 후 확인하실 수 있습니다.<br><br>
+          <span class="link">https://ieum.link/r/8f3a9c2</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="center mt24">
+      <p style="color:var(--text-sub);font-size:14.5px;margin-bottom:16px;">— 시간이 흘러, 이별의 순간이 왔습니다 —</p>
+      <button class="btn btn-primary" onclick="go('unlock')">수령자가 링크를 열어보기 →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ⑦ 수령자 열람 ============ -->
+<section id="unlock" class="screen">
+  <div class="wrap">
+    <div class="eyebrow">받는 사람 · 열람</div>
+
+    <div class="card" id="verifyCard">
+      <div class="locked-hero">
+        <div class="big-ico">
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+        </div>
+        <h2>본인 인증이 필요합니다</h2>
+        <p>지정된 수령자 본인만 열람할 수 있습니다.<br>휴대폰 본인인증으로 확인해 주세요.</p>
+        <button class="btn btn-pass mt24" onclick="startPass()"><span class="pass-logo">PASS</span> 휴대폰 본인인증</button>
+        <p style="font-size:12.5px;color:var(--text-sub);margin-top:12px;">SKT · KT · LG U+ 통합 인증</p>
+      </div>
+    </div>
+
+    <div class="card" id="certCard" style="display:none;">
+      <div class="card-h"><span class="num">✓</span><h2>사망 사실 확인 요청</h2></div>
+      <p class="sub">수령자는 사망 사실의 ‘확인’을 요청합니다. 제출된 서류는 공인기관 검증을 거친 뒤에만 열람 조건에 반영됩니다.</p>
+      <div class="upload" id="uz" onclick="uploadCert()">
+        <div class="u-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></div>
+        <b id="uTxt">사망진단서를 제출하고 확인 요청하기</b>
+      </div>
+
+      <div class="verify-flow" id="verifyFlow">
+        <div class="verify-flow-title">사망 사실 확인 절차</div>
+        <div class="verify-step" id="vf1"><span class="v-dot">1</span><span>수령자 확인 요청 접수</span><span class="v-status" id="vfs1">대기</span></div>
+        <div class="verify-step" id="vf2"><span class="v-dot">2</span><span>공인기관 전자문서 검증</span><span class="v-status" id="vfs2">대기</span></div>
+        <div class="verify-step" id="vf3"><span class="v-dot">3</span><span>검증 완료</span><span class="v-status" id="vfs3">대기</span></div>
+      </div>
+
+      <div class="note">
+        <b>프로토타입 검증 방식</b> · 정부24 사망신고 데이터·병원 발급 전자문서 연동은 시뮬레이션으로 표현합니다. <b>검증이 완료된 결과만</b> 실제 Sepolia 블록체인에 기록합니다.
+      </div>
+      <div class="pre-reveal-guide"><b>열람 전 안내</b><br>지금 확인하는 정보는 고인이 남긴 금융정보의 ‘위치’입니다.<br>이음은 돈을 직접 지급하지 않으며, 실제 수령은 각 금융기관의 상속 절차를 통해 진행됩니다.</div>
+      <button class="btn btn-primary btn-block mt16" id="revealBtn" onclick="doReveal()" disabled>검증 완료 후 정보 열람하기</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ⑧ 개봉 완료 ============ -->
+<section id="revealed" class="screen">
+  <div class="wrap">
+    <div class="eyebrow">전달 완료</div>
+    <h2 style="font-size:26px;font-weight:800;color:#24211D;letter-spacing:-.02em;">고인이 남긴 것</h2>
+    <p style="color:var(--text-sub);font-size:15px;margin:6px 0 24px;">아래는 고인이 생전에 남겨둔 정보입니다. 실제 자산은 각 기관을 직접 방문해 상속 절차로 수령하시게 됩니다.</p>
+
+    <!-- 메시지 먼저 (감성) -->
+    <div class="legacy-open" id="legacyBox" style="display:none;">
+      <div style="font-size:12.5px;letter-spacing:.14em;color:var(--brown);font-weight:700;margin-bottom:10px;">남긴 메시지</div>
+      <div class="q" id="legacyText"></div>
+      <div class="sign" id="legacySign"></div>
+    </div>
+
+    <div class="card mt16">
+      <div class="card-h"><h2 style="font-size:18px;">금융 자산 · 부채</h2></div>
+      <p class="sub">각 항목은 ‘어디에 무엇이 있는지’를 알려드립니다. 상세 금액·계좌번호는 해당 기관에서 확인하세요.</p>
+      <div class="assets" id="revealList"></div>
+    </div>
+
+    <div class="note mt16">
+      <b>안전 안내</b> · 이음은 돈을 직접 지급하지 않습니다. 실제 수령은 가족이 각 금융기관을 방문해 정식 상속 절차로 진행하므로, 금전 사고나 탈취의 위험이 없습니다.
+    </div>
+
+    <!-- 블록체인 증빙 (실제 기록된 경우만 표시) -->
+    <div class="note mt16" id="bcProof" style="display:none;background:var(--teal-pale);border-color:var(--teal-soft);">
+      <b>⛓ 블록체인 기록 확인</b> · 등록과 사망 확인 결과가 실제 Sepolia 테스트넷에 기록되었습니다.
+      <div id="bcProofLinks" style="margin-top:8px;font-size:12.5px;"></div>
+    </div>
+
+    <div class="center mt24"><button class="btn btn-ghost" onclick="resetAll()">처음부터 다시 보기</button></div>
+  </div>
+</section>
+
+<!-- ===== 마이데이터 동의 모달 ===== -->
+<div class="modal-bg" id="consentModal">
+  <div class="sheet">
+    <div class="sheet-h mint"><b>마이데이터 연동 동의</b><small>내 정보를 어디까지 제공할지 직접 확인하세요.</small></div>
+    <div class="sheet-b">
+      <div class="cs-item"><div class="k">정보를 가져올 기관</div><div class="v">은행 · 보험사 · 카드사 · 대출기관 (금융결제원·신용정보원 연계)</div></div>
+      <div class="cs-item"><div class="k">가져오는 정보</div><div class="v">계좌 보유 여부, 보험 가입 내역, 대출·부채 내역<br><span style="color:var(--text-sub);font-size:13px;">※ 계좌번호·상세 잔액이 아닌 ‘어디에 무엇이 있는지’만 수집합니다.</span></div></div>
+      <div class="cs-item"><div class="k">이용 목적</div><div class="v">사망이 확인된 뒤, 생전에 지정한 수령자에게 전달</div></div>
+      <div class="cs-item"><div class="k">보관 기간</div><div class="v">전달 완료 시 또는 회원 탈퇴 시까지</div></div>
+      <div class="cs-hl">🔒 이 정보는 <b>평소에는 잠긴 상태</b>로 보관되며, 본인 외 누구도(운영사 포함) 열람할 수 없습니다. <b>사망이 확인된 경우에 한해</b> 지정 수령자에게만 공개됩니다.</div>
+      <label class="chk"><input type="checkbox" id="cReq"><span><b>[필수]</b> 위 내용을 확인했으며 마이데이터 정보 제공에 동의합니다.</span></label>
+      <label class="chk"><input type="checkbox" id="cOpt"><span><b>[선택]</b> 서비스 개선을 위한 통계 활용에 동의합니다.</span></label>
+    </div>
+    <div class="sheet-f">
+      <button class="cancel" onclick="closeConsent()">취소</button>
+      <button class="go" onclick="agree()">동의하고 연동</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PASS 인증 모달 ===== -->
+<div class="modal-bg" id="passModal">
+  <div class="sheet" style="max-width:360px;">
+    <div class="sheet-h pass"><b><span style="color:#fff;">PASS</span> 인증</b></div>
+    <div class="sheet-b">
+      <div id="ps1">
+        <p style="font-size:14.5px;margin-bottom:16px;">본인 명의의 휴대폰으로 인증합니다.</p>
+        <label class="field"><span>이름</span><input class="input" id="pName" placeholder="이름"></label>
+        <label class="field"><span>휴대폰 번호</span><input class="input" id="pPhone" placeholder="010-0000-0000"></label>
+        <button class="btn btn-pass btn-block" onclick="passGo()">인증 요청</button>
+      </div>
+      <div id="ps2" style="display:none;text-align:center;padding:18px 0;">
+        <div class="spinner dark"></div>
+        <p style="margin-top:18px;font-weight:700;">휴대폰에서 인증을 진행해 주세요.</p>
+        <p style="font-size:13px;color:var(--text-sub);margin-top:6px;">PASS 앱 알림을 확인하면 자동으로 완료됩니다.</p>
+      </div>
+      <div id="ps3" style="display:none;text-align:center;padding:26px 0;">
+        <div style="width:64px;height:64px;margin:0 auto 12px;border-radius:22px;background:#FFF4C2;display:grid;place-items:center;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#D59A00" stroke-width="2.5" stroke-linecap="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        </div>
+        <p style="font-weight:700;">본인 인증이 완료되었습니다.</p>
+      </div>
+    </div>
+    <div class="sheet-f"><button class="cancel" onclick="closePass()">닫기</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ 상태 ============ */
+const S = {
+  owner:'김하늘', linked:false, assets:[], rcps:[],
+  msg:'', msgSaved:false, filter:'all', verified:false, cert:false,
+  theme:{bg:'#FFFCF5',bd:'#F3E8D0'},
+  txRegister:null, txDeath:null, openedHash:null, openedURI:null, dataHash:null
+};
+const SEED = [
+  {t:'예금',  c:'bank', inst:'iM뱅크(대구은행)', d:'입출금 예금 · 정기예금', n:2},
+  {t:'예금',  c:'bank', inst:'국민은행',        d:'입출금 예금',            n:1},
+  {t:'보험',  c:'insu', inst:'삼성생명',        d:'종신보험 · 수익자 배우자', n:1},
+  {t:'보험',  c:'insu', inst:'삼성화재',        d:'실손의료보험',            n:1},
+  {t:'증권',  c:'inv',  inst:'NH투자증권',      d:'주식 · 펀드',            n:2},
+  {t:'대출',  c:'debt', inst:'OO캐피탈',        d:'신용대출 잔액 있음',      n:1},
+];
+const ICON = {
+  bank:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-5 9 5"/><path d="M5 9v9M19 9v9M9 9v9M15 9v9"/><path d="M3 20h18"/></svg>',
+  insu:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3A3630" stroke-width="2" stroke-linecap="round"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/></svg>',
+  inv: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8A6A1F" stroke-width="2" stroke-linecap="round"><path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/></svg>',
+  debt:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B5654A" stroke-width="2" stroke-linecap="round"><path d="M4 7l5 5 4-3 7 8"/><path d="M20 17h-5v-5"/></svg>'
+};
+
+/* ============ 랜딩 내부 메뉴 이동 ============ */
+function goLandingAnchor(id){
+  go('landing');
+  setTimeout(()=>{
+    const el=document.getElementById(id);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  },80);
+}
+
+/* ============ 데모바 토글 (최종 시연 시 숨김) ============ */
+function toggleDemo(show){
+  document.getElementById('demoNav').classList.toggle('hidden', !show);
+  document.getElementById('demoShow').classList.toggle('on', !show);
+}
+
+/* ============ 화면 전환 ============ */
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.demo-nav button').forEach(b=>b.classList.toggle('active', b.dataset.go===id));
+  const roles={landing:'남기는 사람',dash:'남기는 사람',assets:'남기는 사람',message:'남기는 사람',
+               bank:'외부 은행',notify:'받는 가족',unlock:'받는 가족',revealed:'받는 가족'};
+  document.getElementById('roleChip').textContent = roles[id]||'';
+  if(id==='assets') renderAssets();
+  if(id==='dash')   renderDash();
+  if(id==='revealed') renderReveal();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('[data-go]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.go)));
+
+/* ============ 토스트 ============ */
+let tt; function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('show'),2600); }
+
+/* ============ 마이데이터 ============ */
+function openConsent(){
+  if(S.linked){ toast('이미 연동되어 있습니다.'); return; }
+  document.getElementById('cReq').checked=false; document.getElementById('cOpt').checked=false;
+  document.getElementById('consentModal').classList.add('show');
+}
+function closeConsent(){ document.getElementById('consentModal').classList.remove('show'); }
+function agree(){
+  if(!document.getElementById('cReq').checked){ toast('필수 항목에 동의해야 연동할 수 있습니다.'); return; }
+  closeConsent(); loadData();
+}
+function loadData(){
+  const b=document.getElementById('linkBtn');
+  b.disabled=true; document.getElementById('linkTxt').innerHTML='<span class="spinner"></span> 흩어진 금융정보를 불러오는 중…';
+  setTimeout(()=>{
+    S.assets = SEED.map(a=>({...a,isNew:false})); S.linked=true;
+    renderAssets(); b.style.display='none';
+    document.getElementById('p1').classList.add('done');
+    document.getElementById('p2').classList.add('on');
+    toast(SEED.length+'개 기관의 금융정보를 불러왔습니다.');
+  },1500);
+}
+
+/* ============ 자산 렌더 ============ */
+function renderAssets(){
+  const list=document.getElementById('assetList'), empty=document.getElementById('assetEmpty');
+  const sum=document.getElementById('assetSum'), tabs=document.getElementById('assetTabs');
+  if(!list) return;
+  if(S.assets.length===0){ empty.style.display='block'; sum.style.display='none'; tabs.style.display='none'; list.innerHTML=''; return; }
+  empty.style.display='none'; sum.style.display='block'; tabs.style.display='flex';
+  const items=S.assets.reduce((a,x)=>a+(x.n||1),0);
+  sum.innerHTML='<b>총 '+S.assets.length+'개 기관 / '+items+'개 상품</b><span>마이데이터를 통해 자동 동기화된 정보입니다.</span>';
+  const arr = S.filter==='all'? S.assets : S.assets.filter(a=>a.c===S.filter);
+  list.innerHTML = arr.map(a=>`
+    <div class="asset">
+      <div class="ic ${a.c}">${ICON[a.c]}</div>
+      <div class="info"><b>${a.inst}</b><span>${a.t} · ${a.d}</span></div>
+      <span class="badge ${a.c==='debt'?'debt':(a.isNew?'new':'sync')}">${a.isNew?'자동 추가됨':a.t}</span>
+    </div>`).join('');
+}
+document.querySelectorAll('#assetTabs .tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('#assetTabs .tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on'); S.filter=t.dataset.f; renderAssets();
+  });
+});
+
+/* ============ 외부 은행 동기화 ============ */
+function openAccount(){
+  if(!S.linked){ toast('먼저 ‘금융정보 등록’에서 마이데이터를 연동해 주세요.'); return; }
+  const p=document.getElementById('bankProd').value;
+  if(S.assets.some(a=>a.d===p)){ toast('이미 개설된 상품입니다.'); return; }
+  S.assets.forEach(a=>a.isNew=false);
+  S.assets.push({t:'예금',c:'bank',inst:'신한은행',d:p,n:1,isNew:true});
+  toast('계좌가 개설되었습니다. 이음에 자동 반영됩니다.');
+}
+
+/* ============ 수령자 ============ */
+function addRcp(silent){
+  const n=document.getElementById('rName').value.trim(), p=document.getElementById('rPhone').value.trim();
+  if(!n||!p){ if(!silent) toast('이름과 번호를 입력해 주세요.'); return false; }
+  if(S.rcps.length>=5){ toast('수령자는 최대 5명까지 지정할 수 있습니다.'); return false; }
+  S.rcps.push({n,p}); document.getElementById('rName').value=''; document.getElementById('rPhone').value='';
+  renderRcp(); return true;
+}
+function capture(){ const n=document.getElementById('rName').value.trim(), p=document.getElementById('rPhone').value.trim(); if(n&&p) addRcp(true); }
+function delRcp(i){ S.rcps.splice(i,1); renderRcp(); }
+function renderRcp(){
+  document.getElementById('rcpList').innerHTML = S.rcps.map((r,i)=>`
+    <div class="recipient"><div class="av">${r.n.slice(0,1)}</div>
+      <div class="info"><b>${r.n}</b><span>${r.p}</span></div>
+      <button class="del" onclick="delRcp(${i})">×</button></div>`).join('');
+}
+document.getElementById('rPhone').addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();addRcp();} });
+document.getElementById('rName').addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();document.getElementById('rPhone').focus();} });
+
+/* ============ 등록 마치기 ============ */
+async function finish(){
+  if(!S.linked){ toast('금융정보를 먼저 연동해 주세요.'); return; }
+  capture();
+  if(S.rcps.length===0){ toast('받을 사람을 최소 1명 지정해 주세요.'); return; }
+
+  const btn = document.getElementById('finishBtn');
+  if(btn){ btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Sepolia 블록체인에 등록 중…'; }
+
+  try{
+    const payload = {
+      owner:S.owner,
+      assets:S.assets.map(a=>({type:a.t, category:a.c, institution:a.inst, detail:a.d, count:a.n})),
+      recipients:S.rcps.map(r=>({name:r.n, phone:r.p})),
+      createdAt:new Date().toISOString()
+    };
+
+    // 개인정보 원문은 서버로 보내지 않고, 브라우저에서 먼저 데이터 지문만 생성합니다.
+    const dataHash = await hashPayload(payload);
+    const r = await apiCall('/api/register', { dataHash });
+    BC.vaultId = Number(r.vaultId);
+    BC.accessToken = r.accessToken;
+    BC.registrationTx = r.txHash;
+    S.txRegister = r.txHash;
+    S.dataHash = r.dataHash || null;
+  }catch(e){
+    if(btn){ btn.disabled=false; btn.innerHTML='등록 마치기'; }
+    toast('블록체인 등록 실패: '+(e.message||'서버 연결을 확인해 주세요.'));
+    return;
+  }
+
+  if(btn){ btn.disabled=false; btn.innerHTML='등록 마치기'; }
+
+  const f=S.rcps[0];
+  document.getElementById('smsBody').textContent = `${S.owner}님이 ${f.n}님을 ‘이음’ 금융정보 수령자로 지정하셨습니다.`;
+  document.getElementById('pName').value=f.n; document.getElementById('pPhone').value=f.p;
+  document.getElementById('p2').classList.add('done'); document.getElementById('p3').classList.add('on');
+  toast('Sepolia에 등록되어 안전하게 잠겼습니다. (금고 #'+BC.vaultId+')');
+  go('dash');
+}
+
+/* ============ 메시지 ============ */
+function pickTheme(el){
+  document.querySelectorAll('.theme').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  // 선택한 테마는 바깥 카드에 적용하고, 실제 내용 입력칸은 항상 흰색으로 유지
+  const paper=document.querySelector('.msg-paper');
+  const zone=document.querySelector('.msg-zone');
+  paper.style.background = '#FFFFFF';
+  paper.style.borderColor = el.dataset.bd;
+  zone.style.background = el.dataset.bg;
+  zone.style.borderColor = el.dataset.bd;
+  S.theme = { bg:el.dataset.bg, bd:el.dataset.bd };
+}
+function saveMsg(){
+  const b=document.getElementById('msgBody').value.trim();
+  if(!b){ toast('남기고 싶은 말을 적어주세요.'); return; }
+  S.msg=b; S.msgSaved=true; toast('메시지가 저장되어 함께 잠겼습니다.'); go('dash');
+}
+
+/* ============ 대시보드 ============ */
+function renderDash(){
+  const inst=S.assets.length, items=S.assets.reduce((a,x)=>a+(x.n||1),0);
+  document.getElementById('sInst').textContent=inst;
+  document.getElementById('sItem').textContent=items;
+  document.getElementById('sRcp').textContent=S.rcps.length;
+  document.getElementById('sMsg').textContent=S.msgSaved?1:0;
+  const acts=[];
+  if(S.linked) acts.push(['금융정보 자동 동기화 완료','방금']);
+  if(S.rcps.length) acts.push(['수령자 '+S.rcps.length+'명 등록','방금']);
+  if(S.msgSaved) acts.push(['전달 메시지 저장','방금']);
+  document.getElementById('actList').innerHTML = acts.length
+    ? acts.map(a=>`<div class="act"><span class="dot"></span><div>${a[0]} <span class="when">· ${a[1]}</span></div></div>`).join('')
+    : '<div class="act"><span class="dot"></span><div>아직 활동이 없습니다. <span class="when">금융정보를 등록해 보세요.</span></div></div>';
+}
+
+/* ============ PASS ============ */
+function startPass(){ document.getElementById('passModal').classList.add('show'); pStep(1); }
+function closePass(){ document.getElementById('passModal').classList.remove('show'); }
+function pStep(n){ [1,2,3].forEach(i=>document.getElementById('ps'+i).style.display=(i===n)?'block':'none'); }
+function passGo(){
+  const n=document.getElementById('pName').value.trim(), p=document.getElementById('pPhone').value.trim();
+  if(!n||!p){ toast('이름과 번호를 입력해 주세요.'); return; }
+  pStep(2);
+  setTimeout(()=>{ pStep(3); setTimeout(()=>{
+    closePass(); S.verified=true;
+    document.getElementById('verifyCard').style.display='none';
+    document.getElementById('certCard').style.display='block';
+    toast('본인 인증이 완료되었습니다.');
+  },900); },2000);
+}
+
+/* ============ 사망 사실 확인 요청 ============ */
+function setVerifyStep(n,state,status){
+  const el=document.getElementById('vf'+n), st=document.getElementById('vfs'+n);
+  if(!el||!st) return;
+  el.classList.remove('active','done');
+  if(state) el.classList.add(state);
+  st.textContent=status;
+}
+async function uploadCert(){
+  if(S.cert){ toast('이미 사망 사실 검증이 완료되었습니다.'); return; }
+
+  const uz=document.getElementById('uz'), uTxt=document.getElementById('uTxt');
+  const flow=document.getElementById('verifyFlow');
+  flow.classList.add('show');
+  uz.style.pointerEvents='none';
+
+  // 1) 수령자는 사망을 확정하는 사람이 아니라, 확인을 요청하는 사람
+  setVerifyStep(1,'done','접수 완료');
+  setVerifyStep(2,'active','검증 중');
+  setVerifyStep(3,'','대기');
+  uTxt.innerHTML='<span class="spinner"></span> 확인 요청 접수 · 공인기관 전자문서 검증 중…';
+  toast('사망 사실 확인 요청이 접수되었습니다.');
+
+  // 프로토타입: 정부24/병원 전자문서 검증 과정을 시뮬레이션
+  await new Promise(r=>setTimeout(r,1600));
+  setVerifyStep(2,'done','검증 완료');
+  setVerifyStep(3,'active','블록체인 반영 중');
+  uTxt.innerHTML='<span class="spinner"></span> 검증 완료 결과를 Sepolia에 기록 중…';
+
+  try{
+    if(BC.vaultId===null || !BC.accessToken || !BC.registrationTx){
+      throw new Error('등록된 블록체인 금고 정보가 없습니다.');
+    }
+
+    const r = await apiCall('/api/confirm-death', {
+      vaultId:BC.vaultId,
+      registrationTx:BC.registrationTx,
+      accessToken:BC.accessToken
+    });
+
+    S.txDeath = r.txHash;
+    S.cert=true;
+    uz.classList.add('done');
+    setVerifyStep(3,'done','완료');
+    uTxt.textContent='✓ 사망 사실 검증 완료';
+    document.getElementById('revealBtn').disabled=false;
+    toast('검증 결과가 안전하게 반영되었습니다.');
+  }catch(e){
+    setVerifyStep(3,'','재시도 필요');
+    uTxt.textContent='공인기관 검증 완료 · 반영을 다시 시도해 주세요';
+    toast('검증 결과 반영 실패: '+(e.message||'서버 연결을 확인해 주세요.'));
+  }finally{
+    uz.style.pointerEvents='auto';
+  }
+}
+
+/* ============ 개봉 ============ */
+async function doReveal(){
+  if(BC.vaultId===null || !BC.accessToken || !BC.registrationTx){
+    toast('등록된 블록체인 금고 정보가 없습니다.');
+    return;
+  }
+
+  const btn=document.getElementById('revealBtn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> 블록체인에서 열람 조건 확인 중…';
+
+  try{
+    const r = await apiCall('/api/open', {
+      vaultId:BC.vaultId,
+      registrationTx:BC.registrationTx,
+      accessToken:BC.accessToken
+    });
+    S.openedHash=r.dataHash || null;
+    S.openedURI=r.dataURI || null;
+  }catch(e){
+    btn.disabled=false; btn.innerHTML='검증 완료 후 정보 열람하기';
+    toast('아직 열 수 없습니다: '+(e.message||'사망 사실 검증이 필요합니다.'));
+    return;
+  }
+
+  btn.disabled=false; btn.innerHTML='검증 완료 후 정보 열람하기';
+  go('revealed');
+}
+function renderReveal(){
+  document.getElementById('revealList').innerHTML = S.assets.map(a=>`
+    <div class="asset"><div class="ic ${a.c}">${ICON[a.c]}</div>
+      <div class="info"><b>${a.inst}</b><span>${a.t} · ${a.d}</span></div>
+      <span class="badge ${a.c==='debt'?'debt':''}">${a.t}</span></div>`).join('')
+    || '<div class="empty">등록된 정보가 없습니다.</div>';
+  if(S.msgSaved && S.msg){
+    const box=document.getElementById('legacyBox');
+    box.style.display='block';
+    if(S.theme){ box.style.background=S.theme.bg; box.style.borderColor=S.theme.bd; }
+    document.getElementById('legacyText').textContent='“'+S.msg+'”';
+    document.getElementById('legacySign').textContent='— '+S.owner;
+  }else{
+    document.getElementById('legacyBox').style.display='none';
+  }
+  // 대시보드 잠금 카드도 열림 상태로
+  const lc=document.getElementById('lockCard');
+  lc.classList.add('opened');
+  document.getElementById('lockTitle').textContent='전달이 완료되었습니다';
+  document.getElementById('lockDesc').textContent='사망이 확인되어 지정 수령자에게 정보가 공개되었습니다.';
+
+  // 블록체인 증빙 (실제 기록된 경우)
+  const proof=document.getElementById('bcProof');
+  if(S.txRegister || S.txDeath){
+    proof.style.display='block';
+    let links='';
+    if(S.txRegister) links+='등록 기록: <a href="'+BC.SCAN+S.txRegister+'" target="_blank">Etherscan ↗</a>　';
+    if(S.txDeath)    links+='사망 확인 기록: <a href="'+BC.SCAN+S.txDeath+'" target="_blank">Etherscan ↗</a>';
+    document.getElementById('bcProofLinks').innerHTML=links;
+  }else{
+    proof.style.display='none';
+  }
+}
+
+/* ============ 초기화 ============ */
+function resetAll(){
+  S.linked=false; S.assets=[]; S.rcps=[]; S.msg=''; S.msgSaved=false; S.verified=false; S.cert=false; S.filter='all';
+  S.txRegister=null; S.txDeath=null; S.openedHash=null; S.openedURI=null; S.dataHash=null; BC.vaultId=null; BC.accessToken=null; BC.registrationTx=null;
+  const b=document.getElementById('linkBtn'); b.style.display='flex'; b.disabled=false;
+  document.getElementById('linkTxt').textContent='마이데이터 연동하기';
+  document.getElementById('verifyCard').style.display='block';
+  document.getElementById('certCard').style.display='none';
+  document.getElementById('uz').classList.remove('done');
+  document.getElementById('uz').style.pointerEvents='auto';
+  document.getElementById('uTxt').textContent='사망진단서를 제출하고 확인 요청하기';
+  const vf=document.getElementById('verifyFlow'); if(vf) vf.classList.remove('show');
+  [1,2,3].forEach(i=>setVerifyStep(i,'','대기'));
+  document.getElementById('revealBtn').disabled=true;
+  document.getElementById('revealBtn').textContent='검증 완료 후 정보 열람하기';
+  document.getElementById('msgBody').value='';
+  S.theme={bg:'#FFFCF5',bd:'#F3E8D0'};
+  const mp=document.querySelector('.msg-paper'); if(mp){ mp.style.background='#FFFFFF'; mp.style.borderColor='#F3E8D0'; }
+  const mz=document.querySelector('.msg-zone'); if(mz){ mz.style.background='#FFFCF5'; mz.style.borderColor='#F3E8D0'; }
+  document.querySelectorAll('.theme').forEach((t,i)=>t.classList.toggle('on', i===0));
+  const lc=document.getElementById('lockCard'); lc.classList.remove('opened');
+  document.getElementById('lockTitle').textContent='안전하게 잠겨 있습니다';
+  document.getElementById('lockDesc').textContent='사망이 확인되기 전까지 지정 수령자도 정보를 볼 수 없습니다.';
+  ['p1','p2','p3'].forEach(p=>document.getElementById(p).classList.remove('done','on'));
+  document.getElementById('p1').classList.add('on');
+  closeConsent(); closePass(); renderRcp(); go('landing');
+}
+renderRcp();
+
+/* ============================================================
+   제출용 블록체인 연결 (Sepolia)
+   - 심사위원의 MetaMask가 아니라 서버의 공모전용 테스트 지갑이 서명
+   - 개인키는 HTML에 절대 포함하지 않음
+   - 이름/전화번호 등 원문은 브라우저에서 해시한 뒤 서버에는 dataHash만 전송
+   ============================================================ */
+const BC = {
+  SCAN: "https://sepolia.etherscan.io/tx/",
+  vaultId:null,
+  accessToken:null,
+  registrationTx:null
+};
+
+async function hashPayload(payload){
+  const canonical = JSON.stringify(payload);
+  const bytes = new TextEncoder().encode(canonical);
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  return '0x' + Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function apiCall(url, body){
+  let res;
+  try{
+    res = await fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body||{})
+    });
+  }catch(_){
+    throw new Error('제출용 서버에 연결할 수 없습니다.');
+  }
+
+  let data={};
+  try{ data=await res.json(); }catch(_){}
+  if(!res.ok){
+    throw new Error(data.error || '서버 요청에 실패했습니다.');
+  }
+  return data;
+}
+</script>
+</body>
+</html>
