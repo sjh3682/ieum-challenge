@@ -188,6 +188,9 @@ input,select,textarea{ font-family:inherit; }
 .side a:hover{ background:#F7F2E8; color:var(--text); }
 .side a.on{ background:var(--gold-soft); color:var(--amber-text); font-weight:700; }
 .side a svg{ width:18px; height:18px; flex-shrink:0; }
+.owner-page-content{ min-width:0; width:100%; }
+#assets .owner-page-content,#message .owner-page-content{ max-width:none; }
+#recipientSection{ scroll-margin-top:110px; }
 
 .greet{ padding:6px 4px 20px; }
 .greet h2{ font-size:23px; font-weight:800; color:#24211D; letter-spacing:-.025em; }
@@ -369,6 +372,7 @@ input,select,textarea{ font-family:inherit; }
   .dash{ grid-template-columns:1fr; }
   .side{ position:static; display:flex; overflow-x:auto; gap:4px; }
   .side a{ white-space:nowrap; margin-bottom:0; }
+  .owner-page-content{ min-width:0; }
   .stat-row{ grid-template-columns:repeat(2,1fr); }
   .topbar{ grid-template-columns:1fr auto; }
   .topnav{ display:none; }
@@ -617,7 +621,15 @@ input,select,textarea{ font-family:inherit; }
 
 <!-- ============ ③ 금융정보 등록 ============ -->
 <section id="assets" class="screen">
-  <div class="wrap">
+  <div class="dash">
+    <nav class="side">
+      <a onclick="go('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l8-6 8 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg>대시보드</a>
+      <a class="on" onclick="go('assets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>금융정보</a>
+      <a onclick="go('message')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 8l9 6 9-6"/></svg>전달 메시지</a>
+      <a onclick="go('assets'); setTimeout(()=>document.getElementById('recipientSection')?.scrollIntoView({behavior:'smooth',block:'start'}),80)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6"/><path d="M17 11h4M19 9v4"/></svg>수령자 관리</a>
+      <a onclick="go('notify')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>기록 조회</a>
+    </nav>
+    <div class="owner-page-content">
     <div class="progress">
       <div class="pstep on" id="p1"><span class="n">1</span><span class="lb">정보 등록</span><span class="bar"></span></div>
       <div class="pstep" id="p2"><span class="n">2</span><span class="lb">수령자 지정</span><span class="bar"></span></div>
@@ -653,7 +665,7 @@ input,select,textarea{ font-family:inherit; }
     </div>
 
     <!-- 수령자 -->
-    <div class="card">
+    <div class="card" id="recipientSection">
       <div class="card-h"><span class="num">2</span><h2>받을 사람 지정</h2></div>
       <p class="sub">이 정보를 전할 가족을 최대 5명까지 지정합니다. 실제 열람은 사망이 확인된 뒤에만 가능합니다.</p>
       <div id="rcpList"></div>
@@ -666,12 +678,21 @@ input,select,textarea{ font-family:inherit; }
     </div>
 
     <button class="btn btn-primary btn-block mt24" id="finishBtn" onclick="finish()">등록 마치기</button>
+    </div>
   </div>
 </section>
 
 <!-- ============ ④ 전달 메시지 (감성 영역) ============ -->
 <section id="message" class="screen">
-  <div class="wrap">
+  <div class="dash">
+    <nav class="side">
+      <a onclick="go('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l8-6 8 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg>대시보드</a>
+      <a onclick="go('assets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>금융정보</a>
+      <a class="on" onclick="go('message')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 8l9 6 9-6"/></svg>전달 메시지</a>
+      <a onclick="go('assets'); setTimeout(()=>document.getElementById('recipientSection')?.scrollIntoView({behavior:'smooth',block:'start'}),80)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6"/><path d="M17 11h4M19 9v4"/></svg>수령자 관리</a>
+      <a onclick="go('notify')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>기록 조회</a>
+    </nav>
+    <div class="owner-page-content">
     <div class="eyebrow" style="color:var(--brown);">전달 메시지</div>
     <h2 style="font-size:26px;font-weight:800;color:var(--brown);letter-spacing:-.02em;margin-bottom:6px;">마음을 남겨보세요</h2>
     <p style="color:var(--brown);opacity:.85;font-size:15px;margin-bottom:24px;">자산은 위치를 알려줄 수 있지만, 마음은 당신만이 남길 수 있습니다.</p>
@@ -701,6 +722,7 @@ input,select,textarea{ font-family:inherit; }
 
     <div class="note warn" style="margin-top:18px;">
       <b>이 메시지도 함께 잠깁니다.</b> 생전에는 누구도 열어볼 수 없고, 사망이 확인된 뒤 지정한 가족에게만 전달됩니다. 메시지 원문은 블록체인에 공개하지 않으며, 금융정보 등록 지문과 공개 조건은 블록체인 기록으로 무결성을 확인합니다.
+    </div>
     </div>
   </div>
 </section>
@@ -1018,7 +1040,7 @@ async function finish(){
   if(S.rcps.length===0){ toast('받을 사람을 최소 1명 지정해 주세요.'); return; }
 
   const btn = document.getElementById('finishBtn');
-  if(btn){ btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Sepolia 블록체인에 등록 중…'; }
+  if(btn){ btn.disabled=true; btn.innerHTML='<span class="spinner"></span> 소중한 정보를 안전하게 보관하는 중이에요'; }
 
   try{
     const payload = {
@@ -1048,7 +1070,7 @@ async function finish(){
   document.getElementById('smsBody').textContent = `${S.owner}님이 ${f.n}님을 ‘이음’ 금융정보 수령자로 지정하셨습니다.`;
   document.getElementById('pName').value=f.n; document.getElementById('pPhone').value=f.p;
   document.getElementById('p2').classList.add('done'); document.getElementById('p3').classList.add('on');
-  toast('Sepolia에 등록되어 안전하게 잠겼습니다. (금고 #'+BC.vaultId+')');
+  toast('등록이 완료되어 안전하게 잠겼습니다.');
   go('dash');
 }
 
