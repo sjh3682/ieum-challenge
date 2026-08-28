@@ -2485,9 +2485,14 @@ async function checkServiceConnections(){
     return;
   }
   let legacyOk=false, protectionOk=false, aiOk=false;
-  try{ const r=await fetch('/api/health'); const d=await r.json(); legacyOk=!!(r.ok&&d.ok); }catch(_){}
-  try{ const r=await fetch('/api/protection/health'); const d=await r.json(); protectionOk=!!(r.ok&&d.ok); S.protectChain.connected=protectionOk; }catch(_){}
-  try{ const r=await fetch('/api/analyze-medical'); const d=await r.json(); aiOk=!!(r.ok&&d.configured); }catch(_){}
+  try{
+    const r=await fetch('/api/health'); const d=await r.json();
+    legacyOk=!!(r.ok&&d.ok);
+    protectionOk=!!(r.ok&&d.protection&&d.protection.ok);
+    S.protectChain.connected=protectionOk;
+    aiOk=!!(d.gemini&&d.gemini.configured);
+  }catch(_){}
+  if(!aiOk){ try{ const r=await fetch('/api/analyze-medical'); const d=await r.json(); aiOk=!!(r.ok&&d.configured); }catch(_){} }
   if(badge){
     if(legacyOk&&protectionOk) badge.textContent='Sepolia 연결됨 · 사후 + 생전';
     else if(legacyOk) badge.textContent='사후 Sepolia 연결 · 생전 설정 필요';
