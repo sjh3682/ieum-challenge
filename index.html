@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>이음 — 떠난 뒤에도, 당신의 마음과 금융정보를 안전하게 잇다</title>
+<title>이음 — 살아 있을 때 지키고, 떠난 뒤 안전하게 전합니다</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -92,7 +92,7 @@ input,select,textarea{ font-family:inherit; }
 .demo-nav.hidden{ display:none; }
 .demo-show{ position:fixed; left:12px; bottom:12px; z-index:150; background:#24211D; color:#FFD84D; border:1px solid #3A3630; border-radius:20px; padding:7px 14px; font-size:11.5px; display:none; box-shadow:0 5px 16px rgba(36,33,29,.22); }
 .demo-show:hover{ background:#171512; }
-.demo-show.on{ display:block; }
+.demo-show.on{ display:none; }
 
 /* ===================== 화면 전환 ===================== */
 .screen{ display:none; }
@@ -141,7 +141,7 @@ input,select,textarea{ font-family:inherit; }
 /* 핵심 기능 4개 */
 .features{ max-width:1080px; margin:0 auto; padding:20px 24px 70px; }
 .features h3{ text-align:center; font-size:22px; font-weight:700; color:#24211D; margin-bottom:26px; letter-spacing:-.02em; }
-.feat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.feat-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
 .feat{ background:var(--card); border:1px solid var(--line); border-radius:var(--r-md); padding:24px 20px; text-align:center; transition:.2s; }
 .feat:hover{ transform:translateY(-3px); box-shadow:var(--sh-lift); border-color:var(--gold-soft); }
 .feat .ico{ width:46px; height:46px; margin:0 auto 12px; border-radius:14px; background:var(--gold-soft); display:grid; place-items:center; }
@@ -312,6 +312,10 @@ input,select,textarea{ font-family:inherit; }
 .upload.done{ border-color:var(--teal); border-style:solid; background:var(--teal-pale); }
 .upload .u-ico{ width:52px; height:52px; margin:0 auto 10px; border-radius:16px; background:var(--teal-soft); display:grid; place-items:center; }
 .upload b{ font-size:15px; color:var(--text); font-weight:600; }
+.medical-upload{ width:100%; display:block; margin-top:14px; font-family:inherit; color:inherit; }
+.medical-upload:disabled{ cursor:default; opacity:.72; }
+.medical-upload .u-ico{ background:#FFF4BE; }
+.medical-upload .medical-upload-sub{ display:block; margin-top:6px; font-size:11.5px; color:var(--text-sub); font-weight:500; }
 
 /* PASS 인증 */
 .btn-pass{ background:#fff; color:var(--text); border:1.5px solid var(--line); box-shadow:var(--sh); }
@@ -365,6 +369,287 @@ input,select,textarea{ font-family:inherit; }
 .pstep .lb{ font-size:12px; color:var(--text-sub); margin-left:8px; margin-right:8px; white-space:nowrap; }
 .pstep.on .lb{ color:var(--amber-text); font-weight:700; }
 
+
+/* ===================== 생전 보호 ===================== */
+.protect-hero{ background:linear-gradient(135deg,#FFFDF7 0%,#FFF8D9 100%); border:1px solid #EFE2AE; border-radius:24px; padding:30px 32px; margin-bottom:18px; position:relative; overflow:hidden; }
+.protect-hero::after{ content:''; position:absolute; width:210px; height:210px; border-radius:50%; right:-72px; top:-92px; background:rgba(255,216,77,.20); }
+.protect-hero .protect-kicker{ position:relative; z-index:1; font-size:11px; font-weight:800; letter-spacing:.14em; color:#8A6A1F; margin-bottom:10px; }
+.protect-hero h2{ position:relative; z-index:1; font-size:29px; line-height:1.35; letter-spacing:-.035em; color:#24211D; margin-bottom:9px; }
+.protect-hero p{ position:relative; z-index:1; max-width:720px; color:#6F675E; font-size:14.5px; line-height:1.7; }
+.protect-hero .hero-points{ position:relative; z-index:1; display:flex; gap:8px; flex-wrap:wrap; margin-top:18px; }
+.protect-hero .hero-points span{ display:inline-flex; align-items:center; gap:6px; padding:7px 10px; border-radius:999px; background:#fff; border:1px solid #EEDFA7; color:#645B50; font-size:11.8px; font-weight:650; }
+
+.protect-overview{ display:none; background:#24211D; color:#fff; border-radius:24px; padding:26px; margin-bottom:18px; box-shadow:0 10px 26px rgba(36,33,29,.10); }
+.protect-overview.show{ display:block; animation:fade .25s ease; }
+.protect-overview-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:18px; }
+.protect-overview .live{ display:inline-flex; align-items:center; gap:7px; padding:6px 10px; border-radius:999px; background:rgba(255,216,77,.13); border:1px solid rgba(255,216,77,.30); color:#FFD84D; font-size:11px; font-weight:800; }
+.protect-overview .live::before{ content:''; width:7px; height:7px; border-radius:50%; background:#FFD84D; }
+.protect-overview h3{ font-size:22px; margin:10px 0 4px; }
+.protect-overview p{ color:#CFC9C0; font-size:13.5px; }
+.protect-overview .status-action{ background:#34302B; color:#fff; border:1px solid #4B453F; border-radius:12px; padding:10px 13px; font-size:12px; font-weight:700; }
+.protect-overview .status-action:hover{ background:#3E3933; }
+.protect-sums{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:18px; }
+.protect-sums > div{ background:#302C27; border:1px solid #47413A; border-radius:16px; padding:15px; }
+.protect-sums span{ display:block; color:#BEB7AD; font-size:11.5px; }
+.protect-sums b{ display:block; color:#fff; font-size:20px; margin-top:4px; letter-spacing:-.02em; }
+.pending-change{ display:none; margin-top:12px; background:#FFF7D2; color:#4A3D13; border:1px solid #EBD37E; border-radius:14px; padding:12px 14px; font-size:12.5px; line-height:1.55; }
+.pending-change.show{ display:block; }
+.pending-change b{ color:#24211D; }
+
+.protect-section-title{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:18px; }
+.protect-section-title h2{ font-size:21px; color:#24211D; letter-spacing:-.02em; }
+.protect-section-title p{ color:var(--text-sub); font-size:13.5px; margin-top:4px; }
+.asset-total-chip{ flex-shrink:0; padding:9px 12px; border-radius:12px; background:#F7F2E8; border:1px solid #EDE3CF; color:#665442; font-size:12px; font-weight:700; }
+
+.split-bar{ display:flex; height:14px; width:100%; border-radius:999px; overflow:hidden; background:#F1EDE4; margin:16px 0 8px; }
+.split-free{ background:#FFD84D; transition:width .25s ease; }
+.split-protected{ background:#24211D; transition:width .25s ease; }
+.split-labels{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-sub); margin-bottom:22px; }
+.protect-range{ width:100%; accent-color:#F5B800; }
+.preset-row{ display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 20px; }
+.preset{ background:#F7F2E8; color:#665442; border:1px solid #EFE6D2; border-radius:20px; padding:8px 13px; font-size:12.5px; font-weight:700; }
+.preset:hover,.preset.on{ background:#FFD84D; border-color:#FFD84D; color:#3A2E0A; }
+.protect-money{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:18px 0 4px; }
+.money-card{ border-radius:18px; padding:20px; border:1px solid var(--line); background:#fff; }
+.money-card.free{ background:#FFFDF7; }
+.money-card.locked{ background:#24211D; color:#fff; border-color:#24211D; }
+.money-card .cap{ font-size:12px; font-weight:700; color:var(--text-sub); margin-bottom:5px; }
+.money-card.locked .cap{ color:#CFC9C0; }
+.money-card .amt{ font-size:29px; font-weight:850; letter-spacing:-.035em; }
+.money-card .desc{ font-size:12.4px; color:var(--text-sub); margin-top:5px; line-height:1.6; }
+.money-card.locked .desc{ color:#CFC9C0; }
+
+.protect-guide{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:18px; }
+.protect-guide-item{ display:flex; gap:12px; align-items:flex-start; padding:16px; border:1px solid var(--line); border-radius:16px; background:#fff; }
+.protect-guide-item .gi{ width:36px; height:36px; border-radius:12px; background:#FFFBEA; display:grid; place-items:center; flex-shrink:0; }
+.protect-guide-item .gi svg{ width:19px; height:19px; }
+.protect-guide-item b{ display:block; color:#24211D; font-size:13.5px; margin-bottom:3px; }
+.protect-guide-item span{ display:block; color:var(--text-sub); font-size:12.2px; line-height:1.55; }
+
+.protect-actions{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px; }
+.protect-action-card{ border:1px solid var(--line); border-radius:18px; padding:20px; background:#fff; display:flex; flex-direction:column; }
+.protect-action-card .action-top{ display:flex; align-items:center; gap:11px; margin-bottom:9px; }
+.protect-action-card .action-ic{ width:40px; height:40px; border-radius:13px; background:#FFFBEA; display:grid; place-items:center; }
+.protect-action-card h3{ font-size:15px; color:#24211D; }
+.protect-action-card p{ color:var(--text-sub); font-size:12.6px; line-height:1.6; min-height:40px; flex:1; }
+.protect-action-card button{ width:100%; min-height:42px; margin-top:14px; border-radius:12px; padding:11px 13px; font-size:12.5px; font-weight:700; }
+.protect-action-card .dark{ background:#24211D; color:#fff; }
+.protect-action-card .light{ background:#24211D; color:#fff; border:1px solid #24211D; }
+.protect-action-card .light:hover,.protect-action-card .dark:hover{ background:#35302B; }
+
+.change-status-card{ display:none; margin-top:18px; border:1px solid #E9DFC9; border-radius:22px; background:#fff; overflow:hidden; box-shadow:var(--sh); }
+.change-status-card.show{ display:block; }
+.change-complete-note{ display:none; margin:0 24px 22px; padding:15px 16px; background:#F5FAF4; border:1px solid #D8EAD5; border-radius:14px; font-size:12px; color:#35573A; line-height:1.65; }
+.change-complete-note.show{ display:block; }
+.change-complete-note b{ color:#214D28; }
+.release-status-card{ display:none; margin-top:18px; border:1px solid #E9DFC9; border-radius:22px; background:#fff; overflow:hidden; box-shadow:var(--sh); }
+.release-status-card.show{ display:block; }
+.release-status-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:18px; padding:22px 24px 18px; border-bottom:1px solid var(--line); }
+.release-status-top .ey{ font-size:10.5px; letter-spacing:.12em; font-weight:850; color:#A57B00; margin-bottom:5px; }
+.release-status-top h3{ font-size:18px; color:#24211D; letter-spacing:-.02em; }
+.release-status-top p{ margin-top:4px; font-size:12.5px; color:var(--text-sub); line-height:1.6; }
+.release-chip{ flex-shrink:0; padding:7px 11px; border-radius:999px; background:#FFF5C5; color:#6A5200; font-size:11px; font-weight:800; }
+.release-chip.done{ background:#EEF8ED; color:#2E6B35; }
+.release-summary{ display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:18px 24px 4px; }
+.release-summary .rs{ background:#FFFDF7; border:1px solid var(--line); border-radius:14px; padding:13px 15px; }
+.release-summary .rs span{ display:block; font-size:10.5px; color:var(--text-sub); margin-bottom:3px; }
+.release-summary .rs b{ font-size:14px; color:#24211D; }
+.release-steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:20px 24px; }
+.release-step{ position:relative; text-align:center; min-width:0; }
+.release-step:not(:last-child)::after{ content:''; position:absolute; top:15px; left:calc(50% + 17px); right:calc(-50% + 17px); height:2px; background:#EEE5D3; z-index:0; }
+.release-step.done:not(:last-child)::after{ background:#FFD84D; }
+.release-step .sc{ width:30px; height:30px; margin:0 auto 7px; border-radius:50%; display:grid; place-items:center; background:#F2EEE6; color:#9A9388; font-size:11px; font-weight:850; position:relative; z-index:1; }
+.release-step.active .sc{ background:#24211D; color:#FFD84D; box-shadow:0 0 0 4px #FFF5C5; }
+.release-step.done .sc{ background:#FFD84D; color:#3A2E0A; }
+.release-step b{ display:block; font-size:11px; color:#6E675E; white-space:nowrap; }
+.release-step.active b,.release-step.done b{ color:#24211D; }
+.release-status-body{ margin:0 24px 18px; background:#FFF9DE; border:1px solid #F0D77E; border-radius:14px; padding:13px 15px; font-size:12px; line-height:1.65; color:#4C421E; }
+.release-status-actions{ display:flex; gap:10px; padding:0 24px 22px; }
+.release-status-actions button{ flex:1; border-radius:12px; padding:12px 14px; font-size:12.5px; font-weight:800; }
+.release-status-actions .primary{ background:#24211D; color:#FFD84D; }
+.release-status-actions .secondary{ background:#FFF8D9; color:#66510C; border:1px solid #EDD77C; }
+.release-complete-note{ display:none; margin:0 24px 22px; padding:15px 16px; background:#F5FAF4; border:1px solid #D8EAD5; border-radius:14px; font-size:12px; color:#35573A; line-height:1.65; }
+.release-complete-note.show{ display:block; }
+.release-complete-note b{ color:#214D28; }
+
+.protect-log-wrap{ margin-top:18px; }
+.protect-log-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:6px; }
+.protect-log-head h3{ font-size:15px; color:#24211D; }
+.protect-log-head span{ font-size:11.5px; color:var(--text-sub); }
+.protect-log{ border-top:1px solid var(--line); }
+.protect-log .pl{ display:flex; gap:11px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--line); font-size:12.8px; }
+.protect-log .pl:last-child{ border-bottom:none; }
+.protect-log .pdot{ width:8px; height:8px; border-radius:50%; background:#FFD84D; margin-top:6px; flex-shrink:0; box-shadow:0 0 0 4px #FFF8D9; }
+.protect-log small{ color:var(--text-sub); display:block; margin-top:2px; }
+
+.dash-protect{ display:flex; align-items:center; gap:14px; padding:17px 18px; background:#FFFBEA; border:1px solid #F2DF8A; border-radius:17px; margin-bottom:18px; }
+.dash-protect .di{ width:44px; height:44px; border-radius:14px; background:#FFD84D; display:grid; place-items:center; flex-shrink:0; }
+.dash-protect .dt{ flex:1; }
+.dash-protect .dt b{ display:block; font-size:14.5px; color:#24211D; }
+.dash-protect .dt span{ display:block; font-size:12.5px; color:#786F63; margin-top:2px; }
+.dash-protect button{ background:#24211D; color:#fff; border-radius:12px; padding:10px 13px; font-size:12px; font-weight:700; white-space:nowrap; }
+
+.lifetime-callout{ max-width:1080px; margin:0 auto 42px; padding:0 24px; }
+.lifetime-inner{ display:grid; grid-template-columns:1.2fr .8fr; gap:20px; align-items:center; padding:28px; border-radius:24px; background:#FFFBEA; border:1px solid #F1D976; }
+.lifetime-inner .k{ font-size:11px; font-weight:850; letter-spacing:.14em; color:#765A00; margin-bottom:8px; }
+.lifetime-inner h3{ font-size:23px; line-height:1.4; color:#24211D; letter-spacing:-.025em; margin-bottom:7px; }
+.lifetime-inner p{ color:#70685E; font-size:13.8px; line-height:1.65; }
+.lifetime-inner .life-side{ background:#fff; border:1px solid #F0E4BE; border-radius:18px; padding:18px; }
+.lifetime-inner .life-side b{ display:block; color:#24211D; font-size:13.5px; margin-bottom:9px; }
+.lifetime-inner .life-flow{ display:flex; align-items:center; gap:7px; flex-wrap:wrap; font-size:11.5px; color:#6E655B; }
+.lifetime-inner .life-flow span{ background:#F7F2E8; border-radius:12px; padding:7px 9px; font-weight:700; }
+.lifetime-inner .life-flow i{ font-style:normal; color:#B39832; }
+
+
+/* ===================== 금융자산 금액/AI 보호 분석 ===================== */
+.asset .asset-side{ margin-left:auto; display:flex; align-items:center; gap:14px; }
+.asset .asset-amt{ min-width:92px; text-align:right; color:#24211D; font-size:13.5px; font-weight:800; letter-spacing:-.02em; }
+.asset .asset-amt.debt{ color:#B5654A; }
+.asset-summary-head{ display:flex; align-items:center; justify-content:space-between; gap:22px; }
+.asset-summary-copy b{ display:block; }
+.asset-summary-copy span{ display:block; margin-top:3px; }
+.asset-net{ text-align:right; flex-shrink:0; }
+.asset-net small{ display:block; color:#8A837A; font-size:10.8px; font-weight:700; margin-bottom:2px; }
+.asset-net strong{ display:block; color:#24211D; font-size:21px; line-height:1.15; letter-spacing:-.035em; }
+.asset-net em{ display:block; color:#9A9187; font-style:normal; font-size:10.5px; margin-top:3px; }
+
+.ai-protect-card{ position:relative; overflow:hidden; border:1px solid #E8D58A; background:linear-gradient(145deg,#FFFDF7 0%,#FFF8D8 54%,#FFF3B7 100%); }
+.ai-protect-card::after{ content:''; position:absolute; width:230px; height:230px; right:-115px; top:-120px; border-radius:50%; background:rgba(255,216,77,.24); pointer-events:none; }
+.ai-head{ position:relative; z-index:1; display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:18px; }
+.ai-title-wrap{ display:flex; gap:13px; align-items:flex-start; }
+.ai-spark{ width:43px; height:43px; border-radius:15px; display:grid; place-items:center; background:#24211D; color:#FFD84D; font-size:20px; flex-shrink:0; box-shadow:0 6px 18px rgba(36,33,29,.12); }
+.ai-head h2{ font-size:20px; color:#24211D; letter-spacing:-.025em; }
+.ai-head p{ margin-top:4px; color:#776E64; font-size:13px; line-height:1.6; }
+.ai-chip{ display:inline-flex; align-items:center; gap:6px; border:1px solid #E2C85D; background:rgba(255,255,255,.74); color:#735B07; border-radius:999px; padding:6px 10px; font-size:10.8px; font-weight:800; white-space:nowrap; }
+.ai-chip::before{ content:'✦'; color:#D59A00; }
+.ai-source-grid{ position:relative; z-index:1; display:grid; grid-template-columns:repeat(4,1fr); gap:9px; margin-bottom:14px; }
+.ai-source{ background:rgba(255,255,255,.78); border:1px solid rgba(232,213,138,.85); border-radius:14px; padding:13px 14px; min-height:76px; }
+.ai-source span{ display:block; font-size:10.8px; color:#928679; margin-bottom:5px; }
+.ai-source b{ display:block; font-size:13px; color:#24211D; line-height:1.35; }
+.ai-source small{ display:block; font-size:10.5px; color:#9A9187; margin-top:4px; }
+.ai-source.medical.ready{ border-color:#D6B845; background:#FFFDF0; }
+.ai-source-actions{ position:relative; z-index:1; display:flex; gap:8px; margin-bottom:17px; flex-wrap:wrap; }
+.ai-mini-btn{ border:1px solid #DCC96E; background:#fff; color:#65531A; border-radius:11px; padding:9px 12px; font-size:11.5px; font-weight:750; }
+.ai-mini-btn:hover{ background:#FFFBEA; }
+.ai-analysis{ position:relative; z-index:1; background:#24211D; color:#fff; border-radius:19px; padding:20px; }
+.ai-analysis-empty{ text-align:center; padding:17px 10px; color:#D7D1C7; font-size:13px; }
+.ai-result-top{ display:flex; align-items:flex-end; justify-content:space-between; gap:20px; }
+.ai-result-top .label{ color:#C9C2B8; font-size:11.5px; }
+.ai-result-top .recommend{ color:#FFD84D; font-size:31px; font-weight:850; letter-spacing:-.045em; line-height:1.1; margin-top:4px; }
+.ai-result-top .range{ color:#BEB7AD; font-size:11px; margin-top:4px; }
+.ai-apply{ border-radius:12px; background:#FFD84D; color:#362B08; padding:11px 14px; font-size:12px; font-weight:850; white-space:nowrap; }
+.ai-breakdown{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:16px; }
+.ai-breakdown > div{ background:#302C27; border:1px solid #494239; border-radius:13px; padding:12px; }
+.ai-breakdown span{ display:block; color:#BDB5AA; font-size:10.5px; }
+.ai-breakdown b{ display:block; color:#fff; font-size:15px; margin-top:3px; }
+.ai-reason{ margin-top:13px; padding-top:13px; border-top:1px solid #47413A; color:#CFC8BE; font-size:11.5px; line-height:1.65; }
+.ai-reason b{ color:#FFF5CA; }
+.ai-change-note{ display:none; margin:12px 0 0; padding:11px 13px; border-radius:12px; background:#FFF7D1; border:1px solid #E9D06A; color:#625949; font-size:11.8px; line-height:1.55; }
+.ai-change-note.show{ display:block; animation:pop .28s ease; }
+.ai-change-note b{ color:#24211D; }
+.ai-recommend-flash{ animation:recommendFlash .9s ease; }
+@keyframes recommendFlash{ 0%{transform:scale(1);background:transparent;} 35%{transform:scale(1.05);background:#FFF2A8;} 100%{transform:scale(1);background:transparent;} }
+.medical-chain-proof{ margin-top:10px; padding:10px 12px; border-radius:11px; background:#F8F5ED; border:1px solid #E7DEC9; color:#746B60; font-size:11px; line-height:1.55; }
+.medical-chain-proof a{ color:#8A6A1F; font-weight:700; text-decoration:none; }
+.ai-data-note{ position:relative; z-index:1; margin-top:10px; color:#8C8174; font-size:10.8px; line-height:1.55; }
+
+.medical-drop{ display:block; width:100%; border:1.5px dashed #DCC86E; background:#FFFBEA; border-radius:16px; padding:20px; text-align:center; cursor:pointer; transition:.18s; }
+.medical-drop:hover{ border-color:#D59A00; background:#FFF8D6; }
+.medical-drop .mi{ width:46px; height:46px; margin:0 auto 9px; border-radius:15px; background:#FFD84D; display:grid; place-items:center; font-size:21px; }
+.medical-drop b{ display:block; color:#24211D; font-size:14px; }
+.medical-drop span{ display:block; color:#8A837A; font-size:11.5px; margin-top:4px; }
+.medical-file-name{ margin-top:10px; display:none; border-radius:11px; background:#fff; border:1px solid #EADFAF; padding:10px 12px; color:#645C52; font-size:11.5px; text-align:left; word-break:break-all; }
+.medical-file-name.show{ display:block; }
+.medical-summary{ background:#FFFBEA; border:1px solid #E8D58A; border-radius:14px; padding:13px 14px; margin-top:12px; font-size:11.5px; line-height:1.6; color:#665D51; }
+.medical-demo{ background:#FFF9DE; border:1px solid #EBD37E; border-radius:16px; padding:16px; margin-bottom:14px; }
+.medical-demo b{ display:block; color:#24211D; font-size:13.5px; margin-bottom:4px; }
+.medical-demo p{ color:#746B60; font-size:11.8px; line-height:1.6; }
+.medical-demo button{ width:100%; margin-top:11px; border-radius:11px; padding:11px 12px; background:#24211D; color:#FFD84D; font-size:12px; font-weight:800; }
+.medical-or{ display:flex; align-items:center; gap:10px; margin:13px 0; color:#9A9388; font-size:11px; }
+.medical-or::before,.medical-or::after{ content:''; height:1px; background:#EEE4D1; flex:1; }
+.profile-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.profile-help{ background:#F7F4EE; border:1px solid #E8E1D7; border-radius:13px; padding:12px 13px; color:#7B7268; font-size:11.5px; line-height:1.6; margin-bottom:14px; }
+
+
+/* ===================== v4 통합 정보구조 ===================== */
+.hero-service-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:22px 0 18px; }
+.hero-service-card{ background:#fff; border:1px solid #EFE6D2; border-radius:18px; padding:17px 18px; box-shadow:0 5px 18px rgba(36,33,29,.04); }
+.hero-service-card .tag{ display:inline-flex; align-items:center; gap:6px; font-size:10.5px; font-weight:850; letter-spacing:.06em; color:#765A00; background:#FFF8D9; border:1px solid #F0D97D; border-radius:999px; padding:5px 8px; }
+.hero-service-card h3{ font-size:16px; color:#24211D; margin:9px 0 5px; letter-spacing:-.02em; }
+.hero-service-card p{ font-size:12.5px!important; color:#746C62!important; line-height:1.55!important; margin:0!important; }
+.hero-service-card button{ margin-top:12px; background:none; color:#765A00; font-size:12px; font-weight:800; padding:0; text-decoration:underline; text-underline-offset:3px; }
+
+.page-intro{ margin-bottom:18px; }
+.page-intro .page-kicker{ font-size:11px; font-weight:850; letter-spacing:.12em; color:#8A6A1F; margin-bottom:6px; }
+.page-intro h2{ font-size:28px; color:#24211D; letter-spacing:-.035em; line-height:1.35; }
+.page-intro p{ margin-top:6px; color:var(--text-sub); font-size:14px; line-height:1.65; }
+.shared-data-callout{ margin-top:16px; background:#FFFBEA; border:1px solid #F0DE92; border-radius:18px; padding:17px 18px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
+.shared-data-callout .copy b{ display:block; color:#24211D; font-size:13.5px; }
+.shared-data-callout .copy span{ display:block; color:#766D62; font-size:12.3px; margin-top:3px; line-height:1.55; }
+.shared-data-callout .actions{ display:flex; gap:8px; flex-shrink:0; }
+.shared-data-callout .actions button{ border-radius:11px; padding:9px 11px; font-size:11.5px; font-weight:750; }
+.shared-data-callout .actions .gold{ background:#FFD84D; color:#3A2E0A; }
+.shared-data-callout .actions .dark{ background:#24211D; color:#fff; }
+
+.setup-checklist{ background:#fff; border:1px solid var(--line); border-radius:22px; padding:20px; margin-bottom:18px; box-shadow:var(--sh); }
+.setup-checklist-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:14px; margin-bottom:12px; }
+.setup-checklist-head h3{ font-size:17px; color:#24211D; }
+.setup-checklist-head span{ font-size:11.5px; color:var(--text-sub); }
+.setup-list{ display:grid; gap:9px; }
+.setup-item{ display:flex; align-items:center; gap:12px; padding:13px 14px; border:1px solid #EFE6D2; border-radius:15px; background:#FFFDF9; }
+.setup-item .check-ic{ width:34px; height:34px; border-radius:11px; display:grid; place-items:center; flex-shrink:0; background:#F1EEE7; color:#8A837A; font-weight:900; }
+.setup-item.done .check-ic{ background:#FFF1A8; color:#765A00; }
+.setup-item .check-copy{ flex:1; }
+.setup-item .check-copy b{ display:block; font-size:13.5px; color:#24211D; }
+.setup-item .check-copy span{ display:block; font-size:11.8px; color:var(--text-sub); margin-top:2px; }
+.setup-item button{ background:#F4F0E8; color:#625B52; border-radius:10px; padding:8px 10px; font-size:11.5px; font-weight:750; }
+.setup-item.done button{ background:#24211D; color:#fff; }
+
+.legacy-overview{ background:linear-gradient(135deg,#FFFDF7,#FFF7DF); border:1px solid #EFE0B8; border-radius:22px; padding:22px; margin-bottom:18px; }
+.legacy-overview h2{ font-size:25px; color:#24211D; letter-spacing:-.03em; }
+.legacy-overview p{ color:#766D62; font-size:13.5px; margin-top:5px; }
+.legacy-summary-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:16px; }
+.legacy-summary-grid>div{ background:#fff; border:1px solid #EFE6D2; border-radius:15px; padding:13px; }
+.legacy-summary-grid span{ display:block; font-size:10.8px; color:var(--text-sub); }
+.legacy-summary-grid b{ display:block; margin-top:3px; color:#24211D; font-size:15px; }
+.legacy-section-title{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:14px; }
+.legacy-section-title h3{ color:#24211D; font-size:18px; }
+.legacy-section-title p{ color:var(--text-sub); font-size:12.6px; margin-top:3px; }
+.optional-chip{ flex-shrink:0; border-radius:999px; padding:5px 9px; background:#F4F0E8; color:#756D63; font-size:10.5px; font-weight:750; }
+.legacy-save-note{ margin-top:12px; color:var(--text-sub); font-size:11.8px; text-align:center; }
+
+@media(max-width:860px){
+  .hero-service-grid,.legacy-summary-grid{ grid-template-columns:1fr; }
+  .shared-data-callout{ align-items:flex-start; flex-direction:column; }
+  .shared-data-callout .actions{ width:100%; }
+  .shared-data-callout .actions button{ flex:1; }
+}
+
+@media(max-width:860px){
+  .ai-source-grid{ grid-template-columns:1fr 1fr; }
+  .ai-breakdown{ grid-template-columns:1fr; }
+  .ai-result-top{ align-items:flex-start; flex-direction:column; }
+  .asset-summary-head{ align-items:flex-start; flex-direction:column; }
+  .asset-net{ text-align:left; }
+}
+@media(max-width:620px){
+  .ai-source-grid,.profile-grid{ grid-template-columns:1fr; }
+  .asset .asset-side{ align-items:flex-end; flex-direction:column; gap:5px; }
+}
+
+@media(max-width:860px){
+  .protect-money,.protect-guide,.protect-actions,.lifetime-inner,.protect-sums{ grid-template-columns:1fr; }
+  .release-summary{ grid-template-columns:1fr; }
+  .release-steps{ grid-template-columns:repeat(2,1fr); row-gap:18px; }
+  .release-step::after{ display:none; }
+  .protect-overview-head,.protect-section-title{ flex-direction:column; }
+}
+
+@media(max-width:860px){
+  .protect-money,.protect-rules,.protect-status-grid,.lifetime-inner{ grid-template-columns:1fr; }
+  .scenario-grid{ grid-template-columns:1fr; }
+}
+
 @media(max-width:860px){
   .hero{ grid-template-columns:1fr; gap:28px; }
   .feat-grid{ grid-template-columns:repeat(2,1fr); }
@@ -404,42 +689,58 @@ input,select,textarea{ font-family:inherit; }
   <div class="topnav">
     <a onclick="go('landing')">서비스 소개</a>
     <a onclick="goLandingAnchor('feat')">이용 방법</a>
+    <a onclick="go('protect')">생전 보호</a>
     <a onclick="goLandingAnchor('blockchain')">데이터 보호</a>
-    <a onclick="go('notify')">수령자 안내</a>
+    <a onclick="go('message')">사후 전달</a>
   </div>
   <div class="role-chip" id="roleChip">남기는 사람</div>
 </div>
 
 <!-- ===== 데모 이동 ===== -->
 <div class="demo-nav hidden" id="demoNav">
-  <b>PROTOTYPE</b>
+  <b>QUICK NAV</b>
   <button data-go="landing" class="active">소개</button>
   <button data-go="dash">대시보드</button>
-  <button data-go="assets">금융정보 등록</button>
-  <button data-go="message">전달 메시지</button>
+  <button data-go="assets">금융정보</button>
+  <button data-go="message">사후 전달</button>
+  <button data-go="protect">생전 보호</button>
   <button data-go="bank">외부은행(동기화)</button>
   <button data-go="notify">수령자 통지</button>
   <button data-go="unlock">수령자 열람</button>
-  <button class="hide-demo" onclick="toggleDemo(false)">시연바 숨기기</button>
+  <button class="hide-demo" onclick="toggleDemo(false)">빠른 이동 숨기기</button>
 </div>
-<button class="demo-show on" id="demoShow" onclick="toggleDemo(true)">시연바 표시</button>
-<div id="serverChainMode" style="position:fixed;right:12px;bottom:12px;z-index:149;background:#24211D;color:#FFD84D;border:1px solid #3A3630;border-radius:20px;padding:7px 12px;font-size:11px;box-shadow:0 5px 16px rgba(36,33,29,.18);">실제 Sepolia · 서버 연결</div>
+<button class="demo-show on" id="demoShow" onclick="toggleDemo(true)">빠른 이동</button>
+<div id="serverChainMode" style="display:none;">연결 상태</div>
 
 <!-- ============ ① 랜딩 ============ -->
 <section id="landing" class="screen active">
   <div class="hero">
     <div>
-      <div class="eyebrow">마이데이터 기반 금융정보 안심 전달 서비스</div>
-      <h1>떠난 뒤에도,<br>당신의 <span class="accent">마음과 금융정보</span>를 잇다</h1>
-      <p>흩어지고, 잊히고, 사라지는 금융정보.<br>이음은 살아 있을 때 남겨, 꼭 필요한 사람에게만 전합니다.</p>
+      <div class="eyebrow">마이데이터 기반 생애주기 금융안심 서비스</div>
+      <h1>살아 있을 때 지키고,<br>떠난 뒤 <span class="accent">안전하게 전합니다.</span></h1>
+      <p>한 번 연결한 금융정보를 바탕으로 생전에는 필요한 자산을 보호하고,<br>사후에는 남겨둔 금융정보와 마음을 지정한 사람에게 이어줍니다.</p>
+      <div class="hero-service-grid">
+        <div class="hero-service-card">
+          <div class="tag">생전 자산 보호</div>
+          <h3>미래의 나를 위해 미리 지켜두기</h3>
+          <p>생활·의료비는 충분히 남기고, 오래 지켜둘 자산은 본인이 직접 보호 금액으로 설정합니다.</p>
+          <button onclick="go('protect')">생전 보호 살펴보기 →</button>
+        </div>
+        <div class="hero-service-card">
+          <div class="tag">사후 금융정보 전달</div>
+          <h3>필요한 사람에게 정보와 마음 잇기</h3>
+          <p>연동된 금융정보를 바탕으로 수령자와 메시지를 미리 정하고, 확인 절차 이후에만 공개합니다.</p>
+          <button onclick="go('message')">사후 전달 준비하기 →</button>
+        </div>
+      </div>
       <div class="cta-row">
-        <button class="btn btn-primary" onclick="go('dash')">지금 시작하기 →</button>
+        <button class="btn btn-primary" onclick="go('dash')">이음 시작하기 →</button>
         <button class="btn btn-secondary" onclick="document.getElementById('feat').scrollIntoView({behavior:'smooth'})">어떻게 작동하나요</button>
       </div>
       <div class="trust-row">
-        <span><svg viewBox="0 0 24 24" fill="none" stroke="#F5B800" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>생전엔 아무도 못 봄</span>
-        <span><svg viewBox="0 0 24 24" fill="none" stroke="#F5B800" stroke-width="2.2" stroke-linecap="round"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/><path d="M9.5 12l2 2 3.5-4"/></svg>블록체인 기록</span>
-        <span><svg viewBox="0 0 24 24" fill="none" stroke="#F5B800" stroke-width="2.2" stroke-linecap="round"><path d="M20 7L9 18l-5-5"/></svg>마이데이터 자동 갱신</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="#F5B800" stroke-width="2.2" stroke-linecap="round"><path d="M20 7L9 18l-5-5"/></svg>금융정보 한 번 연결</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="#F5B800" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>생전 보호 설정</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="#F5B800" stroke-width="2.2" stroke-linecap="round"><path d="M4 12h16M14 6l6 6-6 6"/></svg>사후 정보 전달</span>
       </div>
     </div>
 
@@ -513,35 +814,43 @@ input,select,textarea{ font-family:inherit; }
   <div class="problem" id="problem">
     <div class="problem-inner">
       <div class="problem-kicker">FINANCIAL INFORMATION GAP</div>
-      <h3>갑작스러운 이별 뒤, 가족이 금융정보를 처음부터 찾아 헤매지 않도록</h3>
-      <p class="lead">계좌·보험·대출 정보가 여러 기관에 흩어져 있으면 남은 가족은 무엇이 어디에 있는지조차 파악하기 어렵습니다. 이음은 그 ‘금융정보 단절’을 생전에 미리 대비합니다.</p>
+      <h3>생전의 금융 불안과 사후의 정보 단절을 하나의 흐름으로 준비하도록</h3>
+      <p class="lead">흩어진 금융정보를 한 번 연결해두면 생전에는 자산 보호의 기준이 되고, 사후에는 남은 가족이 금융정보를 처음부터 찾아 헤매지 않도록 돕습니다.</p>
       <div class="problem-grid">
         <div class="problem-card"><b>흩어진 금융정보</b><span>마이데이터로 보유 기관과 상품 정보를 한 번에 연결합니다.</span></div>
-        <div class="problem-card"><b>가족의 탐색 부담</b><span>사후에 가족이 처음부터 찾는 대신, 본인이 미리 수령자를 지정합니다.</span></div>
-        <div class="problem-card"><b>본인이 정하는 공개 조건</b><span>누구에게 언제 공개할지 사용자가 직접 정해 데이터 주권을 지킵니다.</span></div>
+        <div class="problem-card"><b>생전 보호의 공백</b><span>필요한 생활자금은 남기고 장기간 지켜둘 자산은 본인이 미리 보호할 수 있습니다.</span></div>
+        <div class="problem-card"><b>사후 정보 단절</b><span>사망 이후 가족이 처음부터 찾는 대신, 본인이 미리 수령자와 전달 내용을 정합니다.</span></div>
       </div>
     </div>
   </div>
 
-  <!-- 핵심 기능 4 -->
+  <!-- 핵심 기능 6 -->
   <div class="features" id="feat">
     <h3>이음의 핵심 기능</h3>
     <div class="feat-grid">
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M5 8l7-5 7 5"/></svg></div>
-        <b>생전 등록</b><span>금융정보와 뜻을<br>미리 등록해요</span>
+        <b>금융정보 한 번 연결</b><span>한 번 불러온 정보로<br>생전·사후를 함께 준비해요</span>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16l5-5 4 4 7-7"/><path d="M15 8h5v5"/></svg></div>
+        <b>AI 보호금액 추천</b><span>자산·부채와 의료 정보를 바탕으로<br>보호 비율을 안내해요</span>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/><path d="M8 13h8M12 9v8"/></svg></div>
+        <b>생전 보호 설정</b><span>생활비는 남기고<br>지켜둘 자산을 미리 정해요</span>
       </div>
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div>
-        <b>안전한 잠금</b><span>평소엔 잠겨 있어<br>누구도 볼 수 없어요</span>
+        <b>안전한 잠금</b><span>평소엔 잠겨 있어<br>누구도 임의로 열 수 없어요</span>
       </div>
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
-        <b>사망 시 전달</b><span>지정한 가족에게만<br>안전하게 전달돼요</span>
+        <b>사후 전달 준비</b><span>사망 이후 지정한 가족에게만<br>정보가 안전하게 이어져요</span>
       </div>
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/><path d="M9.5 12l2 2 3.5-4"/></svg></div>
-        <b>위변조 없는 신뢰</b><span>블록체인으로 기록해<br>영구히 보관해요</span>
+        <b>위변조 없는 신뢰</b><span>생전 보호와 사후 전달 기록을<br>블록체인으로 남겨요</span>
       </div>
     </div>
   </div>
@@ -551,13 +860,13 @@ input,select,textarea{ font-family:inherit; }
     <div class="blockchain-inner">
       <div class="kicker">DATA PROTECTION · BLOCKCHAIN IDENTITY</div>
       <h3>왜 블록체인 신원 인프라인가?</h3>
-      <p class="intro">이음은 금융정보 원문을 블록체인에 올리는 서비스가 아닙니다. 공개 조건·수령자 지정·열람 이력처럼 ‘누가, 언제, 어떤 조건으로 열 수 있는지’에 대한 신뢰 기록을 남겨 안전한 마이데이터 공유를 돕습니다.</p>
+      <p class="intro">이음은 금융정보 원문을 블록체인에 올리는 서비스가 아닙니다. 생전 보호에서는 보호 규칙·변경 요청·사용 요청 이력을, 사후 전달에서는 수령자 지정·공개 조건·열람 이력을 남겨 ‘누가, 언제, 어떤 조건으로 사용할 수 있는지’에 대한 신뢰를 기록합니다.</p>
       <div class="block-grid">
-        <div class="block-card"><div class="num">01</div><b>조건부 공개</b><span>사망 확인 전에는 잠긴 상태를 유지하고, 조건이 충족된 뒤 지정 수령자에게만 공개합니다.</span></div>
-        <div class="block-card"><div class="num">02</div><b>위변조 방지 기록</b><span>등록·잠금·개봉 같은 핵심 이력을 기록해 사후 임의 변경이나 분쟁 가능성을 줄입니다.</span></div>
-        <div class="block-card"><div class="num">03</div><b>데이터 주권</b><span>수령자와 공개 조건을 본인이 직접 결정하고, 필요한 최소 정보만 안전하게 공유합니다.</span></div>
+        <div class="block-card"><div class="num">01</div><b>생전 보호 규칙 기록</b><span>보호 금액 설정, 변경 요청, 사용 요청 같은 핵심 이력을 기록해 생전 자산 보호의 근거를 남깁니다.</span></div>
+        <div class="block-card"><div class="num">02</div><b>사후 조건부 공개</b><span>사망 확인 전에는 잠긴 상태를 유지하고, 확인 절차가 완료된 뒤 지정 수령자에게만 공개합니다.</span></div>
+        <div class="block-card"><div class="num">03</div><b>위변조 없는 신뢰</b><span>생전 보호와 사후 전달의 주요 기록을 남겨 임의 변경과 사후 분쟁 가능성을 줄입니다.</span></div>
       </div>
-      <div class="blockchain-note"><strong>핵심:</strong> 상세 잔액이나 계좌번호가 아니라 ‘어디에 무엇이 있는지’를 중심으로 공유해 개인정보 노출 부담도 낮춥니다.</div>
+      <div class="blockchain-note"><strong>핵심:</strong> 생전 보호에서는 보호 규칙과 요청 이력을, 사후 전달에서는 공개 조건과 열람 이력을 기록합니다. 자산 금액은 본인 화면에서 분석에만 활용하고, 사후 수령자에게는 계좌번호·상세 거래내역 없이 금융기관과 상품 위치 중심으로 전달합니다.</div>
     </div>
   </div>
 
@@ -576,8 +885,8 @@ input,select,textarea{ font-family:inherit; }
     <nav class="side">
       <a class="on" onclick="go('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l8-6 8 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg>대시보드</a>
       <a onclick="go('assets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>금융정보</a>
-      <a onclick="go('message')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 8l9 6 9-6"/></svg>전달 메시지</a>
-      <a onclick="go('assets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6"/><path d="M17 11h4M19 9v4"/></svg>수령자 관리</a>
+      <a onclick="go('protect')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/><path d="M8 13h8M12 9v8"/></svg>생전 보호</a>
+      <a onclick="go('message')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v12H4z"/><path d="M4 9l8 5 8-5"/></svg>사후 전달</a>
       <a onclick="go('notify')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>기록 조회</a>
     </nav>
 
@@ -585,6 +894,23 @@ input,select,textarea{ font-family:inherit; }
       <div class="greet">
         <h2>안녕하세요, 김하늘님</h2>
         <p>당신의 소중한 정보를 안전하게 보관하고 있어요.</p>
+      </div>
+
+      <div class="setup-checklist">
+        <div class="setup-checklist-head">
+          <div><h3>이음 시작하기</h3><span>금융정보를 한 번 연결한 뒤, 원하는 기능만 설정할 수 있어요.</span></div>
+        </div>
+        <div class="setup-list">
+          <div class="setup-item" id="setupFinancial">
+            <div class="check-ic">1</div><div class="check-copy"><b>금융정보 연결</b><span id="setupFinancialText">연동된 금융정보가 없습니다.</span></div><button onclick="go('assets')" id="setupFinancialBtn">연결하기</button>
+          </div>
+          <div class="setup-item" id="setupProtect">
+            <div class="check-ic">2</div><div class="check-copy"><b>생전 보호 설정</b><span id="setupProtectText">필요한 만큼 보호 자금을 미리 정할 수 있어요.</span></div><button onclick="go('protect')" id="setupProtectBtn">설정하기</button>
+          </div>
+          <div class="setup-item" id="setupLegacy">
+            <div class="check-ic">3</div><div class="check-copy"><b>사후 전달 설정</b><span id="setupLegacyText">수령자와 전달 메시지를 미리 정할 수 있어요.</span></div><button onclick="go('message')" id="setupLegacyBtn">준비하기</button>
+          </div>
+        </div>
       </div>
 
       <!-- 잠금 상태 (핵심 시각화) -->
@@ -599,6 +925,13 @@ input,select,textarea{ font-family:inherit; }
             <small id="lockDesc">사망이 확인되기 전까지 지정 수령자도 정보를 볼 수 없습니다.</small>
           </div>
         </div>
+      </div>
+
+
+      <div class="dash-protect" id="dashProtect">
+        <div class="di"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/><path d="M8 13h8M12 9v8"/></svg></div>
+        <div class="dt"><b id="dashProtectTitle">생전 보호를 아직 설정하지 않았어요</b><span id="dashProtectDesc">내 자산 중 일부를 미리 보호 자금으로 정해둘 수 있습니다.</span></div>
+        <button onclick="go('protect')" id="dashProtectBtn">설정하기</button>
       </div>
 
       <div class="stat-row">
@@ -625,22 +958,19 @@ input,select,textarea{ font-family:inherit; }
     <nav class="side">
       <a onclick="go('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l8-6 8 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg>대시보드</a>
       <a class="on" onclick="go('assets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>금융정보</a>
-      <a onclick="go('message')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 8l9 6 9-6"/></svg>전달 메시지</a>
-      <a onclick="go('assets'); setTimeout(()=>document.getElementById('recipientSection')?.scrollIntoView({behavior:'smooth',block:'start'}),80)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6"/><path d="M17 11h4M19 9v4"/></svg>수령자 관리</a>
+      <a onclick="go('protect')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/><path d="M8 13h8M12 9v8"/></svg>생전 보호</a>
+      <a onclick="go('message')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v12H4z"/><path d="M4 9l8 5 8-5"/></svg>사후 전달</a>
       <a onclick="go('notify')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>기록 조회</a>
     </nav>
     <div class="owner-page-content">
-    <div class="progress">
-      <div class="pstep on" id="p1"><span class="n">1</span><span class="lb">정보 등록</span><span class="bar"></span></div>
-      <div class="pstep" id="p2"><span class="n">2</span><span class="lb">수령자 지정</span><span class="bar"></span></div>
-      <div class="pstep" id="p3"><span class="n">3</span><span class="lb">잠금 완료</span></div>
-    </div>
+
+    <div class="page-intro"><div class="page-kicker">FINANCIAL DATA HUB</div><h2>내 금융정보</h2><p>한 번 연결한 금융정보는 생전 보호와 사후 전달에서 함께 사용됩니다.</p></div>
 
     <!-- 마이데이터 -->
     <div class="card">
-      <div class="card-h"><span class="num">1</span><h2>내 금융정보 연동</h2></div>
-      <p class="sub">직접 입력할 필요 없이, 한 번 동의하면 흩어진 계좌·보험·대출을 자동으로 불러오고 이후 변동도 스스로 갱신됩니다.</p>
-      <div class="data-share-highlight"><b>상세 잔액이 아니라 ‘어디에 무엇이 있는지’만 안전하게 공유합니다.</b><br>계좌번호나 상세 금액은 이음에 공개하지 않아 개인정보 부담을 줄입니다.</div>
+      <div class="card-h"><h2>마이데이터 금융정보 연동</h2></div>
+      <p class="sub">직접 입력할 필요 없이 계좌·보험·증권·대출을 한 번에 연결하고, 순금융자산을 계산해 생전 보호와 사후 전달의 공통 기준으로 사용합니다.</p>
+      <div class="data-share-highlight"><b>생전 보호에는 자산·부채 금액을 계산에 활용하고, 사후 전달에서는 기관·상품 위치 중심으로 보여줍니다.</b><br>계좌번호와 상세 거래내역은 수령자에게 직접 공개하지 않습니다.</div>
 
       <button class="btn btn-primary btn-block mt16" id="linkBtn" onclick="openConsent()">
         <span id="linkTxt">마이데이터 연동하기</span>
@@ -664,73 +994,288 @@ input,select,textarea{ font-family:inherit; }
       </div>
     </div>
 
-    <!-- 수령자 -->
-    <div class="card" id="recipientSection">
-      <div class="card-h"><span class="num">2</span><h2>받을 사람 지정</h2></div>
-      <p class="sub">이 정보를 전할 가족을 최대 5명까지 지정합니다. 실제 열람은 사망이 확인된 뒤에만 가능합니다.</p>
-      <div id="rcpList"></div>
-      <div class="row" style="align-items:flex-end;">
-        <label class="field" style="margin-bottom:0;"><span>이름</span><input class="input" id="rName" placeholder="예: 김민서" /></label>
-        <label class="field" style="margin-bottom:0;"><span>휴대폰 번호</span><input class="input" id="rPhone" placeholder="010-0000-0000" /></label>
-      </div>
-      <button class="btn btn-secondary btn-block mt16" onclick="addRcp()">+ 가족 더 추가하기</button>
-      <p style="font-size:13px;color:var(--text-sub);text-align:center;margin-top:10px;">한 명만 지정한다면 입력 후 아래 ‘등록 마치기’를 누르세요.</p>
+    <div class="shared-data-callout">
+      <div class="copy"><b>연결한 금융정보는 두 서비스에서 함께 사용돼요.</b><span>생전 보호에서는 AI 보호금액 분석의 기준으로, 사후 전달에서는 전달할 금융정보의 기준으로 연결됩니다.</span></div>
+      <div class="actions"><button class="gold" onclick="go('protect')">생전 보호</button><button class="dark" onclick="go('message')">사후 전달</button></div>
     </div>
-
-    <button class="btn btn-primary btn-block mt24" id="finishBtn" onclick="finish()">등록 마치기</button>
     </div>
   </div>
 </section>
 
-<!-- ============ ④ 전달 메시지 (감성 영역) ============ -->
+<!-- ============ ④ 사후 전달 ============ -->
 <section id="message" class="screen">
   <div class="dash">
     <nav class="side">
       <a onclick="go('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l8-6 8 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg>대시보드</a>
       <a onclick="go('assets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>금융정보</a>
-      <a class="on" onclick="go('message')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 8l9 6 9-6"/></svg>전달 메시지</a>
-      <a onclick="go('assets'); setTimeout(()=>document.getElementById('recipientSection')?.scrollIntoView({behavior:'smooth',block:'start'}),80)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6"/><path d="M17 11h4M19 9v4"/></svg>수령자 관리</a>
+      <a onclick="go('protect')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/><path d="M8 13h8M12 9v8"/></svg>생전 보호</a>
+      <a class="on" onclick="go('message')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v12H4z"/><path d="M4 9l8 5 8-5"/></svg>사후 전달</a>
       <a onclick="go('notify')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>기록 조회</a>
     </nav>
     <div class="owner-page-content">
-    <div class="eyebrow" style="color:var(--brown);">전달 메시지</div>
-    <h2 style="font-size:26px;font-weight:800;color:var(--brown);letter-spacing:-.02em;margin-bottom:6px;">마음을 남겨보세요</h2>
-    <p style="color:var(--brown);opacity:.85;font-size:15px;margin-bottom:24px;">자산은 위치를 알려줄 수 있지만, 마음은 당신만이 남길 수 있습니다.</p>
-
-    <div class="msg-zone">
-      <label class="field"><span style="color:var(--brown);">받는 사람</span>
-        <select class="input" id="msgTo" style="border-color:var(--beige);">
-          <option>가족 모두에게</option><option>배우자에게</option><option>자녀에게</option><option>부모님께</option>
-        </select>
-      </label>
-      <label class="field"><span style="color:var(--brown);">제목</span>
-        <input class="input" id="msgTitle" style="border-color:var(--beige);" placeholder="사랑하는 가족에게" />
-      </label>
-      <span style="display:block;font-size:14px;font-weight:600;color:var(--brown);margin-bottom:7px;">내용</span>
-      <div class="msg-paper">
-        <textarea id="msgBody" placeholder="사랑하는 가족에게 남기고 싶은 말을 적어주세요."></textarea>
+      <div class="legacy-overview">
+        <div class="page-kicker">AFTER-LIFE DELIVERY</div>
+        <h2>사후 전달 설정</h2>
+        <p>이미 연결된 금융정보를 바탕으로, 내가 떠난 뒤 누구에게 어떤 정보를 전할지 미리 정해둡니다.</p>
+        <div class="legacy-summary-grid">
+          <div><span>연결된 금융정보</span><b id="legacyAssetSummary">연동 필요</b></div>
+          <div><span>지정 수령자</span><b id="legacyRecipientSummary">0명</b></div>
+          <div><span>전달 메시지</span><b id="legacyMessageSummary">미작성</b></div>
+        </div>
       </div>
-      <span style="display:block;font-size:14px;font-weight:600;color:var(--brown);margin:16px 0 7px;">편지지 테마</span>
-      <div class="theme-row">
-        <div class="theme on" data-bg="#FFFCF5" data-bd="#F3E8D0" style="background:#FFFCF5;" onclick="pickTheme(this)"></div>
-        <div class="theme" data-bg="#FDF4F6" data-bd="#F0DDE3" style="background:#FDF4F6;" onclick="pickTheme(this)"></div>
-        <div class="theme" data-bg="#FFF7EF" data-bd="#F1DCCF" style="background:#FFF7EF;" onclick="pickTheme(this)"></div>
-        <div class="theme" data-bg="#F6F5FB" data-bd="#E1DFEE" style="background:#F6F5FB;" onclick="pickTheme(this)"></div>
-      </div>
-      <button class="btn btn-msg btn-block mt24" onclick="saveMsg()">메시지 저장하기</button>
-    </div>
 
-    <div class="note warn" style="margin-top:18px;">
-      <b>이 메시지도 함께 잠깁니다.</b> 생전에는 누구도 열어볼 수 없고, 사망이 확인된 뒤 지정한 가족에게만 전달됩니다. 메시지 원문은 블록체인에 공개하지 않으며, 금융정보 등록 지문과 공개 조건은 블록체인 기록으로 무결성을 확인합니다.
-    </div>
+      <div class="card" id="recipientSection">
+        <div class="legacy-section-title"><div><h3>전달할 사람</h3><p>금융정보를 받을 사람을 최대 5명까지 지정합니다. 실제 열람은 확인 절차가 끝난 뒤에만 가능합니다.</p></div><span class="optional-chip">필수</span></div>
+        <div id="rcpList"></div>
+        <div class="row" style="align-items:flex-end;">
+          <label class="field" style="margin-bottom:0;"><span>이름</span><input class="input" id="rName" placeholder="예: 김민서" /></label>
+          <label class="field" style="margin-bottom:0;"><span>휴대폰 번호</span><input class="input" id="rPhone" placeholder="010-0000-0000" /></label>
+        </div>
+        <button class="btn btn-secondary btn-block mt16" onclick="addRcp()">+ 수령자 추가하기</button>
+      </div>
+
+      <div class="card" style="margin-top:18px;">
+        <div class="legacy-section-title"><div><h3>전달 메시지</h3><p>금융정보와 함께 남기고 싶은 말을 적어둘 수 있습니다.</p></div><span class="optional-chip">선택</span></div>
+        <div class="msg-zone">
+          <label class="field"><span style="color:var(--brown);">받는 사람</span>
+            <select class="input" id="msgTo" style="border-color:var(--beige);">
+              <option>가족 모두에게</option><option>배우자에게</option><option>자녀에게</option><option>부모님께</option>
+            </select>
+          </label>
+          <label class="field"><span style="color:var(--brown);">제목</span>
+            <input class="input" id="msgTitle" style="border-color:var(--beige);" placeholder="사랑하는 가족에게" />
+          </label>
+          <span style="display:block;font-size:14px;font-weight:600;color:var(--brown);margin-bottom:7px;">내용</span>
+          <div class="msg-paper"><textarea id="msgBody" placeholder="사랑하는 가족에게 남기고 싶은 말을 적어주세요."></textarea></div>
+          <span style="display:block;font-size:14px;font-weight:600;color:var(--brown);margin:16px 0 7px;">편지지 테마</span>
+          <div class="theme-row">
+            <div class="theme on" data-bg="#FFFCF5" data-bd="#F3E8D0" style="background:#FFFCF5;" onclick="pickTheme(this)"></div>
+            <div class="theme" data-bg="#FDF4F6" data-bd="#F0DDE3" style="background:#FDF4F6;" onclick="pickTheme(this)"></div>
+            <div class="theme" data-bg="#FFF7EF" data-bd="#F1DCCF" style="background:#FFF7EF;" onclick="pickTheme(this)"></div>
+            <div class="theme" data-bg="#F6F5FB" data-bd="#E1DFEE" style="background:#F6F5FB;" onclick="pickTheme(this)"></div>
+          </div>
+          <button class="btn btn-msg btn-block mt24" onclick="saveMsg()">메시지 저장하기</button>
+        </div>
+        <div class="note warn" style="margin-top:18px;"><b>메시지는 선택사항입니다.</b> 원문은 블록체인에 공개하지 않으며, 확인 절차가 끝난 뒤 지정된 사람에게만 함께 보여줍니다.</div>
+      </div>
+
+      <button class="btn btn-primary btn-block mt24" id="finishBtn" onclick="finish()">사후 전달 설정 저장하기</button>
+      <div class="legacy-save-note">금융정보는 다시 입력하지 않습니다. 현재 연결된 금융정보를 기준으로 사후 전달 설정이 저장됩니다.</div>
     </div>
   </div>
 </section>
 
-<!-- ============ ⑤ 외부 은행 ============ -->
+
+<!-- ============ ⑤ 생전 보호 ============ -->
+<section id="protect" class="screen">
+  <div class="dash">
+    <nav class="side">
+      <a onclick="go('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l8-6 8 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg>대시보드</a>
+      <a onclick="go('assets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>금융정보</a>
+      <a class="on" onclick="go('protect')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/><path d="M8 13h8M12 9v8"/></svg>생전 보호</a>
+      <a onclick="go('message')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v12H4z"/><path d="M4 9l8 5 8-5"/></svg>사후 전달</a>
+      <a onclick="go('notify')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>기록 조회</a>
+    </nav>
+
+    <div class="owner-page-content">
+      <div class="protect-hero">
+        <div class="protect-kicker">LIFETIME PROTECTION</div>
+        <h2>내가 정한 만큼,<br>미리 지켜두는 자산</h2>
+        <p>판단력이 충분할 때 자산 일부를 보호 자금으로 정해두고, 일상에 필요한 돈은 그대로 사용할 수 있습니다. 보호 자금은 평소 일반 이체·인출과 분리하고, 꼭 필요한 경우 정해진 확인 절차를 거쳐 사용합니다.</p>
+        <div class="hero-points">
+          <span>✓ 가족 승인 없이 본인이 직접 설정</span>
+          <span>✓ 생활 자금은 자유롭게 사용</span>
+          <span>✓ 보호 변경은 즉시 적용되지 않음</span>
+        </div>
+      </div>
+
+      <div class="protect-overview" id="protectStatus">
+        <div class="protect-overview-head">
+          <div>
+            <div class="live">보호 중</div>
+            <h3>내 자산이 설정한 기준대로 보호되고 있어요.</h3>
+            <p>생활에 필요한 자금과 장기간 지켜둘 자금을 분리해 관리합니다.</p>
+          </div>
+          <button class="status-action" onclick="scrollProtectionSetup()">보호 설정 변경</button>
+        </div>
+        <div class="protect-sums">
+          <div><span>총 연결 자산</span><b id="statusTotal">—</b></div>
+          <div><span>자유 사용 자금</span><b id="statusFree">2억 원</b></div>
+          <div><span>보호 자금</span><b id="statusProtected">4억 원</b></div>
+        </div>
+        <div id="protectChainProof" style="display:none;margin-top:13px;padding:11px 13px;border:1px solid #4B453F;border-radius:12px;background:#302C27;color:#CFC8BE;font-size:11.5px;line-height:1.6;"></div>
+        <div class="pending-change" id="pendingChange"></div>
+      </div>
+
+      <div class="card ai-protect-card" id="aiProtectCard">
+        <div class="ai-head">
+          <div class="ai-title-wrap">
+            <div class="ai-spark">✦</div>
+            <div>
+              <h2>이음 AI 자산 보호 분석</h2>
+              <p>연동된 금융자산과 생활 정보를 바탕으로, 앞으로 충분히 남겨둘 생활·의료 자금과 보호 가능한 범위를 함께 살펴봅니다.</p>
+            </div>
+          </div>
+          <div class="ai-chip" id="aiStatusChip">개인 맞춤 분석</div>
+        </div>
+
+        <div class="ai-source-grid">
+          <div class="ai-source"><span>연동 순금융자산</span><b id="aiTotalAsset">금융정보 연동 필요</b><small>마이데이터 기준</small></div>
+          <div class="ai-source"><span>현재 나이</span><b id="aiAge">72세</b><small>회원정보 기준</small></div>
+          <div class="ai-source"><span>월 생활비 · 정기소득</span><b id="aiLiving">230만 · 160만 원</b><small>분석 기준 정보</small></div>
+          <div class="ai-source medical" id="aiMedicalSource"><span>의료정보</span><b id="aiMedical">미등록</b><small id="aiMedicalSub">선택적으로 추가 가능</small></div>
+        </div>
+
+        <div class="ai-source-actions">
+          <button class="ai-mini-btn" onclick="openProfileModal()">기준 정보 수정</button>
+          <button class="ai-mini-btn" onclick="openMedicalModal()">의료정보 추가하기</button>
+        </div>
+
+        <div class="ai-analysis" id="aiAnalysisBox">
+          <div class="ai-analysis-empty" id="aiAnalysisEmpty">금융정보를 연동하면 현재 자산을 기준으로 보호금액 추천을 확인할 수 있어요.</div>
+          <div id="aiAnalysisResult" style="display:none;">
+            <div class="ai-result-top">
+              <div>
+                <div class="label">추천 보호금액</div>
+                <div class="recommend" id="aiRecommendAmount">4억 원</div>
+                <div class="range" id="aiRecommendRange">권장 범위 3억 8천만 ~ 4억 2천만 원</div>
+              </div>
+              <button class="ai-apply" onclick="applyAIRecommendation()">추천 금액 적용</button>
+            </div>
+            <div class="ai-breakdown">
+              <div><span>생활비 준비금</span><b id="aiLivingReserve">1억 2천만 원</b></div>
+              <div><span>의료·요양 예비자금</span><b id="aiMedicalReserve">4천만 원</b></div>
+              <div><span>긴급자금</span><b id="aiEmergencyReserve">3천만 원</b></div>
+            </div>
+            <div class="ai-reason" id="aiReason"><b>추천 이유</b> · 현재 연령, 생활비와 정기소득의 차이, 의료정보와 비상자금을 먼저 남긴 뒤 장기간 보호할 수 있는 범위를 계산했습니다. 최종 금액은 직접 조정할 수 있습니다.</div>
+            <div class="ai-change-note" id="aiRecommendationChange"></div>
+          </div>
+        </div>
+        <div class="ai-data-note">의료정보는 질병을 진단하거나 미래 치료비를 단정하기 위한 용도가 아니라, 의료·요양 예비자금을 지나치게 적게 남기지 않도록 참고하는 정보로 사용됩니다.</div>
+      </div>
+
+      <div class="card" id="protectSetupCard">
+        <div class="protect-section-title">
+          <div>
+            <h2 id="protectSetupTitle">보호할 금액을 정해주세요</h2>
+            <p>필요한 생활 자금을 충분히 남겨두고, 오래 지켜둘 자산만 보호 자금으로 설정합니다.</p>
+          </div>
+          <div class="asset-total-chip" id="protectTotalChip">금융정보 연동 필요</div>
+        </div>
+
+        <div class="split-bar"><div class="split-free" id="splitFree" style="width:33.33%"></div><div class="split-protected" id="splitProtected" style="width:66.67%"></div></div>
+        <div class="split-labels"><span id="freePctLabel">자유 사용 33%</span><span id="protectedPctLabel">보호 67%</span></div>
+
+        <input class="protect-range" id="protectRange" type="range" min="100" max="550" step="10" value="400" oninput="updateProtectionPreview(this.value)" aria-label="보호 금액 선택">
+        <div class="preset-row">
+          <button class="preset" onclick="setProtectPreset(300,this)">절반 보호</button>
+          <button class="preset on" onclick="setProtectPreset(400,this)">AI 권장</button>
+          <button class="preset" onclick="setProtectPreset(480,this)">더 많이 보호</button>
+        </div>
+
+        <div class="protect-money">
+          <div class="money-card free">
+            <div class="cap">자유 사용 자금</div>
+            <div class="amt" id="freeAmount">2억 원</div>
+            <div class="desc">생활비, 병원비, 여행비처럼 평소 필요한 지출에 자유롭게 사용합니다.</div>
+          </div>
+          <div class="money-card locked">
+            <div class="cap">보호 자금</div>
+            <div class="amt" id="protectedAmount">4억 원</div>
+            <div class="desc">일반 이체·인출과 분리해 두고, 필요한 경우 확인 절차를 거쳐 사용합니다.</div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block mt24" id="protectStartBtn" onclick="enableProtection()">이 금액으로 생전 보호 설정하기</button>
+      </div>
+
+      <div class="card">
+        <div class="protect-section-title">
+          <div>
+            <h2>보호 자금은 이렇게 관리돼요</h2>
+            <p>돈을 완전히 묶는 것이 아니라, 필요할 때 사용할 수 있는 안전 절차를 함께 둡니다.</p>
+          </div>
+        </div>
+        <div class="protect-guide">
+          <div class="protect-guide-item"><div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="#765A00" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="M7 10h5"/></svg></div><div><b>생활 자금은 그대로 사용</b><span>자유 사용 자금은 평소 금융생활을 방해하지 않습니다.</span></div></div>
+          <div class="protect-guide-item"><div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="#765A00" stroke-width="2"><path d="M12 21s-7-4.5-7-11a7 7 0 0114 0c0 6.5-7 11-7 11z"/><path d="M9 10h6M12 7v6"/></svg></div><div><b>병원·요양비는 사용 요청</b><span>큰 의료비처럼 꼭 필요한 지출은 본인 확인 후 보호 자금에서 사용할 수 있습니다.</span></div></div>
+          <div class="protect-guide-item"><div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="#765A00" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><b>갑작스러운 해제는 잠시 보류</b><span>보호 금액 축소나 해제는 대기시간과 본인 재확인을 거쳐 적용합니다.</span></div></div>
+          <div class="protect-guide-item"><div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="#765A00" stroke-width="2"><path d="M4 19h16M6 19V9l6-4 6 4v10"/><path d="M9 13h6"/></svg></div><div><b>사망 후에는 상속재산으로 유지</b><span>보호 자금이 특정 가족에게 자동 송금되지는 않으며 기존 상속 절차를 따릅니다.</span></div></div>
+        </div>
+      </div>
+
+      <div class="protect-actions" id="protectActions" style="display:none;">
+        <div class="protect-action-card">
+          <div class="action-top"><div class="action-ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#765A00" stroke-width="2"><path d="M12 21s-7-4.5-7-11a7 7 0 0114 0c0 6.5-7 11-7 11z"/><path d="M9 10h6M12 7v6"/></svg></div><h3>보호 자금 사용</h3></div>
+          <p>병원비·요양비 등 꼭 필요한 큰 지출이 생겼다면 금액을 요청할 수 있습니다. 이후 등록 전화번호 본인확인과 금융기관 처리가 자동으로 이어집니다.</p>
+          <button class="dark" onclick="openProtectUse()">보호 자금 사용 요청</button>
+        </div>
+        <div class="protect-action-card">
+          <div class="action-top"><div class="action-ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#765A00" stroke-width="2"><path d="M4 12a8 8 0 0114-5l2 2"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 01-14 5l-2-2"/><path d="M4 20v-5h5"/></svg></div><h3>보호 설정 변경</h3></div>
+          <p>생활 상황이 바뀌었다면 보호 금액을 조정할 수 있습니다. 축소·해제는 바로 적용되지 않습니다.</p>
+          <button class="dark" onclick="scrollProtectionSetup()">보호 금액 다시 설정</button>
+        </div>
+      </div>
+
+      <div class="change-status-card" id="protectChangeCard">
+        <div class="release-status-top">
+          <div>
+            <div class="ey">PROTECTION CHANGE</div>
+            <h3>보호 설정 변경 절차</h3>
+            <p>변경 신청이 기록되면 보호 대기와 본인 재확인을 거친 뒤 새 보호 금액이 자동 적용됩니다. 별도 확인 버튼을 계속 누를 필요가 없습니다.</p>
+          </div>
+          <div class="release-chip" id="changeStatusChip">처리 중</div>
+        </div>
+        <div class="release-summary">
+          <div class="rs"><span>현재 보호 금액</span><b id="changeFromText">—</b></div>
+          <div class="rs"><span>변경 보호 금액</span><b id="changeToText">—</b></div>
+        </div>
+        <div class="release-steps">
+          <div class="release-step" id="changeStep1"><div class="sc">1</div><b>변경 요청 기록</b></div>
+          <div class="release-step" id="changeStep2"><div class="sc">2</div><b>보호 대기·재확인</b></div>
+          <div class="release-step" id="changeStep3"><div class="sc">3</div><b>변경 적용</b></div>
+        </div>
+        <div class="release-status-body" id="changeStatusText">보호 설정 변경을 준비하고 있습니다.</div>
+        <div class="change-complete-note" id="changeCompleteNote"></div>
+      </div>
+
+      <div class="release-status-card" id="protectReleaseCard">
+        <div class="release-status-top">
+          <div>
+            <div class="ey">PROTECTED FUND USE</div>
+            <h3>보호 자금 사용 절차</h3>
+            <p>금액을 요청하면 등록된 전화번호를 통한 본인 확인을 거쳐 금융기관 처리로 자동 이어집니다. 통화 화면이나 통화 내용은 저장하지 않습니다.</p>
+          </div>
+          <div class="release-chip" id="releaseStatusChip">처리 중</div>
+        </div>
+        <div class="release-summary">
+          <div class="rs"><span>사용 목적</span><b id="releasePurposeText">—</b></div>
+          <div class="rs"><span>요청 금액</span><b id="releaseAmountText">—</b></div>
+        </div>
+        <div class="release-steps">
+          <div class="release-step" id="releaseStep1"><div class="sc">1</div><b>금액 요청</b></div>
+          <div class="release-step" id="releaseStep2"><div class="sc">2</div><b>전화 본인확인</b></div>
+          <div class="release-step" id="releaseStep3"><div class="sc">3</div><b>금융기관 지급</b></div>
+        </div>
+        <div class="release-status-body" id="releaseStatusText">사용 요청이 접수되었습니다.</div>
+        <div class="release-complete-note" id="releaseCompleteNote"></div>
+        <div class="release-status-actions" id="releaseStatusActions" style="display:none;"></div>
+      </div>
+
+      <div class="card" id="protectLogCard" style="display:none;">
+        <div class="protect-log-wrap">
+          <div class="protect-log-head"><h3>보호 기록</h3><span>최근 변경 내역</span></div>
+          <div class="protect-log" id="protectLog"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ⑥ 외부 은행 ============ -->
 <section id="bank" class="screen">
   <div style="background:#1B4B8A;color:#fff;padding:18px 24px;text-align:center;font-weight:700;font-size:18px;">
-    신한은행 · 모바일뱅킹 <span style="font-weight:400;font-size:13px;opacity:.85;">(데모용 가상 화면)</span>
+    신한은행 · 모바일뱅킹 <span style="font-weight:400;font-size:13px;opacity:.85;">연동 화면</span>
   </div>
   <div class="wrap">
     <div class="eyebrow" style="color:#1B4B8A;">외부 금융기관 — 이음과 별개의 서비스</div>
@@ -745,13 +1290,13 @@ input,select,textarea{ font-family:inherit; }
         </select>
       </label>
       <button class="btn btn-primary btn-block" style="background:#1B4B8A;box-shadow:0 4px 14px rgba(27,75,138,.28);" onclick="openAccount()">계좌 개설하기</button>
-      <div class="note" style="background:#EAF0F8;border-color:#D3E0F0;">개설 후 <b>‘금융정보 등록’</b> 화면으로 돌아가면, 방금 만든 계좌가 이음 목록에 저절로 추가되어 있습니다.</div>
+      <div class="note" style="background:#EAF0F8;border-color:#D3E0F0;">개설 후 <b>‘금융정보’</b> 화면으로 돌아가면, 방금 만든 계좌가 이음 목록에 저절로 추가되어 있습니다.</div>
       <button class="btn btn-secondary btn-block mt16" style="border-color:#1B4B8A;color:#1B4B8A;" onclick="go('assets')">← 이음으로 돌아가 확인하기</button>
     </div>
   </div>
 </section>
 
-<!-- ============ ⑥ 수령자 통지 ============ -->
+<!-- ============ ⑦ 수령자 통지 ============ -->
 <section id="notify" class="screen">
   <div class="wrap">
     <div class="eyebrow">받는 사람에게</div>
@@ -777,7 +1322,7 @@ input,select,textarea{ font-family:inherit; }
   </div>
 </section>
 
-<!-- ============ ⑦ 수령자 열람 ============ -->
+<!-- ============ ⑧ 수령자 열람 ============ -->
 <section id="unlock" class="screen">
   <div class="wrap">
     <div class="eyebrow">받는 사람 · 열람</div>
@@ -799,7 +1344,7 @@ input,select,textarea{ font-family:inherit; }
       <p class="sub">수령자는 사망 사실의 ‘확인’을 요청합니다. 제출된 서류는 공인기관 검증을 거친 뒤에만 열람 조건에 반영됩니다.</p>
       <div class="upload" id="uz" onclick="uploadCert()">
         <div class="u-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></div>
-        <b id="uTxt">사망진단서를 제출하고 확인 요청하기</b>
+        <b id="uTxt">사망 사실 전자문서 확인 요청하기</b>
       </div>
 
       <div class="verify-flow" id="verifyFlow">
@@ -810,7 +1355,7 @@ input,select,textarea{ font-family:inherit; }
       </div>
 
       <div class="note">
-        <b>프로토타입 안내</b> · 정부24 사망신고 데이터·병원 발급 전자문서 연동은 시뮬레이션으로 구현되어 있습니다. 확인된 결과만 안전하게 반영되어 정보 열람 조건에 사용됩니다.
+        <b>확인 안내</b> · 사망 사실은 공인기관 전자문서 확인 결과를 기준으로 처리하며, 확인이 완료된 결과만 정보 열람 조건에 반영됩니다.
       </div>
       <div class="pre-reveal-guide"><b>열람 전 안내</b><br>지금 확인하는 정보는 고인이 남긴 금융정보의 ‘위치’입니다.<br>이음은 돈을 직접 지급하지 않으며, 실제 수령은 각 금융기관의 상속 절차를 통해 진행됩니다.</div>
       <button class="btn btn-primary btn-block mt16" id="revealBtn" onclick="doReveal()" disabled>확인 후 정보 열람하기</button>
@@ -858,10 +1403,10 @@ input,select,textarea{ font-family:inherit; }
     <div class="sheet-h mint"><b>마이데이터 연동 동의</b><small>내 정보를 어디까지 제공할지 직접 확인하세요.</small></div>
     <div class="sheet-b">
       <div class="cs-item"><div class="k">정보를 가져올 기관</div><div class="v">은행 · 보험사 · 카드사 · 대출기관 (금융결제원·신용정보원 연계)</div></div>
-      <div class="cs-item"><div class="k">가져오는 정보</div><div class="v">계좌 보유 여부, 보험 가입 내역, 대출·부채 내역<br><span style="color:var(--text-sub);font-size:13px;">※ 계좌번호·상세 잔액이 아닌 ‘어디에 무엇이 있는지’만 수집합니다.</span></div></div>
-      <div class="cs-item"><div class="k">이용 목적</div><div class="v">사망이 확인된 뒤, 생전에 지정한 수령자에게 전달</div></div>
+      <div class="cs-item"><div class="k">가져오는 정보</div><div class="v">계좌·보험·증권·대출 보유정보와 자산·부채 금액<br><span style="color:var(--text-sub);font-size:13px;">※ 생전 보호 분석에는 금액을 활용하고, 사후 수령자에게는 계좌번호·상세 거래내역을 공개하지 않습니다.</span></div></div>
+      <div class="cs-item"><div class="k">이용 목적</div><div class="v">생전 자산 보호 분석 및 사후 금융정보 전달</div></div>
       <div class="cs-item"><div class="k">보관 기간</div><div class="v">전달 완료 시 또는 회원 탈퇴 시까지</div></div>
-      <div class="cs-hl">🔒 이 정보는 <b>평소에는 잠긴 상태</b>로 보관되며, 본인 외 누구도(운영사 포함) 열람할 수 없습니다. <b>사망이 확인된 경우에 한해</b> 지정 수령자에게만 공개됩니다.</div>
+      <div class="cs-hl">🔒 연동 정보는 생전 보호 분석과 사후 전달 설정에 공통으로 사용됩니다. 사후 전달 정보는 <b>확인 절차가 완료된 경우에만</b> 지정 수령자에게 공개되도록 설계됩니다.</div>
       <label class="chk"><input type="checkbox" id="cReq"><span><b>[필수]</b> 위 내용을 확인했으며 마이데이터 정보 제공에 동의합니다.</span></label>
       <label class="chk"><input type="checkbox" id="cOpt"><span><b>[선택]</b> 서비스 개선을 위한 통계 활용에 동의합니다.</span></label>
     </div>
@@ -899,23 +1444,85 @@ input,select,textarea{ font-family:inherit; }
   </div>
 </div>
 
+
+<!-- ===== AI 분석 기준 정보 ===== -->
+<div class="modal-bg" id="profileModal">
+  <div class="sheet" style="max-width:500px;">
+    <div class="sheet-h" style="background:#24211D;"><b>AI 분석 기준 정보</b><small>추천은 아래 정보를 기준으로 다시 계산됩니다.</small></div>
+    <div class="sheet-b">
+      <div class="profile-help">AI는 보호금액을 결정하지 않습니다. 생활에 필요한 자금을 충분히 남길 수 있도록 권장 범위를 제안하며, 최종 금액은 본인이 직접 정합니다.</div>
+      <div class="profile-grid">
+        <label class="field"><span>현재 나이</span><input class="input" id="profileAge" type="number" min="40" max="100" value="72"></label>
+        <label class="field"><span>월평균 생활비</span><input class="input" id="profileLiving" type="number" min="0" value="230" placeholder="만원"></label>
+        <label class="field"><span>월 연금·정기소득</span><input class="input" id="profileIncome" type="number" min="0" value="160" placeholder="만원"></label>
+        <label class="field"><span>의료비 대비 보험 보장</span>
+          <select class="input" id="profileInsurance"><option value="partial">일부 보장</option><option value="good">충분한 편</option><option value="none">보장 적음</option></select>
+        </label>
+      </div>
+    </div>
+    <div class="sheet-f"><button class="cancel" onclick="closeProfileModal()">취소</button><button class="go" style="background:#FFD84D;color:#3A2E0A;" onclick="saveProfileInfo()">분석에 반영</button></div>
+  </div>
+</div>
+
+<!-- ===== 의료정보 연결 ===== -->
+<div class="modal-bg" id="medicalModal">
+  <div class="sheet" style="max-width:500px;">
+    <div class="sheet-h" style="background:#24211D;"><b>의료정보 확인</b><small>연결된 의료기관의 전자문서에서 필요한 정보를 확인합니다.</small></div>
+    <div class="sheet-b">
+      <div class="profile-help">확인된 의료정보는 지속적인 진료·관리 필요성을 분석해 생활·의료 예비자금 산정에 반영됩니다. 의료정보 원문은 블록체인에 저장하지 않습니다.</div>
+      <button type="button" class="upload medical-upload" id="medicalLinkedBtn" onclick="analyzeLinkedMedicalInfo()">
+        <div class="u-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></div>
+        <b id="medicalLinkedBtnText">의료 전자문서 확인 요청하기</b>
+        <span class="medical-upload-sub" id="medicalLinkedSub">진료·관리 정보를 안전하게 확인해 AI 분석에 반영합니다.</span>
+      </button>
+      <div class="medical-summary" id="medicalModalSummary" style="display:none;"></div>
+      <div class="medical-chain-proof" id="medicalChainProof" style="display:none;"></div>
+    </div>
+    <div class="sheet-f"><button class="cancel" style="flex:1;" onclick="closeMedicalModal()">닫기</button></div>
+  </div>
+</div>
+
+<!-- ===== 생전 보호 자금 사용 요청 ===== -->
+<div class="modal-bg" id="protectUseModal">
+  <div class="sheet" style="max-width:420px;">
+    <div class="sheet-h" style="background:#24211D;"><b>보호 자금 사용 요청</b><small>필요한 목적과 금액을 확인해주세요.</small></div>
+    <div class="sheet-b">
+      <label class="field"><span>사용 목적</span>
+        <select class="input" id="protectUsePurpose">
+          <option>병원비</option><option>요양비</option><option>주거비</option><option>기타 필수 지출</option>
+        </select>
+      </label>
+      <label class="field"><span>필요 금액</span><input class="input" id="protectUseAmount" inputmode="numeric" placeholder="예: 5000 (만원 단위)"></label>
+      <div class="note" style="background:#FFFBEA;border-color:#EFE0A3;color:#665442;">보호 자금은 일반 이체와 분리되어 있으며, 사용 요청 시 본인 확인과 목적 확인 절차를 거치도록 설계됩니다.</div>
+    </div>
+    <div class="sheet-f"><button class="cancel" onclick="closeProtectUse()">취소</button><button class="go" style="background:#FFD84D;color:#3A2E0A;" onclick="submitProtectionUse()">사용 요청</button></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 /* ============ 상태 ============ */
 const S = {
   owner:'김하늘', linked:false, assets:[], rcps:[],
-  msg:'', msgSaved:false, filter:'all', verified:false, cert:false,
+  msg:'', msgSaved:false, legacyConfigured:false, filter:'all', verified:false, cert:false,
   theme:{bg:'#FFFCF5',bd:'#F3E8D0'},
-  txRegister:null, txDeath:null, txOpen:null, openedHash:null, openedURI:null, dataHash:null
+  txRegister:null, txDeath:null, txOpen:null, openedHash:null, openedURI:null, dataHash:null,
+  protectEnabled:false, protectTotal:0, protectAmount:0, protectFree:0, protectDraft:0, protectPending:null, protectLogs:[],
+  protectChange:{active:false,status:'',from:0,to:0},
+  protectProcessMode:'',
+  protectRelease:{active:false,status:'',purpose:'',amountManwon:0,amountMillion:0,requestHash:null,verificationHash:null,txRequest:null,txPhoneVerify:null,txComplete:null},
+  member:{age:72, monthlyLiving:230, monthlyIncome:160, insurance:'partial'},
+  medicalLoaded:false, medicalDocName:'', medicalSummary:'', medicalAnalysis:null, medicalBasisHash:null, medicalCheckedAt:null, aiMode:'rules', aiRecommended:0, aiPreviousRecommended:null, aiLivingReserve:0, aiMedicalReserve:0, aiEmergencyReserve:0,
+  protectChain:{connected:false,protectionId:null,accessToken:null,txCreate:null,txMedicalBasis:null,txChangeRequest:null,txChangeComplete:null,txRelease:null,txPhoneVerify:null,txReleaseComplete:null,executeAfter:null}
 };
 const SEED = [
-  {t:'예금',  c:'bank', inst:'iM뱅크(대구은행)', d:'입출금 예금 · 정기예금', n:2},
-  {t:'예금',  c:'bank', inst:'국민은행',        d:'입출금 예금',            n:1},
-  {t:'보험',  c:'insu', inst:'삼성생명',        d:'종신보험 · 수익자 배우자', n:1},
-  {t:'보험',  c:'insu', inst:'삼성화재',        d:'실손의료보험',            n:1},
-  {t:'증권',  c:'inv',  inst:'NH투자증권',      d:'주식 · 펀드',            n:2},
-  {t:'대출',  c:'debt', inst:'OO캐피탈',        d:'신용대출 잔액 있음',      n:1},
+  {t:'예금',  c:'bank', inst:'iM뱅크(대구은행)', d:'입출금 예금 · 정기예금', n:2, amt:230},
+  {t:'예금',  c:'bank', inst:'국민은행',        d:'입출금 예금',            n:1, amt:90},
+  {t:'보험',  c:'insu', inst:'삼성생명',        d:'종신보험 · 예상 해약환급금', n:1, amt:70},
+  {t:'보험',  c:'insu', inst:'삼성화재',        d:'실손의료보험 · 적립/환급가치', n:1, amt:10},
+  {t:'증권',  c:'inv',  inst:'NH투자증권',      d:'주식 · 펀드',            n:2, amt:250},
+  {t:'대출',  c:'debt', inst:'OO캐피탈',        d:'신용대출 잔액 있음',      n:1, amt:-50},
 ];
 const ICON = {
   bank:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-5 9 5"/><path d="M5 9v9M19 9v9M9 9v9M15 9v9"/><path d="M3 20h18"/></svg>',
@@ -944,11 +1551,13 @@ function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.demo-nav button').forEach(b=>b.classList.toggle('active', b.dataset.go===id));
-  const roles={landing:'남기는 사람',dash:'남기는 사람',assets:'남기는 사람',message:'남기는 사람',
+  const roles={landing:'남기는 사람',dash:'남기는 사람',assets:'남기는 사람',message:'남기는 사람',protect:'남기는 사람',
                bank:'외부 은행',notify:'받는 가족',unlock:'받는 가족',revealed:'받는 가족'};
   document.getElementById('roleChip').textContent = roles[id]||'';
   if(id==='assets') renderAssets();
   if(id==='dash')   renderDash();
+  if(id==='protect') renderProtection();
+  if(id==='message') renderLegacySummary();
   if(id==='revealed') renderReveal();
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -973,29 +1582,48 @@ function loadData(){
   b.disabled=true; document.getElementById('linkTxt').innerHTML='<span class="spinner"></span> 흩어진 금융정보를 불러오는 중…';
   setTimeout(()=>{
     S.assets = SEED.map(a=>({...a,isNew:false})); S.linked=true;
-    renderAssets(); b.style.display='none';
-    document.getElementById('p1').classList.add('done');
-    document.getElementById('p2').classList.add('on');
+    renderAssets(); calculateAIRecommendation(); if(!S.protectEnabled) S.protectDraft=S.aiRecommended; b.style.display='none';
+    renderDash(); renderLegacySummary();
     toast(SEED.length+'개 기관의 금융정보를 불러왔습니다.');
   },1500);
 }
 
 /* ============ 자산 렌더 ============ */
+function getFinancialTotals(){
+  const positive=S.assets.filter(a=>Number(a.amt||0)>0).reduce((sum,a)=>sum+Number(a.amt||0),0);
+  const debt=Math.abs(S.assets.filter(a=>Number(a.amt||0)<0).reduce((sum,a)=>sum+Number(a.amt||0),0));
+  return {positive,debt,net:Math.max(0,positive-debt)};
+}
+function syncProtectionTotal(){
+  const {net}=getFinancialTotals();
+  S.protectTotal=net;
+  if(!S.protectEnabled){
+    calculateAIRecommendation();
+    S.protectDraft=S.aiRecommended || Math.max(0,Math.round(net*0.65/10)*10);
+  }else{
+    S.protectAmount=Math.min(S.protectAmount,net);
+    S.protectFree=Math.max(0,net-S.protectAmount);
+    if(S.protectDraft>S.protectTotal) S.protectDraft=S.protectAmount;
+    calculateAIRecommendation();
+  }
+}
 function renderAssets(){
   const list=document.getElementById('assetList'), empty=document.getElementById('assetEmpty');
   const sum=document.getElementById('assetSum'), tabs=document.getElementById('assetTabs');
   if(!list) return;
-  if(S.assets.length===0){ empty.style.display='block'; sum.style.display='none'; tabs.style.display='none'; list.innerHTML=''; return; }
+  if(S.assets.length===0){ empty.style.display='block'; sum.style.display='none'; tabs.style.display='none'; list.innerHTML=''; syncProtectionTotal(); return; }
   empty.style.display='none'; sum.style.display='block'; tabs.style.display='flex';
   const items=S.assets.reduce((a,x)=>a+(x.n||1),0);
-  sum.innerHTML='<b>총 '+S.assets.length+'개 기관 / '+items+'개 상품</b><span>마이데이터를 통해 자동 동기화된 정보입니다.</span>';
+  const totals=getFinancialTotals();
+  sum.innerHTML=`<div class="asset-summary-head"><div class="asset-summary-copy"><b>총 ${S.assets.length}개 기관 / ${items}개 상품</b><span>마이데이터를 통해 자동 동기화된 정보입니다.</span></div><div class="asset-net"><small>순금융자산</small><strong>${formatEok(totals.net)}</strong><em>자산 ${formatEok(totals.positive)} · 부채 ${formatEok(totals.debt)}</em></div></div>`;
   const arr = S.filter==='all'? S.assets : S.assets.filter(a=>a.c===S.filter);
   list.innerHTML = arr.map(a=>`
     <div class="asset">
       <div class="ic ${a.c}">${ICON[a.c]}</div>
       <div class="info"><b>${a.inst}</b><span>${a.t} · ${a.d}</span></div>
-      <span class="badge ${a.c==='debt'?'debt':(a.isNew?'new':'sync')}">${a.isNew?'자동 추가됨':a.t}</span>
+      <div class="asset-side"><b class="asset-amt ${a.c==='debt'?'debt':''}">${a.c==='debt'?'- ':''}${formatEok(Math.abs(Number(a.amt||0)))}</b><span class="badge ${a.c==='debt'?'debt':(a.isNew?'new':'sync')}">${a.isNew?'자동 추가됨':a.t}</span></div>
     </div>`).join('');
+  syncProtectionTotal();
 }
 document.querySelectorAll('#assetTabs .tab').forEach(t=>{
   t.addEventListener('click',()=>{
@@ -1006,11 +1634,12 @@ document.querySelectorAll('#assetTabs .tab').forEach(t=>{
 
 /* ============ 외부 은행 동기화 ============ */
 function openAccount(){
-  if(!S.linked){ toast('먼저 ‘금융정보 등록’에서 마이데이터를 연동해 주세요.'); return; }
+  if(!S.linked){ toast('먼저 ‘금융정보’에서 마이데이터를 연동해 주세요.'); return; }
   const p=document.getElementById('bankProd').value;
   if(S.assets.some(a=>a.d===p)){ toast('이미 개설된 상품입니다.'); return; }
   S.assets.forEach(a=>a.isNew=false);
-  S.assets.push({t:'예금',c:'bank',inst:'신한은행',d:p,n:1,isNew:true});
+  S.assets.push({t:'예금',c:'bank',inst:'신한은행',d:p,n:1,amt:10,isNew:true});
+  renderAssets();
   toast('계좌가 개설되었습니다. 이음에 자동 반영됩니다.');
 }
 
@@ -1025,13 +1654,15 @@ function addRcp(silent){
 function capture(){ const n=document.getElementById('rName').value.trim(), p=document.getElementById('rPhone').value.trim(); if(n&&p) addRcp(true); }
 function delRcp(i){ S.rcps.splice(i,1); renderRcp(); }
 function renderRcp(){
-  document.getElementById('rcpList').innerHTML = S.rcps.map((r,i)=>`
+  const list=document.getElementById('rcpList');
+  if(list) list.innerHTML = S.rcps.map((r,i)=>`
     <div class="recipient"><div class="av">${r.n.slice(0,1)}</div>
       <div class="info"><b>${r.n}</b><span>${r.p}</span></div>
       <button class="del" onclick="delRcp(${i})">×</button></div>`).join('');
+  renderLegacySummary();
 }
-document.getElementById('rPhone').addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();addRcp();} });
-document.getElementById('rName').addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();document.getElementById('rPhone').focus();} });
+document.getElementById('rPhone')?.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();addRcp();} });
+document.getElementById('rName')?.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();document.getElementById('rPhone')?.focus();} });
 
 /* ============ 등록 마치기 ============ */
 async function finish(){
@@ -1042,35 +1673,33 @@ async function finish(){
   const btn = document.getElementById('finishBtn');
   if(btn){ btn.disabled=true; btn.innerHTML='<span class="spinner"></span> 소중한 정보를 안전하게 보관하는 중이에요'; }
 
+  const payload = {
+    owner:S.owner,
+    assets:S.assets.map(a=>({type:a.t, category:a.c, institution:a.inst, detail:a.d, count:a.n})),
+    recipients:S.rcps.map(r=>({name:r.n, phone:r.p})),
+    createdAt:new Date().toISOString()
+  };
+  const dataHash = await hashPayload(payload);
+  S.dataHash=dataHash;
+  let chainRegistered=false;
   try{
-    const payload = {
-      owner:S.owner,
-      assets:S.assets.map(a=>({type:a.t, category:a.c, institution:a.inst, detail:a.d, count:a.n})),
-      recipients:S.rcps.map(r=>({name:r.n, phone:r.p})),
-      createdAt:new Date().toISOString()
-    };
-
-    // 개인정보 원문은 서버로 보내지 않고, 브라우저에서 먼저 데이터 지문만 생성합니다.
-    const dataHash = await hashPayload(payload);
+    if(isLocalPreview()) throw new Error('LOCAL_PREVIEW');
     const r = await apiCall('/api/register', { dataHash });
-    BC.vaultId = Number(r.vaultId);
-    BC.accessToken = r.accessToken;
-    BC.registrationTx = r.txHash;
-    S.txRegister = r.txHash;
-    S.dataHash = r.dataHash || null;
+    BC.vaultId = Number(r.vaultId); BC.accessToken = r.accessToken; BC.registrationTx = r.txHash;
+    S.txRegister = r.txHash; S.dataHash = r.dataHash || dataHash; chainRegistered=true;
   }catch(e){
-    if(btn){ btn.disabled=false; btn.innerHTML='등록 마치기'; }
-    toast('블록체인 등록 실패: '+(e.message||'서버 연결을 확인해 주세요.'));
-    return;
+    if(!isLocalPreview()){
+      if(btn){ btn.disabled=false; btn.innerHTML='사후 전달 설정 저장하기'; }
+      toast('블록체인 등록 실패: '+(e.message||'서버 연결을 확인해 주세요.')); return;
+    }
   }
 
-  if(btn){ btn.disabled=false; btn.innerHTML='등록 마치기'; }
-
+  if(btn){ btn.disabled=false; btn.innerHTML='사후 전달 설정 저장하기'; }
   const f=S.rcps[0];
   document.getElementById('smsBody').textContent = `${S.owner}님이 ${f.n}님을 ‘이음’ 금융정보 수령자로 지정하셨습니다.`;
   document.getElementById('pName').value=f.n; document.getElementById('pPhone').value=f.p;
-  document.getElementById('p2').classList.add('done'); document.getElementById('p3').classList.add('on');
-  toast('등록이 완료되어 안전하게 잠겼습니다.');
+  S.legacyConfigured=true; renderLegacySummary(); renderDash();
+  toast(chainRegistered?'사후 전달 설정이 Sepolia에 안전하게 기록되었습니다.':'사후 전달 설정을 미리보기로 저장했습니다. 배포 주소에서는 Sepolia에 기록됩니다.');
   go('dash');
 }
 
@@ -1090,7 +1719,18 @@ function pickTheme(el){
 function saveMsg(){
   const b=document.getElementById('msgBody').value.trim();
   if(!b){ toast('남기고 싶은 말을 적어주세요.'); return; }
-  S.msg=b; S.msgSaved=true; toast('메시지가 저장되어 함께 잠겼습니다.'); go('dash');
+  S.msg=b; S.msgSaved=true; renderLegacySummary(); renderDash(); toast('전달 메시지가 저장되었습니다.');
+}
+
+/* ============ 사후 전달 요약 ============ */
+function renderLegacySummary(){
+  const a=document.getElementById('legacyAssetSummary'), r=document.getElementById('legacyRecipientSummary'), m=document.getElementById('legacyMessageSummary');
+  if(a){
+    if(S.linked){ const t=getFinancialTotals(); a.textContent=`${S.assets.length}개 기관 · 순자산 ${formatEok(t.net)}`; }
+    else a.textContent='연동 필요';
+  }
+  if(r) r.textContent=S.rcps.length+'명';
+  if(m) m.textContent=S.msgSaved?'작성 완료':'미작성';
 }
 
 /* ============ 대시보드 ============ */
@@ -1104,9 +1744,554 @@ function renderDash(){
   if(S.linked) acts.push(['금융정보 자동 동기화 완료','방금']);
   if(S.rcps.length) acts.push(['수령자 '+S.rcps.length+'명 등록','방금']);
   if(S.msgSaved) acts.push(['전달 메시지 저장','방금']);
+  if(S.protectEnabled) acts.push(['생전 보호 '+formatEok(S.protectAmount)+' 설정','방금']);
   document.getElementById('actList').innerHTML = acts.length
     ? acts.map(a=>`<div class="act"><span class="dot"></span><div>${a[0]} <span class="when">· ${a[1]}</span></div></div>`).join('')
     : '<div class="act"><span class="dot"></span><div>아직 활동이 없습니다. <span class="when">금융정보를 등록해 보세요.</span></div></div>';
+  const pt=document.getElementById('dashProtectTitle'), pd=document.getElementById('dashProtectDesc'), pb=document.getElementById('dashProtectBtn');
+  if(pt&&pd&&pb){
+    if(S.protectEnabled){ pt.textContent=formatEok(S.protectAmount)+'을 생전 보호 중이에요'; pd.textContent='자유 사용 '+formatEok(S.protectFree)+' · 보호 금액 변경은 보호 절차를 거칩니다.'; pb.textContent='보호 현황'; }
+    else{ pt.textContent='생전 보호를 아직 설정하지 않았어요'; pd.textContent='내 자산 중 일부를 미리 보호 자금으로 정해둘 수 있습니다.'; pb.textContent='설정하기'; }
+  }
+  const sf=document.getElementById('setupFinancial'), sp=document.getElementById('setupProtect'), sl=document.getElementById('setupLegacy');
+  const sft=document.getElementById('setupFinancialText'), spt=document.getElementById('setupProtectText'), slt=document.getElementById('setupLegacyText');
+  const sfb=document.getElementById('setupFinancialBtn'), spb=document.getElementById('setupProtectBtn'), slb=document.getElementById('setupLegacyBtn');
+  if(sf&&sft&&sfb){ sf.classList.toggle('done',S.linked); sft.textContent=S.linked?`${S.assets.length}개 기관 금융정보가 연결되어 있어요.`:'연동된 금융정보가 없습니다.'; sfb.textContent=S.linked?'확인하기':'연결하기'; }
+  if(sp&&spt&&spb){ sp.classList.toggle('done',S.protectEnabled); spt.textContent=S.protectEnabled?`${formatEok(S.protectAmount)}을 보호 자금으로 설정했어요.`:'필요한 만큼 보호 자금을 미리 정할 수 있어요.'; spb.textContent=S.protectEnabled?'현황 보기':'설정하기'; }
+  const legacyDone=S.legacyConfigured||S.rcps.length>0;
+  if(sl&&slt&&slb){ sl.classList.toggle('done',legacyDone); slt.textContent=legacyDone?`수령자 ${S.rcps.length}명${S.msgSaved?' · 메시지 작성 완료':''}`:'수령자와 전달 메시지를 미리 정할 수 있어요.'; slb.textContent=legacyDone?'확인하기':'준비하기'; }
+}
+
+
+/* ============ 생전 보호 ============ */
+function formatEok(v){
+  v=Math.round(Number(v)||0);
+  const sign=v<0?'- ':''; v=Math.abs(v);
+  const eok=Math.floor(v/100), rest=v%100; // 단위: 100만원
+  const cheon=Math.floor(rest/10), million=rest%10;
+  const parts=[];
+  if(eok) parts.push(eok+'억');
+  if(cheon) parts.push(cheon+'천만');
+  if(million) parts.push(million+'백만');
+  if(!parts.length) return '0원';
+  return sign+parts.join(' ')+' 원';
+}
+function round10(v){ return Math.max(0,Math.round(v/10)*10); }
+function calculateAIRecommendation(){
+  const total=Number(S.protectTotal||0);
+  const age=Number(S.member.age||0), living=Number(S.member.monthlyLiving||0), income=Number(S.member.monthlyIncome||0);
+  // 금액 계산은 설명 가능한 기준식으로 고정하고, AI는 의료서류에서 지속 치료·관리 부담을 분류해 보정치만 제공합니다.
+  const gap=Math.max(0,living-income);
+  const projectedGap=round10((gap*12*10)/100);
+  let livingReserve=Math.max(120,projectedGap);
+  let medicalReserve=age>=75?50:(age>=70?40:30);
+  const aiAdd = S.medicalAnalysis ? Math.max(0,Math.min(30,Number(S.medicalAnalysis.reserveAddMillionWon||0))) : (S.medicalLoaded?10:0);
+  medicalReserve += aiAdd;
+  if(S.member.insurance==='none') medicalReserve+=10;
+  if(S.member.insurance==='good') medicalReserve=Math.max(20,medicalReserve-10);
+  const emergencyReserve=Math.max(30,round10((living*6)/100));
+  let reserve=round10(livingReserve+medicalReserve+emergencyReserve);
+  if(total && reserve>total*0.7) reserve=round10(total*0.7);
+  let recommended=total?round10(Math.max(0,total-reserve)):0;
+  recommended=Math.min(recommended,Math.max(0,total-50));
+  S.aiLivingReserve=livingReserve; S.aiMedicalReserve=medicalReserve; S.aiEmergencyReserve=emergencyReserve; S.aiRecommended=recommended;
+  return recommended;
+}
+function renderAIProtection(){
+  calculateAIRecommendation();
+  const linked=S.linked && S.protectTotal>0;
+  const total=document.getElementById('aiTotalAsset'), age=document.getElementById('aiAge'), living=document.getElementById('aiLiving');
+  const med=document.getElementById('aiMedical'), medSub=document.getElementById('aiMedicalSub'), medSource=document.getElementById('aiMedicalSource');
+  const chip=document.getElementById('aiStatusChip');
+  if(total) total.textContent=linked?formatEok(S.protectTotal):'금융정보 연동 필요';
+  if(age) age.textContent=S.member.age+'세';
+  if(living) living.textContent=S.member.monthlyLiving+'만 · '+S.member.monthlyIncome+'만 원';
+  if(med){ med.textContent=S.medicalLoaded?'의료정보 반영 완료':'미등록'; }
+  if(medSub) medSub.textContent=S.medicalLoaded?(S.medicalSummary||'의료·요양 예비자금에 반영'):'선택적으로 추가 가능';
+  medSource?.classList.toggle('ready',S.medicalLoaded);
+  if(chip){
+    if(S.aiMode==='api') chip.textContent='Gemini 분석 반영';
+    else if(S.aiMode==='local') chip.textContent='기본 추천 모드';
+    else chip.textContent='개인 맞춤 분석';
+  }
+
+  const empty=document.getElementById('aiAnalysisEmpty'), result=document.getElementById('aiAnalysisResult');
+  if(!linked){ if(empty) empty.style.display='block'; if(result) result.style.display='none'; return; }
+  if(empty) empty.style.display='none'; if(result) result.style.display='block';
+  const rec=S.aiRecommended, low=Math.max(0,rec-20), high=Math.min(S.protectTotal,rec+20);
+  const recEl=document.getElementById('aiRecommendAmount');
+  if(recEl) recEl.textContent=formatEok(rec);
+  document.getElementById('aiRecommendRange').textContent='권장 범위 '+formatEok(low).replace(' 원','')+' ~ '+formatEok(high);
+  const chg=document.getElementById('aiRecommendationChange');
+  if(chg){
+    const before=Number(S.aiPreviousRecommended);
+    if(S.medicalLoaded && before>0 && before!==rec){
+      const diff=rec-before;
+      chg.classList.add('show');
+      chg.innerHTML='<b>의료정보 반영으로 추천금액이 조정되었습니다.</b><br>'+formatEok(before)+' → <b>'+formatEok(rec)+'</b> · '+(diff<0?'의료·요양 예비자금을 '+formatEok(Math.abs(diff))+' 더 남기도록 조정':'보호 가능 금액을 '+formatEok(Math.abs(diff))+' 늘려 반영');
+    }else chg.classList.remove('show');
+  }
+  document.getElementById('aiLivingReserve').textContent=formatEok(S.aiLivingReserve);
+  document.getElementById('aiMedicalReserve').textContent=formatEok(S.aiMedicalReserve);
+  document.getElementById('aiEmergencyReserve').textContent=formatEok(S.aiEmergencyReserve);
+  const reason=document.getElementById('aiReason');
+  if(reason){
+    let medicalText='추가 의료정보가 없어 현재 연령대의 보수적 의료 예비자금을 적용했고, ';
+    if(S.medicalAnalysis){
+      const care=S.medicalAnalysis.careLevel==='high'?'높은 편':(S.medicalAnalysis.careLevel==='moderate'?'보통':'낮은 편');
+      medicalText='등록한 의료정보에서 지속적인 진료·관리 필요도가 '+care+'으로 분석되어 의료 예비자금에 반영했고, ';
+    }else if(S.medicalLoaded){ medicalText='등록한 의료정보에서 지속적인 진료·관리 가능성을 보수적으로 반영했고, '; }
+    reason.innerHTML='<b>추천 이유</b> · '+medicalText+'월 생활비 '+S.member.monthlyLiving+'만 원과 정기소득 '+S.member.monthlyIncome+'만 원의 차이, 긴급자금을 먼저 남긴 뒤 장기간 보호할 수 있는 범위를 계산했습니다. AI는 금액을 결정하지 않으며 최종 금액은 직접 조정할 수 있습니다.';
+  }
+}
+function applyAIRecommendation(){
+  if(!S.linked){ toast('금융정보를 먼저 연동해주세요.'); return; }
+  const rec=calculateAIRecommendation();
+  const r=document.getElementById('protectRange'); if(r) r.value=rec;
+  updateProtectionPreview(rec);
+  toast('AI 추천 금액을 적용했습니다. 최종 금액은 직접 조정할 수 있어요.');
+  document.getElementById('protectSetupCard')?.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function updateProtectionPreview(v){
+  v=Math.min(Number(v)||0,S.protectTotal||0); S.protectDraft=v; const draftFree=Math.max(0,S.protectTotal-v);
+  const freePct=S.protectTotal?Math.round(draftFree/S.protectTotal*100):0, proPct=S.protectTotal?100-freePct:0;
+  const fa=document.getElementById('freeAmount'), pa=document.getElementById('protectedAmount');
+  const sf=document.getElementById('splitFree'), sp=document.getElementById('splitProtected');
+  const fl=document.getElementById('freePctLabel'), pl=document.getElementById('protectedPctLabel');
+  if(fa) fa.textContent=S.linked?formatEok(draftFree):'—'; if(pa) pa.textContent=S.linked?formatEok(v):'—';
+  if(sf) sf.style.width=freePct+'%'; if(sp) sp.style.width=proPct+'%';
+  if(fl) fl.textContent=S.linked?'자유 사용 '+freePct+'%':'자유 사용 —'; if(pl) pl.textContent=S.linked?'보호 '+proPct+'%':'보호 —';
+  document.querySelectorAll('#protectSetupCard .preset').forEach(b=>b.classList.remove('on'));
+}
+function setProtectPreset(v,btn){
+  if(!S.linked){ toast('금융정보를 먼저 연동해주세요.'); return; }
+  v=Math.min(v,S.protectTotal);
+  const r=document.getElementById('protectRange'); if(r) r.value=v;
+  updateProtectionPreview(v);
+  document.querySelectorAll('#protectSetupCard .preset').forEach(b=>b.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+}
+function updatePresetLabels(){
+  const presets=document.querySelectorAll('#protectSetupCard .preset');
+  if(presets.length<3 || !S.linked) return;
+  const half=round10(S.protectTotal*0.5), rec=S.aiRecommended, more=Math.min(S.protectTotal-20,round10(S.protectTotal*0.8));
+  const vals=[half,rec,more];
+  const labels=['절반 보호 · ','AI 권장 · ','더 많이 보호 · '];
+  presets.forEach((b,i)=>{ b.textContent=labels[i]+formatEok(vals[i]).replace(' 원',''); b.onclick=()=>setProtectPreset(vals[i],b); });
+}
+function renderProtection(){
+  syncProtectionTotal(); renderAIProtection(); updatePresetLabels();
+  const r=document.getElementById('protectRange');
+  if(r){ r.min=0; r.max=Math.max(0,S.protectTotal); r.step=10; r.disabled=!S.linked; r.value=Math.min(S.protectDraft,S.protectTotal); }
+  updateProtectionPreview(Math.min(S.protectDraft,S.protectTotal));
+  const chip=document.getElementById('protectTotalChip'); if(chip) chip.textContent=S.linked?'연동 순금융자산 · '+formatEok(S.protectTotal):'금융정보 연동 필요';
+  const stTotal=document.getElementById('statusTotal'); if(stTotal) stTotal.textContent=S.linked?formatEok(S.protectTotal):'—';
+
+  const st=document.getElementById('protectStatus');
+  const actions=document.getElementById('protectActions');
+  const logCard=document.getElementById('protectLogCard');
+  const btn=document.getElementById('protectStartBtn');
+  const title=document.getElementById('protectSetupTitle');
+  const pending=document.getElementById('pendingChange');
+  if(btn) btn.disabled=!S.linked;
+  if(title && !S.linked) title.textContent='먼저 금융정보를 연동해주세요';
+
+  if(S.protectEnabled){
+    st?.classList.add('show');
+    if(actions) actions.style.display='grid';
+    if(logCard) logCard.style.display='block';
+    if(btn) btn.textContent='변경 내용 신청하기';
+    if(title) title.textContent='보호 금액을 조정할까요?';
+    document.getElementById('statusFree').textContent=formatEok(S.protectFree);
+    document.getElementById('statusProtected').textContent=formatEok(S.protectAmount);
+    if(pending){
+      if(S.protectPending!==null){
+        pending.classList.add('show');
+        const eta=S.protectChain.executeAfter?new Date(S.protectChain.executeAfter*1000).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):null;
+        pending.innerHTML='<b>보호 금액 변경 절차가 진행 중이에요.</b><br>현재 '+formatEok(S.protectAmount)+' 보호 상태는 유지되며, '+formatEok(S.protectPending)+'으로의 변경은 보호 대기와 본인 재확인 뒤 자동 적용됩니다.'+(eta?'<br><span style="font-size:11px;color:#8A837A;">테스트넷 적용 예정 시각 · '+eta+'</span>':'');
+      }else pending.classList.remove('show');
+    }
+    const proof=document.getElementById('protectChainProof');
+    if(proof){
+      if(S.protectChain.txCreate || S.protectChain.txChangeRequest || S.protectChain.txChangeComplete || S.protectChain.txRelease || S.protectChain.txPhoneVerify || S.protectChain.txReleaseComplete){
+        proof.style.display='block';
+        const links=[];
+        if(S.protectChain.txCreate) links.push('보호 설정 <a style="color:#FFD84D" href="'+BC.SCAN+S.protectChain.txCreate+'" target="_blank">Etherscan ↗</a>');
+        if(S.protectChain.txChangeRequest) links.push('변경 요청 <a style="color:#FFD84D" href="'+BC.SCAN+S.protectChain.txChangeRequest+'" target="_blank">Etherscan ↗</a>');
+        if(S.protectChain.txChangeComplete) links.push('변경 적용 <a style="color:#FFD84D" href="'+BC.SCAN+S.protectChain.txChangeComplete+'" target="_blank">Etherscan ↗</a>');
+        if(S.protectChain.txPhoneVerify) links.push('전화 확인 <a style="color:#FFD84D" href="'+BC.SCAN+S.protectChain.txPhoneVerify+'" target="_blank">Etherscan ↗</a>');
+        if(S.protectChain.txRelease) links.push('사용 요청 <a style="color:#FFD84D" href="'+BC.SCAN+S.protectChain.txRelease+'" target="_blank">Etherscan ↗</a>');
+        if(S.protectChain.txReleaseComplete) links.push('사용 완료 <a style="color:#FFD84D" href="'+BC.SCAN+S.protectChain.txReleaseComplete+'" target="_blank">Etherscan ↗</a>');
+        proof.innerHTML='<b style="color:#fff">Sepolia 보호 기록</b><br>'+links.join(' · ');
+      }else{ proof.style.display='none'; }
+    }
+    renderProtectionChange();
+    renderProtectionRelease();
+    renderProtectionLog();
+  }else{
+    const proof=document.getElementById('protectChainProof'); if(proof) proof.style.display='none';
+    st?.classList.remove('show');
+    if(actions) actions.style.display='none';
+    if(logCard) logCard.style.display='none';
+    if(btn) btn.textContent=S.linked?'이 금액으로 생전 보호 설정하기':'금융정보를 먼저 연동해주세요';
+    if(title && S.linked) title.textContent='보호할 금액을 정해주세요';
+    pending?.classList.remove('show');
+    const releaseCard=document.getElementById('protectReleaseCard'); if(releaseCard) releaseCard.classList.remove('show');
+    const changeCard=document.getElementById('protectChangeCard'); if(changeCard) changeCard.classList.remove('show');
+  }
+}
+let protectionChangeTimer=null;
+function renderProtectionChange(){
+  const c=document.getElementById('protectChangeCard');
+  if(!c) return;
+  const ch=S.protectChange;
+  const show=!!ch.active && S.protectProcessMode==='change';
+  c.classList.toggle('show',show);
+  if(!show) return;
+  document.getElementById('changeFromText').textContent=formatEok(ch.from);
+  document.getElementById('changeToText').textContent=formatEok(ch.to);
+  const chip=document.getElementById('changeStatusChip');
+  const body=document.getElementById('changeStatusText');
+  const note=document.getElementById('changeCompleteNote');
+  const steps=[1,2,3].map(i=>document.getElementById('changeStep'+i));
+  steps.forEach(s=>s?.classList.remove('active','done'));
+  chip.classList.remove('done'); note.classList.remove('show'); note.innerHTML='';
+  if(ch.status==='requested'){
+    steps[0]?.classList.add('active'); chip.textContent='변경 요청 기록 중';
+    body.innerHTML='<b>새 보호 금액 변경 요청을 기록하고 있어요.</b><br>현재 보호 금액은 그대로 유지됩니다.';
+  }else if(ch.status==='waiting'){
+    steps[0]?.classList.add('done'); steps[1]?.classList.add('active'); chip.textContent='보호 대기 중';
+    const eta=S.protectChain.executeAfter?new Date(S.protectChain.executeAfter*1000).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):null;
+    body.innerHTML='<b>갑작스러운 축소·해제를 막기 위한 보호 대기와 본인 재확인 단계입니다.</b><br>'+(eta?'변경 적용 예정 · '+eta:'보호 대기와 재확인이 끝나면 자동으로 다음 단계로 넘어갑니다.');
+  }else if(ch.status==='applying'){
+    steps[0]?.classList.add('done'); steps[1]?.classList.add('done'); steps[2]?.classList.add('active'); chip.textContent='변경 적용 중';
+    body.innerHTML='<b>보호 대기 조건을 확인하고 새 보호 설정을 반영하고 있어요.</b><br>변경 적용 결과는 블록체인 기록으로 남겨 이후에도 확인할 수 있습니다.';
+  }else if(ch.status==='done'){
+    steps.forEach(s=>s?.classList.add('done')); chip.textContent='변경 완료'; chip.classList.add('done');
+    body.innerHTML='<b>보호 설정 변경이 완료되었습니다.</b><br>새 보호 금액이 현재 보호 기준으로 적용되었습니다.';
+    note.classList.add('show'); note.innerHTML='<b>'+formatEok(ch.to)+' 보호로 변경 완료</b><br>현재 보호 자금 '+formatEok(S.protectAmount)+' · 자유 사용 자금 '+formatEok(S.protectFree)+(S.protectChain.txChangeComplete?' · Sepolia 변경 적용 기록 완료':'');
+  }
+}
+function scheduleProtectionChangeExecution(){
+  clearTimeout(protectionChangeTimer);
+  let wait=2400;
+  if(!isLocalPreview() && S.protectChain.executeAfter){
+    wait=Math.max(800,S.protectChain.executeAfter*1000-Date.now()+650);
+  }
+  protectionChangeTimer=setTimeout(()=>executeProtectionChange(true),wait);
+}
+async function enableProtection(){
+  if(!S.linked){ toast('금융정보를 먼저 연동해주세요.'); go('assets'); return; }
+  const requested=Number(S.protectDraft);
+  if(requested<=0){ toast('보호할 금액을 선택해주세요.'); return; }
+
+  if(!S.protectEnabled){
+    const rulePayload={
+      total:S.protectTotal, protected:requested, free:S.protectTotal-requested,
+      changePolicy:'delayed_reauthentication', essentialExpenseRelease:true,
+      medicalBasisHash:S.medicalBasisHash||null,
+      createdAt:new Date().toISOString()
+    };
+    const ruleHash=await hashPayload(rulePayload);
+    let chainResult=null;
+    if(!isLocalPreview()){
+      try{ chainResult=await apiCall('/api/protection/create',{ruleHash}); }
+      catch(e){ toast('생전 보호 블록체인 미연결: '+(e.message||'설정을 확인해 주세요.')); }
+    }
+    if(chainResult){
+      S.protectChain.connected=true;
+      S.protectChain.protectionId=Number(chainResult.protectionId);
+      S.protectChain.accessToken=chainResult.accessToken;
+      S.protectChain.txCreate=chainResult.txHash;
+      if(S.medicalBasisHash){
+        try{ const br=await apiCall('/api/protection/medical-basis',{protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,basisHash:S.medicalBasisHash}); S.protectChain.txMedicalBasis=br.txHash||null; }
+        catch(e){ /* 보호 설정 자체는 유지하고 의료 근거 기록만 별도 확인 */ }
+      }
+    }
+    S.protectEnabled=true; S.protectAmount=requested; S.protectFree=S.protectTotal-S.protectAmount; S.protectPending=null;
+    S.protectLogs.unshift({text:'생전 보호 설정이 완료되었습니다.',sub:'보호 자금 '+formatEok(S.protectAmount)+' · 자유 사용 자금 '+formatEok(S.protectFree)+(chainResult?' · Sepolia 기록 완료':'')});
+    renderProtection(); renderDash(); toast(chainResult?'생전 보호 설정과 Sepolia 기록이 완료되었습니다.':'생전 보호 설정이 완료되었습니다.');
+    setTimeout(()=>document.getElementById('protectStatus')?.scrollIntoView({behavior:'smooth',block:'center'}),120); return;
+  }
+  if(requested===S.protectAmount){ toast('현재 보호 금액과 동일합니다.'); return; }
+
+  const old=S.protectAmount;
+  S.protectProcessMode='change';
+  S.protectChange={active:true,status:'requested',from:old,to:requested};
+  S.protectPending=requested;
+  renderProtectionChange();
+  setTimeout(()=>document.getElementById('protectChangeCard')?.scrollIntoView({behavior:'smooth',block:'center'}),100);
+
+  const changePayload={from:old,to:requested,total:S.protectTotal,requestedAt:new Date().toISOString()};
+  const newRuleHash=await hashPayload(changePayload);
+  let chainResult=null;
+  if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
+    try{
+      chainResult=await apiCall('/api/protection/change-request',{
+        protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,newRuleHash
+      });
+      S.protectChain.txChangeRequest=chainResult.txHash;
+      S.protectChain.executeAfter=Number(chainResult.executeAfter||0)||null;
+    }catch(e){
+      S.protectChange.status='waiting';
+      toast('변경 요청의 Sepolia 기록 실패: '+(e.message||'서버 연결을 확인해 주세요.'));
+    }
+  }else if(isLocalPreview()){
+    S.protectChain.executeAfter=Math.floor((Date.now()+2400)/1000);
+  }
+  S.protectChange.status='waiting';
+  S.protectLogs.unshift({text:'보호 금액 변경을 신청했습니다.',sub:formatEok(old)+' → '+formatEok(requested)+' · 보호 대기 후 자동 적용'+(chainResult?' · Sepolia 요청 기록 완료':'')});
+  renderProtection(); renderDash(); toast('보호 금액 변경 절차가 시작되었습니다.');
+  scheduleProtectionChangeExecution();
+}
+
+async function executeProtectionChange(auto=false){
+  if(S.protectPending===null) return;
+  S.protectChange.status='applying'; renderProtectionChange();
+  const old=S.protectAmount, next=S.protectPending;
+  if(S.protectChain.protectionId===null || !S.protectChain.accessToken || isLocalPreview()){
+    await new Promise(r=>setTimeout(r,900));
+    S.protectAmount=next; S.protectFree=S.protectTotal-next; S.protectPending=null; S.protectChain.executeAfter=null;
+    S.protectChange={active:true,status:'done',from:old,to:next};
+    S.protectLogs.unshift({text:'보호 금액 변경이 적용되었습니다.',sub:formatEok(old)+' → '+formatEok(next)+' · 보호 대기 및 재확인 완료'});
+    renderProtection(); renderDash(); toast('보호 금액 변경이 완료되었습니다.');
+    return;
+  }
+  try{
+    const r=await apiCall('/api/protection/change-execute',{protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken});
+    S.protectAmount=next; S.protectFree=S.protectTotal-next; S.protectPending=null; S.protectChain.executeAfter=null; S.protectChain.txChangeComplete=r.txHash||null;
+    S.protectChange={active:true,status:'done',from:old,to:next};
+    S.protectLogs.unshift({text:'보호 금액 변경이 적용되었습니다.',sub:formatEok(old)+' → '+formatEok(next)+' · 보호 대기 및 재확인 조건 충족 · Sepolia 변경 적용 기록 완료'});
+    renderProtection(); renderDash(); toast('보호 금액 변경이 완료되었습니다.');
+  }catch(e){
+    const msg=e.message||'';
+    if(auto && /CHANGE_DELAY_ACTIVE|아직|delay/i.test(msg)){
+      S.protectChange.status='waiting'; renderProtectionChange();
+      protectionChangeTimer=setTimeout(()=>executeProtectionChange(true),1800);
+      return;
+    }
+    S.protectChange.status='waiting'; renderProtectionChange();
+    toast('변경 적용 대기 중입니다: '+(msg||'보호 대기 시간이 필요합니다.'));
+  }
+}
+function openProfileModal(){
+  document.getElementById('profileAge').value=S.member.age;
+  document.getElementById('profileLiving').value=S.member.monthlyLiving;
+  document.getElementById('profileIncome').value=S.member.monthlyIncome;
+  document.getElementById('profileInsurance').value=S.member.insurance;
+  document.getElementById('profileModal').classList.add('show');
+}
+function closeProfileModal(){ document.getElementById('profileModal').classList.remove('show'); }
+function saveProfileInfo(){
+  const age=Number(document.getElementById('profileAge').value), living=Number(document.getElementById('profileLiving').value), income=Number(document.getElementById('profileIncome').value);
+  if(!age||age<40||age>100){ toast('나이를 확인해주세요.'); return; }
+  S.member={age,monthlyLiving:Math.max(0,living),monthlyIncome:Math.max(0,income),insurance:document.getElementById('profileInsurance').value};
+  closeProfileModal(); calculateAIRecommendation();
+  if(!S.protectEnabled) S.protectDraft=S.aiRecommended;
+  renderProtection(); toast('분석 기준 정보를 반영했습니다.');
+}
+function openMedicalModal(){
+  document.getElementById('medicalModal').classList.add('show');
+  const summary=document.getElementById('medicalModalSummary');
+  const proof=document.getElementById('medicalChainProof');
+  const btn=document.getElementById('medicalLinkedBtn'); if(btn) btn.disabled=false;
+  const txt=document.getElementById('medicalLinkedBtnText');
+  const sub=document.getElementById('medicalLinkedSub');
+  if(S.medicalLoaded){
+    if(summary){ summary.style.display='block'; summary.innerHTML='<b>의료정보 확인 및 AI 분석 완료</b><br>'+escapeHtml(S.medicalSummary||'확인된 의료정보가 AI 분석에 반영되어 있습니다.')+'<br><span style="font-size:11px;color:#8A837A;">마지막 확인 '+escapeHtml(S.medicalCheckedAt||'최근')+' · 다시 확인하기 전까지 현재 분석 결과가 유지됩니다.</span>'; }
+    if(txt) txt.textContent='의료 전자문서 다시 확인하기';
+    if(sub) sub.textContent='최신 진료·관리 정보로 AI 분석을 갱신합니다.';
+    if(proof){
+      proof.style.display='block';
+      proof.innerHTML=S.protectChain.txMedicalBasis
+        ? '의료정보 원문은 저장하지 않고 <b>분석 근거 해시만 Sepolia에 기록</b>했습니다. <a href="https://sepolia.etherscan.io/tx/'+encodeURIComponent(S.protectChain.txMedicalBasis)+'" target="_blank" rel="noopener">기록 확인 ↗</a>'
+        : (S.medicalBasisHash ? '의료정보 원문은 저장하지 않습니다. 보호 설정이 생성되면 <b>분석 근거 해시</b>를 블록체인 신뢰 기록에 연결합니다.' : '');
+    }
+  }else{
+    if(summary){ summary.style.display='none'; summary.textContent=''; }
+    if(proof) proof.style.display='none';
+    if(txt) txt.textContent='의료 전자문서 확인 요청하기';
+    if(sub) sub.textContent='진료·관리 정보를 안전하게 확인해 AI 분석에 반영합니다.';
+  }
+}
+function closeMedicalModal(){ document.getElementById('medicalModal').classList.remove('show'); }
+async function analyzeLinkedMedicalInfo(){
+  const beforeRecommendation=calculateAIRecommendation();
+  const btn=document.getElementById('medicalLinkedBtn');
+  const btnText=document.getElementById('medicalLinkedBtnText');
+  const btnSub=document.getElementById('medicalLinkedSub');
+  const summary=document.getElementById('medicalModalSummary');
+  summary.style.display='block'; summary.textContent='의료기관 전자문서를 확인하고 AI 분석에 반영하고 있어요.';
+  btn.disabled=true; if(btnText) btnText.textContent='의료정보 확인 중…'; if(btnSub) btnSub.textContent='연결된 의료기관의 확인 결과를 기다리고 있습니다.';
+  const documentText='의료기관 전자문서 연계 결과 요약입니다. 정기적인 외래 추적 관찰과 지속적인 약물 관리가 필요하며, 정기 검진이 권고되어 있습니다. 장기 입원이나 즉각적인 수술 예정 정보는 확인되지 않았습니다.';
+  try{
+    let analysis=null;
+    if(!isLocalPreview()){
+      const r=await apiCall('/api/analyze-medical',{
+        documentText,
+        context:{age:S.member.age,monthlyLiving:S.member.monthlyLiving,monthlyIncome:S.member.monthlyIncome,insurance:S.member.insurance,netAssetMillionWon:S.protectTotal}
+      });
+      analysis=r.analysis||null; S.aiMode='api';
+    }else{
+      await new Promise(r=>setTimeout(r,900));
+      analysis={careLevel:'moderate',reserveAddMillionWon:10,summary:'정기적인 진료·관리 필요성을 보수적으로 반영했습니다.',reason:'연결된 의료정보의 지속 관리 필요성 반영'};
+      S.aiMode='local';
+    }
+    if(analysis){
+      const add=Number(analysis.reserveAddMillionWon||0);
+      if(analysis.careLevel==='moderate' && add<10) analysis.reserveAddMillionWon=10;
+      if(analysis.careLevel==='high' && add<20) analysis.reserveAddMillionWon=20;
+    }
+    S.aiPreviousRecommended=beforeRecommendation;
+    S.medicalAnalysis=analysis; S.medicalLoaded=true; S.medicalDocName='의료기관 전자문서';
+    S.medicalCheckedAt=new Date().toLocaleString('ko-KR',{month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    S.medicalSummary=(analysis&&analysis.summary)||'정기적인 진료·관리 필요성을 의료 예비자금에 반영했습니다.';
+    S.medicalBasisHash=await hashPayload({source:'medical_e_document',careLevel:analysis?.careLevel||'moderate',ongoingCare:!!analysis?.ongoingCare,confidence:analysis?.confidence||'medium',reserveAddMillionWon:Number(analysis?.reserveAddMillionWon||10),checkedAt:new Date().toISOString()});
+    if(!isLocalPreview() && S.protectChain.connected && S.protectChain.protectionId!==null && S.protectChain.accessToken){
+      try{
+        const br=await apiCall('/api/protection/medical-basis',{protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,basisHash:S.medicalBasisHash});
+        S.protectChain.txMedicalBasis=br.txHash||null;
+      }catch(e){ toast('의료 분석은 반영됐지만 블록체인 근거 기록을 확인하지 못했습니다.'); }
+    }
+    summary.innerHTML='<b>의료정보 확인 및 AI 분석 완료</b><br>'+escapeHtml(S.medicalSummary)+'<br><span style="font-size:11px;color:#8A837A;">질병을 새로 진단하거나 미래 치료비를 단정하지 않고, 보호금액 산정을 위한 의료 예비자금 수준에만 반영합니다.</span>';
+    calculateAIRecommendation(); if(!S.protectEnabled) S.protectDraft=S.aiRecommended; renderProtection();
+    const recEl=document.getElementById('aiRecommendAmount'); if(recEl){ recEl.classList.remove('ai-recommend-flash'); void recEl.offsetWidth; recEl.classList.add('ai-recommend-flash'); }
+    openMedicalModal();
+    if(btnText) btnText.textContent='의료정보 확인 완료';
+    if(btnSub) btnSub.textContent='확인된 의료정보가 현재 AI 보호금액 분석에 반영되었습니다.';
+    toast('의료정보가 AI 보호금액 분석에 반영되었습니다.');
+  }catch(e){
+    summary.innerHTML='<b>의료정보 분석에 연결하지 못했습니다.</b><br>'+escapeHtml(e.message||'서버 연결을 확인해주세요.');
+    if(btnText) btnText.textContent='의료 전자문서 다시 확인하기'; if(btnSub) btnSub.textContent='연결 상태를 확인한 뒤 다시 요청해주세요.';
+  }finally{ btn.disabled=false; }
+}
+function openProtectUse(){
+  S.protectProcessMode='release';
+  renderProtectionChange(); renderProtectionRelease();
+  if(!S.protectEnabled){ toast('먼저 생전 보호를 설정해주세요.'); return; }
+  if(S.protectRelease.active && S.protectRelease.status!=='completed'){
+    toast('진행 중인 보호 자금 사용 요청을 먼저 완료해주세요.');
+    document.getElementById('protectReleaseCard')?.scrollIntoView({behavior:'smooth',block:'center'}); return;
+  }
+  document.getElementById('protectUseAmount').value=''; document.getElementById('protectUsePurpose').selectedIndex=0; document.getElementById('protectUseModal').classList.add('show');
+}
+function closeProtectUse(){ document.getElementById('protectUseModal').classList.remove('show'); }
+function releaseDisplayAmount(amountManwon){
+  const amount=Number(amountManwon||0);
+  return amount>=10000 ? (amount/10000).toFixed(amount%10000?1:0)+'억 원' : amount.toLocaleString()+'만 원';
+}
+function renderProtectionRelease(){
+  const card=document.getElementById('protectReleaseCard'); if(!card) return;
+  const r=S.protectRelease;
+  const show=!!r.active && S.protectProcessMode==='release';
+  if(!show){ card.classList.remove('show'); return; }
+  card.classList.add('show');
+  document.getElementById('releasePurposeText').textContent=r.purpose||'—';
+  document.getElementById('releaseAmountText').textContent=releaseDisplayAmount(r.amountManwon);
+  const order=['requested','phone','completed'];
+  const idx=order.indexOf(r.status);
+  [1,2,3].forEach((n,i)=>{
+    const el=document.getElementById('releaseStep'+n); if(!el) return;
+    el.classList.remove('done','active');
+    if(r.status==='completed' || i<idx) el.classList.add('done');
+    else if(i===idx) el.classList.add('active');
+  });
+  const chip=document.getElementById('releaseStatusChip'), txt=document.getElementById('releaseStatusText');
+  const actions=document.getElementById('releaseStatusActions');
+  const note=document.getElementById('releaseCompleteNote');
+  chip.classList.toggle('done',r.status==='completed');
+  note.classList.remove('show');
+  if(actions) actions.style.display='none';
+  if(r.status==='requested'){
+    chip.textContent='전화 본인확인 대기';
+    txt.innerHTML='<b>보호 자금 사용 요청이 접수되었습니다.</b><br>등록된 전화번호를 통해 금융기관이 본인 확인을 진행합니다. 사용자가 화면에서 단계를 하나씩 누를 필요는 없습니다.'+(r.txRequest?' <a href="'+BC.SCAN+r.txRequest+'" target="_blank" style="color:#7A5B00;font-weight:800;">요청 기록 확인 ↗</a>':'');
+  }else if(r.status==='phone'){
+    chip.textContent='전화 본인확인 완료';
+    txt.innerHTML='<b>전화 본인확인 결과가 확인되었습니다.</b><br>통화 내용은 블록체인에 저장하지 않고, 본인 확인이 완료되었다는 검증 결과의 해시만 Sepolia에 기록합니다. 이제 금융기관의 지급 처리로 자동 이어집니다.'+(r.txPhoneVerify?' <a href="'+BC.SCAN+r.txPhoneVerify+'" target="_blank" style="color:#7A5B00;font-weight:800;">본인확인 기록 확인 ↗</a>':'');
+  }else if(r.status==='completed'){
+    chip.textContent='금융기관 지급 완료';
+    txt.innerHTML='<b>보호 자금 사용 처리가 완료되었습니다.</b><br>확인 절차가 끝나 금융기관에서 요청 금액을 본인이 사용할 수 있는 자금으로 처리한 것으로 반영되었습니다.';
+    note.classList.add('show');
+    const links=[];
+    if(r.txRequest) links.push('<a href="'+BC.SCAN+r.txRequest+'" target="_blank" style="color:#2E6B35;font-weight:800;">요청 기록 ↗</a>');
+    if(r.txPhoneVerify) links.push('<a href="'+BC.SCAN+r.txPhoneVerify+'" target="_blank" style="color:#2E6B35;font-weight:800;">전화 본인확인 기록 ↗</a>');
+    if(r.txComplete) links.push('<a href="'+BC.SCAN+r.txComplete+'" target="_blank" style="color:#2E6B35;font-weight:800;">지급 완료 기록 ↗</a>');
+    note.innerHTML='<b>'+releaseDisplayAmount(r.amountManwon)+' 사용 가능 처리 완료</b><br>현재 보호 자금 '+formatEok(S.protectAmount)+' · 자유 사용 자금 '+formatEok(S.protectFree)+(links.length?'<br>'+links.join(' · '):'');
+  }
+}
+async function submitProtectionUse(){
+  const purpose=document.getElementById('protectUsePurpose').value, raw=document.getElementById('protectUseAmount').value.replace(/[^0-9]/g,''), amount=Number(raw);
+  if(!amount){ toast('필요 금액을 입력해주세요.'); return; }
+  const amountMillion=amount/100;
+  if(amountMillion>S.protectAmount){ toast('현재 보호 중인 금액보다 큰 금액은 요청할 수 없습니다.'); return; }
+  const display=releaseDisplayAmount(amount);
+  const requestHash=await hashPayload({purpose,amountManwon:amount,requestedAt:new Date().toISOString()});
+  let chainResult=null;
+  if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
+    try{
+      chainResult=await apiCall('/api/protection/release-request',{protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,requestHash});
+      S.protectChain.txRelease=chainResult.txHash;
+    }catch(e){ toast('사용 요청의 Sepolia 기록 실패: '+(e.message||'서버 연결을 확인해주세요.')); }
+  }
+  S.protectProcessMode='release';
+  S.protectRelease={active:true,status:'requested',purpose,amountManwon:amount,amountMillion,requestHash,verificationHash:null,txRequest:chainResult?.txHash||null,txPhoneVerify:null,txComplete:null};
+  S.protectLogs.unshift({text:purpose+' 목적으로 보호 자금 사용을 요청했습니다.',sub:'요청 금액 '+display+' · 등록 전화번호 본인확인 대기'+(chainResult?' · Sepolia 요청 기록 완료':'')});
+  closeProtectUse(); renderProtection(); toast('보호 자금 사용 요청이 접수되었습니다. 전화 본인확인으로 이어집니다.');
+  setTimeout(()=>document.getElementById('protectReleaseCard')?.scrollIntoView({behavior:'smooth',block:'center'}),120);
+  setTimeout(()=>processPhoneVerifiedRelease(),1200);
+}
+async function processPhoneVerifiedRelease(){
+  const r=S.protectRelease; if(!r.active || r.status!=='requested') return;
+  const verificationHash=await hashPayload({requestHash:r.requestHash,method:'registered-phone-verification',verifiedAt:new Date().toISOString()});
+  let phoneResult=null;
+  if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
+    try{
+      phoneResult=await apiCall('/api/protection/phone-verify',{
+        protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,requestHash:r.requestHash,verificationHash
+      });
+      r.txPhoneVerify=phoneResult.txHash; S.protectChain.txPhoneVerify=phoneResult.txHash;
+    }catch(e){
+      toast('전화 본인확인 블록체인 기록 실패: '+(e.message||'서버 연결을 확인해주세요.'));
+      return;
+    }
+  }
+  r.verificationHash=verificationHash; r.status='phone';
+  S.protectLogs.unshift({text:'등록 전화번호를 통한 본인 확인이 완료되었습니다.',sub:r.purpose+' · '+releaseDisplayAmount(r.amountManwon)+(phoneResult?' · Sepolia 본인확인 기록 완료':' · 로컬 시뮬레이션')});
+  renderProtection(); toast('전화 본인확인이 완료되었습니다. 금융기관 처리로 이어집니다.');
+  setTimeout(()=>completePhoneVerifiedRelease(),1400);
+}
+async function completePhoneVerifiedRelease(){
+  const r=S.protectRelease; if(!r.active || r.status!=='phone') return;
+  let completeResult=null;
+  if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
+    try{
+      completeResult=await apiCall('/api/protection/release-complete',{
+        protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,requestHash:r.requestHash
+      });
+      S.protectChain.txReleaseComplete=completeResult.txHash; r.txComplete=completeResult.txHash;
+    }catch(e){
+      toast('금융기관 처리 완료 기록 실패: '+(e.message||'서버 연결을 확인해주세요.'));
+      return;
+    }
+  }
+  const released=Math.min(Number(r.amountMillion||0),S.protectAmount);
+  const before=S.protectAmount;
+  S.protectAmount=Math.max(0,Math.round((S.protectAmount-released)*100)/100);
+  S.protectFree=Math.max(0,Math.round((S.protectTotal-S.protectAmount)*100)/100);
+  S.protectDraft=S.protectAmount; r.status='completed';
+  S.protectLogs.unshift({text:'금융기관의 보호 자금 사용 처리가 완료되었습니다.',sub:releaseDisplayAmount(r.amountManwon)+' · 보호 '+formatEok(before)+' → '+formatEok(S.protectAmount)+(completeResult?' · Sepolia 지급 완료 기록':'')});
+  renderProtection(); renderDash(); toast('보호 자금 사용 처리가 완료되었습니다.');
+}
+function renderProtectionLog(){
+  const el=document.getElementById('protectLog'); if(!el) return;
+  const base=S.protectLogs.length?S.protectLogs:[{text:'보호 기록이 아직 없습니다.',sub:'보호 설정이나 사용 요청 내역이 이곳에 표시됩니다.'}];
+  el.innerHTML=base.slice(0,6).map(x=>`<div class="pl"><span class="pdot"></span><div>${x.text}<small>${x.sub}</small></div></div>`).join('');
+}
+function scrollProtectionSetup(){
+  S.protectProcessMode='change';
+  renderProtectionChange(); renderProtectionRelease();
+  S.protectDraft=S.protectAmount; const r=document.getElementById('protectRange'); if(r) r.value=S.protectAmount; updateProtectionPreview(S.protectAmount);
+  document.getElementById('protectSetupCard')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 /* ============ PASS ============ */
@@ -1145,7 +2330,7 @@ async function uploadCert(){
   setVerifyStep(1,'done','접수 완료');
   setVerifyStep(2,'active','검증 중');
   setVerifyStep(3,'','대기');
-  uTxt.innerHTML='<span class="spinner"></span> 확인 요청 접수 · 공인기관 전자문서 검증 중…';
+  uTxt.innerHTML='<span class="spinner"></span> 전자문서 확인 요청 접수 · 공인기관 확인 중…';
   toast('사망 사실 확인 요청이 접수되었습니다.');
 
   // 프로토타입: 정부24/병원 전자문서 검증 과정을 시뮬레이션
@@ -1155,17 +2340,13 @@ async function uploadCert(){
   uTxt.innerHTML='<span class="spinner"></span> 확인 결과를 안전하게 반영하고 있어요';
 
   try{
-    if(BC.vaultId===null || !BC.accessToken || !BC.registrationTx){
-      throw new Error('등록 정보를 확인할 수 없습니다.');
+    if(isLocalPreview()){
+      await new Promise(r=>setTimeout(r,600));
+    }else{
+      if(BC.vaultId===null || !BC.accessToken || !BC.registrationTx){ throw new Error('등록 정보를 확인할 수 없습니다.'); }
+      const r = await apiCall('/api/confirm-death', { vaultId:BC.vaultId, registrationTx:BC.registrationTx, accessToken:BC.accessToken });
+      S.txDeath = r.txHash;
     }
-
-    const r = await apiCall('/api/confirm-death', {
-      vaultId:BC.vaultId,
-      registrationTx:BC.registrationTx,
-      accessToken:BC.accessToken
-    });
-
-    S.txDeath = r.txHash;
     S.cert=true;
     uz.classList.add('done');
     setVerifyStep(3,'done','완료');
@@ -1174,7 +2355,7 @@ async function uploadCert(){
     toast('확인 절차가 완료되었습니다.');
   }catch(e){
     setVerifyStep(3,'','재시도 필요');
-    uTxt.textContent='공인기관 확인 완료 · 반영을 다시 시도해 주세요';
+    uTxt.textContent='공인기관 확인 완료 · 결과 반영을 다시 시도해 주세요';
     toast('확인 결과 반영 실패: '+(e.message||'서버 연결을 확인해 주세요.'));
   }finally{
     uz.style.pointerEvents='auto';
@@ -1183,31 +2364,22 @@ async function uploadCert(){
 
 /* ============ 개봉 ============ */
 async function doReveal(){
-  if(BC.vaultId===null || !BC.accessToken || !BC.registrationTx){
-    toast('등록 정보를 확인할 수 없습니다.');
-    return;
-  }
-
   const btn=document.getElementById('revealBtn');
   btn.disabled=true; btn.innerHTML='<span class="spinner"></span> 정보 열람 조건을 확인하고 있어요';
-
   try{
-    const r = await apiCall('/api/open', {
-      vaultId:BC.vaultId,
-      registrationTx:BC.registrationTx,
-      accessToken:BC.accessToken
-    });
-    S.openedHash=r.dataHash || null;
-    S.openedURI=r.dataURI || null;
-    S.txOpen=r.openTxHash || null;
+    if(isLocalPreview()){
+      if(!S.cert) throw new Error('확인 절차가 필요합니다.');
+      await new Promise(r=>setTimeout(r,500));
+      S.openedHash=S.dataHash||null; S.openedURI=null;
+    }else{
+      if(BC.vaultId===null || !BC.accessToken || !BC.registrationTx) throw new Error('등록 정보를 확인할 수 없습니다.');
+      const r = await apiCall('/api/open', {vaultId:BC.vaultId,registrationTx:BC.registrationTx,accessToken:BC.accessToken});
+      S.openedHash=r.dataHash || null; S.openedURI=r.dataURI || null; S.txOpen=r.openTxHash || null;
+    }
   }catch(e){
-    btn.disabled=false; btn.innerHTML='확인 후 정보 열람하기';
-    toast('아직 열 수 없습니다: '+(e.message||'확인 절차가 필요합니다.'));
-    return;
+    btn.disabled=false; btn.innerHTML='확인 후 정보 열람하기'; toast('아직 열 수 없습니다: '+(e.message||'확인 절차가 필요합니다.')); return;
   }
-
-  btn.disabled=false; btn.innerHTML='확인 후 정보 열람하기';
-  go('revealed');
+  btn.disabled=false; btn.innerHTML='확인 후 정보 열람하기'; go('revealed');
 }
 function renderReveal(){
   document.getElementById('revealList').innerHTML = S.assets.map(a=>`
@@ -1246,15 +2418,17 @@ function renderReveal(){
 
 /* ============ 초기화 ============ */
 function resetAll(){
-  S.linked=false; S.assets=[]; S.rcps=[]; S.msg=''; S.msgSaved=false; S.verified=false; S.cert=false; S.filter='all';
+  S.linked=false; S.assets=[]; S.rcps=[]; S.msg=''; S.msgSaved=false; S.legacyConfigured=false; S.verified=false; S.cert=false; S.filter='all';
   S.txRegister=null; S.txDeath=null; S.txOpen=null; S.openedHash=null; S.openedURI=null; S.dataHash=null; BC.vaultId=null; BC.accessToken=null; BC.registrationTx=null;
+  S.protectEnabled=false; S.protectTotal=0; S.protectAmount=0; S.protectFree=0; S.protectDraft=0; S.protectPending=null; S.protectLogs=[]; S.protectChange={active:false,status:'',from:0,to:0}; S.protectProcessMode=''; S.protectRelease={active:false,status:'',purpose:'',amountManwon:0,amountMillion:0,requestHash:null,verificationHash:null,txRequest:null,txPhoneVerify:null,txComplete:null}; S.medicalLoaded=false; S.medicalDocName=''; S.medicalSummary=''; S.medicalAnalysis=null; S.medicalBasisHash=null; S.medicalCheckedAt=null; S.aiMode='rules'; S.aiRecommended=0; S.aiPreviousRecommended=null;
+  S.protectChain={connected:false,protectionId:null,accessToken:null,txCreate:null,txMedicalBasis:null,txChangeRequest:null,txChangeComplete:null,txRelease:null,txPhoneVerify:null,txReleaseComplete:null,executeAfter:null};
   const b=document.getElementById('linkBtn'); b.style.display='flex'; b.disabled=false;
   document.getElementById('linkTxt').textContent='마이데이터 연동하기';
   document.getElementById('verifyCard').style.display='block';
   document.getElementById('certCard').style.display='none';
   document.getElementById('uz').classList.remove('done');
   document.getElementById('uz').style.pointerEvents='auto';
-  document.getElementById('uTxt').textContent='사망진단서를 제출하고 확인 요청하기';
+  document.getElementById('uTxt').textContent='사망 사실 전자문서 확인 요청하기';
   const vf=document.getElementById('verifyFlow'); if(vf) vf.classList.remove('show');
   [1,2,3].forEach(i=>setVerifyStep(i,'','대기'));
   document.getElementById('revealBtn').disabled=true;
@@ -1267,9 +2441,7 @@ function resetAll(){
   const lc=document.getElementById('lockCard'); lc.classList.remove('opened');
   document.getElementById('lockTitle').textContent='안전하게 잠겨 있습니다';
   document.getElementById('lockDesc').textContent='사망이 확인되기 전까지 지정 수령자도 정보를 볼 수 없습니다.';
-  ['p1','p2','p3'].forEach(p=>document.getElementById(p).classList.remove('done','on'));
-  document.getElementById('p1').classList.add('on');
-  closeConsent(); closePass(); renderRcp(); go('landing');
+  closeConsent(); closePass(); renderRcp(); renderLegacySummary(); go('landing');
 }
 renderRcp();
 
@@ -1296,22 +2468,34 @@ async function hashPayload(payload){
 async function apiCall(url, body){
   let res;
   try{
-    res = await fetch(url, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(body||{})
-    });
-  }catch(_){
-    throw new Error('제출용 서버에 연결할 수 없습니다.');
-  }
-
-  let data={};
-  try{ data=await res.json(); }catch(_){}
-  if(!res.ok){
-    throw new Error(data.error || '서버 요청에 실패했습니다.');
-  }
+    res = await fetch(url, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body||{})});
+  }catch(_){ throw new Error('서비스 서버에 연결할 수 없습니다.'); }
+  let data={}; try{ data=await res.json(); }catch(_){}
+  if(!res.ok){ throw new Error(data.error || '서버 요청에 실패했습니다.'); }
   return data;
 }
+function isLocalPreview(){ return location.protocol==='file:' || location.hostname==='localhost' || location.hostname==='127.0.0.1'; }
+function escapeHtml(v){ return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])); }
+
+async function checkServiceConnections(){
+  const badge=document.getElementById('serverChainMode');
+  const aiChip=document.getElementById('aiStatusChip');
+  if(isLocalPreview()){
+    if(badge) badge.textContent='서버 연결 확인 필요';
+    return;
+  }
+  let legacyOk=false, protectionOk=false, aiOk=false;
+  try{ const r=await fetch('/api/health'); const d=await r.json(); legacyOk=!!(r.ok&&d.ok); }catch(_){}
+  try{ const r=await fetch('/api/protection/health'); const d=await r.json(); protectionOk=!!(r.ok&&d.ok); S.protectChain.connected=protectionOk; }catch(_){}
+  try{ const r=await fetch('/api/analyze-medical'); const d=await r.json(); aiOk=!!(r.ok&&d.configured); }catch(_){}
+  if(badge){
+    if(legacyOk&&protectionOk) badge.textContent='Sepolia 연결됨 · 사후 + 생전';
+    else if(legacyOk) badge.textContent='사후 Sepolia 연결 · 생전 설정 필요';
+    else badge.textContent='블록체인 서버 연결 확인 필요';
+  }
+  if(aiChip && aiOk && S.aiMode==='rules') aiChip.textContent='Gemini 연결 준비';
+}
+checkServiceConnections();
 </script>
 </body>
 </html>
