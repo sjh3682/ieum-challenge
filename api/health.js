@@ -1,5 +1,7 @@
 const { ethers, getClient: getVaultClient } = require('../lib/vault');
-const { getClient: getProtectionClient } = require('../lib/protection');
+const {
+  getClient: getProtectionClient
+} = require('../lib/protection');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -18,11 +20,12 @@ module.exports = async function handler(req, res) {
       contractAddress
     } = getVaultClient();
 
-    const [network, balance, verifier] = await Promise.all([
-      provider.getNetwork(),
-      provider.getBalance(wallet.address),
-      contract.verifier()
-    ]);
+    const [network, balance, verifier] =
+      await Promise.all([
+        provider.getNetwork(),
+        provider.getBalance(wallet.address),
+        contract.verifier()
+      ]);
 
     let protection = {
       configured: Boolean(
@@ -31,44 +34,75 @@ module.exports = async function handler(req, res) {
       ok: false
     };
 
-    if (process.env.IEUM_PROTECTION_CONTRACT_ADDRESS) {
+    if (
+      process.env.IEUM_PROTECTION_CONTRACT_ADDRESS
+    ) {
       try {
-        const p = getProtectionClient();
+        const protectionClient =
+          getProtectionClient();
 
-        const [operator, delay] = await Promise.all([
-          p.contract.operator(),
-          p.contract.changeDelay()
-        ]);
+        const [operator, delay] =
+          await Promise.all([
+            protectionClient.contract.operator(),
+            protectionClient.contract.changeDelay()
+          ]);
 
         protection = {
           configured: true,
           ok: true,
-          contractAddress: p.contractAddress,
-          contractOperator: operator,
+
+          contractAddress:
+            protectionClient.contractAddress,
+
+          contractOperator:
+            operator,
+
           operatorMatchesWallet:
             operator.toLowerCase() ===
-            p.wallet.address.toLowerCase(),
-          changeDelaySeconds: Number(delay)
+            protectionClient.wallet.address.toLowerCase(),
+
+          changeDelaySeconds:
+            Number(delay)
         };
-      } catch (e) {
+      } catch (error) {
+        console.error(
+          'Protection health error:',
+          error
+        );
+
         protection = {
           configured: true,
           ok: false,
           error:
-            e.message ||
-            '생전 보호 상태 확인 실패'
+            error?.message ||
+            '생전 보호 상태 확인에 실패했습니다.'
         };
       }
     }
 
+    const geminiModel =
+      process.env.GEMINI_MODEL ||
+      'gemini-3.6-flash';
+
     return res.status(200).json({
       ok: true,
+
       network: 'Sepolia',
-      chainId: Number(network.chainId),
-      walletAddress: wallet.address,
-      balanceETH: ethers.formatEther(balance),
+
+      chainId:
+        Number(network.chainId),
+
+      walletAddress:
+        wallet.address,
+
+      balanceETH:
+        ethers.formatEther(balance),
+
       contractAddress,
-      contractVerifier: verifier,
+
+      contractVerifier:
+        verifier,
+
       verifierMatchesWallet:
         verifier.toLowerCase() ===
         wallet.address.toLowerCase(),
@@ -76,21 +110,24 @@ module.exports = async function handler(req, res) {
       protection,
 
       gemini: {
-        configured: Boolean(
-          process.env.GEMINI_API_KEY
-        ),
+        configured:
+          Boolean(process.env.GEMINI_API_KEY),
+
         model:
-          process.env.GEMINI_MODEL ||
-          'gemini-3.6-flash'
+          geminiModel
       }
     });
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(
+      'Health check error:',
+      error
+    );
 
     return res.status(500).json({
       ok: false,
+
       error:
-        e.message ||
+        error?.message ||
         'health check failed'
     });
   }
