@@ -1955,7 +1955,7 @@ function renderProtectionChange(){
   }else if(ch.status==='waiting'){
     steps[0]?.classList.add('done'); steps[1]?.classList.add('active'); chip.textContent='보호 대기 중';
     const eta=S.protectChain.executeAfter?new Date(S.protectChain.executeAfter*1000).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):null;
-    body.innerHTML='<b>갑작스러운 축소·해제를 막기 위한 보호 대기와 본인 재확인 단계입니다.</b><br>'+(eta?'변경 적용 예정 · '+eta:'보호 대기와 재확인이 끝나면 자동으로 다음 단계로 넘어갑니다.');
+    body.innerHTML='<b>갑작스러운 축소·해제를 막기 위한 60초 보호 대기와 본인 재확인 단계입니다.</b><br>'+(eta?'변경 적용 예정 · '+eta:'보호 대기와 재확인이 끝나면 자동으로 다음 단계로 넘어갑니다.');
   }else if(ch.status==='applying'){
     steps[0]?.classList.add('done'); steps[1]?.classList.add('done'); steps[2]?.classList.add('active'); chip.textContent='변경 적용 중';
     body.innerHTML='<b>보호 대기 조건을 확인하고 새 보호 설정을 반영하고 있어요.</b><br>완료되면 현재 보호 금액에 바로 반영됩니다.';
@@ -1967,7 +1967,7 @@ function renderProtectionChange(){
 }
 function scheduleProtectionChangeExecution(){
   clearTimeout(protectionChangeTimer);
-  let wait=2400;
+  let wait=60000;
   if(!isLocalPreview() && S.protectChain.executeAfter){
     wait=Math.max(800,S.protectChain.executeAfter*1000-Date.now()+650);
   }
@@ -1996,6 +1996,7 @@ async function enableProtection(){
   if(S.protectEnabled && requested===S.protectAmount){ toast('현재 보호 금액과 동일합니다.'); return; }
 
   protectionActionBusy=true;
+  const protectionFlowStartedAt=Date.now();
   renderProtection();
   try{
     if(!S.protectEnabled){
@@ -2016,6 +2017,8 @@ async function enableProtection(){
         S.protectChain.accessToken=chainResult.accessToken;
         S.protectChain.txCreate=chainResult.txHash;
       }
+      // 최초 설정은 한 번의 클릭으로 진행되며 약 9초 동안 처리 상태를 명확히 보여줍니다.
+      await waitUntil(protectionFlowStartedAt,IEUM_FLOW_MS.initialProtection);
       S.protectEnabled=true;
       S.protectAmount=requested;
       S.protectFree=S.protectTotal-S.protectAmount;
@@ -2045,8 +2048,11 @@ async function enableProtection(){
       S.protectChain.txChangeRequest=chainResult.txHash;
       S.protectChain.executeAfter=Number(chainResult.executeAfter||0)||null;
     }else if(isLocalPreview()){
-      S.protectChain.executeAfter=Math.floor((Date.now()+2400)/1000);
+      S.protectChain.executeAfter=Math.floor((Date.now()+60000)/1000);
     }
+
+    // 변경 요청 접수·확인 단계는 약 15초 보여주고, 이후 60초 안전 대기의 남은 시간을 자동으로 이어갑니다.
+    await waitUntil(protectionFlowStartedAt,IEUM_FLOW_MS.changeRequest);
     S.protectChange.status='waiting';
     S.protectLogs.unshift({text:'보호 금액 변경을 신청했습니다.',sub:formatEok(old)+' → '+formatEok(requested)+' · 보호 대기 후 자동 적용'});
     renderDash();
@@ -2117,6 +2123,17 @@ function saveProfileInfo(){
 let medicalAnalysisBusy=false;
 let protectionUseBusy=false;
 
+// 최종 사용자 흐름용 최소 체감 처리시간
+const IEUM_FLOW_MS={
+  medical:10000,          // 의료 전자문서 확인 + AI 분석: 약 10초
+  initialProtection:9000, // 최초 생전 보호 설정: 약 9초
+  changeRequest:15000,    // 보호 설정 변경 요청 처리 화면: 약 15초
+  releaseToPhone:6000,    // 보호자금 사용 요청 → 전화 본인확인
+  phoneToComplete:8500    // 전화 본인확인 → 금융기관 처리 완료
+};
+function waitMs(ms){ return new Promise(resolve=>setTimeout(resolve,Math.max(0,ms))); }
+function waitUntil(startedAt,minMs){ return waitMs(minMs-(Date.now()-startedAt)); }
+
 function openMedicalModal(){
   document.getElementById('medicalModal').classList.add('show');
   const summary=document.getElementById('medicalModalSummary');
@@ -2144,6 +2161,7 @@ function closeMedicalModal(){ document.getElementById('medicalModal').classList.
 async function analyzeLinkedMedicalInfo(){
   if(medicalAnalysisBusy){ toast('의료정보를 분석하고 있어요. 잠시만 기다려주세요.'); return; }
   medicalAnalysisBusy=true;
+  const flowStartedAt=Date.now();
   const beforeRecommendation=calculateAIRecommendation();
   const btn=document.getElementById('medicalLinkedBtn');
   const btnText=document.getElementById('medicalLinkedBtnText');
@@ -2152,7 +2170,20 @@ async function analyzeLinkedMedicalInfo(){
   if(summary){ summary.style.display='block'; summary.innerHTML='<b>의료정보 확인 중</b><br>연결된 전자문서에서 보호금액 산정에 필요한 정보만 확인하고 있습니다.'; }
   if(btn){ btn.disabled=true; }
   if(btnText) btnText.textContent='의료정보 확인 중…';
-  if(btnSub) btnSub.textContent='확인이 끝나면 이 화면에서 바로 결과를 보여드려요.';
+  if(btnSub) btnSub.textContent='전자문서를 확인하고 필요한 정보만 분석하고 있어요.';
+
+  const medicalStage2=setTimeout(()=>{
+    if(medicalAnalysisBusy && summary){
+      summary.innerHTML='<b>의료정보 분석 중</b><br>진료·관리 필요성을 AI가 보호금액 산정 기준에 맞춰 정리하고 있습니다.';
+    }
+    if(medicalAnalysisBusy && btnSub) btnSub.textContent='AI 분석 결과를 보호금액 기준에 맞춰 정리하고 있어요.';
+  },3200);
+  const medicalStage3=setTimeout(()=>{
+    if(medicalAnalysisBusy && summary){
+      summary.innerHTML='<b>분석 결과 정리 중</b><br>필요한 의료 예비자금 수준을 계산하고 결과를 안전하게 반영하고 있습니다.';
+    }
+    if(medicalAnalysisBusy && btnSub) btnSub.textContent='곧 분석 결과를 확인할 수 있어요.';
+  },7000);
 
   const documentText='의료기관 전자문서 연계 결과 요약입니다. 정기적인 외래 추적 관찰과 지속적인 약물 관리가 필요하며, 정기 검진이 권고되어 있습니다. 장기 입원이나 즉각적인 수술 예정 정보는 확인되지 않았습니다.';
   try{
@@ -2190,6 +2221,9 @@ async function analyzeLinkedMedicalInfo(){
 
     calculateAIRecommendation();
     if(!S.protectEnabled) S.protectDraft=S.aiRecommended;
+
+    // Gemini가 빨리 응답해도 결과 화면은 약 10초의 자연스러운 확인 흐름 뒤 표시합니다.
+    await waitUntil(flowStartedAt,IEUM_FLOW_MS.medical);
     renderProtection();
 
     if(summary){
@@ -2210,6 +2244,8 @@ async function analyzeLinkedMedicalInfo(){
     if(btnText) btnText.textContent='의료 전자문서 다시 확인하기';
     if(btnSub) btnSub.textContent='연결 상태를 확인한 뒤 다시 요청해주세요.';
   }finally{
+    clearTimeout(medicalStage2);
+    clearTimeout(medicalStage3);
     medicalAnalysisBusy=false;
     if(btn) btn.disabled=false;
   }
@@ -2305,8 +2341,9 @@ async function submitProtectionUse(){
     renderProtectionRelease(); renderProtectionLog();
     toast('보호 자금 사용 요청이 접수되었습니다. 확인 절차가 자동으로 진행됩니다.');
 
-    // 사용자는 블록 채굴을 기다리지 않습니다. 화면 단계는 짧게 진행하고 체인 기록은 별도 동기화합니다.
-    setTimeout(()=>{ void processPhoneVerifiedRelease(); },700);
+    // 한 번의 요청으로 약 15~20초 동안 세 단계가 자연스럽게 진행됩니다.
+    // 실제 기록 동기화는 뒤에서 계속 진행하되, 사용자가 버튼을 다시 누를 필요는 없습니다.
+    setTimeout(()=>{ void processPhoneVerifiedRelease(); },IEUM_FLOW_MS.releaseToPhone);
   }catch(e){
     console.error(e);
     S.protectRelease={active:false,status:'',purpose:'',amountManwon:0,amountMillion:0,requestHash:null,verificationHash:null,txRequest:null,txPhoneVerify:null,txComplete:null};
@@ -2353,7 +2390,7 @@ async function processPhoneVerifiedRelease(){
 
   // 실제 블록체인 기록은 순서를 지키며 뒤에서 진행합니다.
   void syncReleaseChainInBackground(r.requestHash,verificationHash);
-  setTimeout(()=>{ void completePhoneVerifiedRelease(); },850);
+  setTimeout(()=>{ void completePhoneVerifiedRelease(); },IEUM_FLOW_MS.phoneToComplete);
 }
 
 async function completePhoneVerifiedRelease(){
@@ -2380,7 +2417,7 @@ function scrollProtectionSetup(){
   S.protectDraft=S.protectAmount;
   const r=document.getElementById('protectRange'); if(r) r.value=S.protectAmount;
   updateProtectionPreview(S.protectAmount);
-  document.getElementById('protectSetupCard')?.scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('protectSetupCard')?.scrollIntoView({behavior:'auto',block:'start'});
 }
 
 /* ============ PASS ============ */
