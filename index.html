@@ -1976,14 +1976,15 @@ function scheduleProtectionChangeExecution(){
 async function recordMedicalBasisInBackground(){
   if(isLocalPreview() || !S.medicalBasisHash || S.protectChain.protectionId===null || !S.protectChain.accessToken) return;
   try{
-    const br=await apiCall('/api/protection/medical-basis',{
+    // 보호 설정 생성 트랜잭션이 아직 블록에 반영되지 않았더라도 화면은 기다리지 않고 뒤에서 자동 재시도합니다.
+    const br=await apiCallRetry('/api/protection/medical-basis',{
       protectionId:S.protectChain.protectionId,
       accessToken:S.protectChain.accessToken,
       basisHash:S.medicalBasisHash
-    });
-    S.protectChain.txMedicalBasis=br.txHash||null;
+    },14,1500);
+    S.protectChain.txMedicalBasis=br.txHash||S.protectChain.txMedicalBasis||null;
   }catch(e){
-    console.warn('medical basis record skipped',e);
+    console.warn('medical basis background record pending',e);
   }
 }
 async function enableProtection(){
@@ -2280,19 +2281,21 @@ async function submitProtectionUse(){
 
   protectionUseBusy=true;
   const submitBtn=document.getElementById('protectUseSubmitBtn');
-  if(submitBtn){ submitBtn.disabled=true; submitBtn.innerHTML='<span class="spinner"></span> 요청 처리 중'; }
+  if(submitBtn){ submitBtn.disabled=true; submitBtn.innerHTML='<span class="spinner"></span> 요청 접수 중'; }
 
   try{
     const display=releaseDisplayAmount(amount);
     const requestHash=await hashPayload({purpose,amountManwon:amount,requestedAt:new Date().toISOString()});
     let chainResult=null;
+
+    // 첫 트랜잭션은 '전송 성공'까지만 확인합니다. 블록 확정은 기다리지 않습니다.
     if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
-      chainResult=await apiCall('/api/protection/release-request',{
+      chainResult=await apiCallRetry('/api/protection/release-request',{
         protectionId:S.protectChain.protectionId,
         accessToken:S.protectChain.accessToken,
         requestHash
-      });
-      S.protectChain.txRelease=chainResult.txHash||null;
+      },8,1200);
+      S.protectChain.txRelease=chainResult.txHash||S.protectChain.txRelease||null;
     }
 
     S.protectProcessMode='release';
@@ -2302,8 +2305,8 @@ async function submitProtectionUse(){
     renderProtectionRelease(); renderProtectionLog();
     toast('보호 자금 사용 요청이 접수되었습니다. 확인 절차가 자동으로 진행됩니다.');
 
-    await new Promise(r=>setTimeout(r,650));
-    await processPhoneVerifiedRelease();
+    // 사용자는 블록 채굴을 기다리지 않습니다. 화면 단계는 짧게 진행하고 체인 기록은 별도 동기화합니다.
+    setTimeout(()=>{ void processPhoneVerifiedRelease(); },700);
   }catch(e){
     console.error(e);
     S.protectRelease={active:false,status:'',purpose:'',amountManwon:0,amountMillion:0,requestHash:null,verificationHash:null,txRequest:null,txPhoneVerify:null,txComplete:null};
@@ -2314,39 +2317,47 @@ async function submitProtectionUse(){
     if(submitBtn){ submitBtn.disabled=false; submitBtn.textContent='사용 요청'; }
   }
 }
+
+async function syncReleaseChainInBackground(requestHash,verificationHash){
+  if(S.protectChain.protectionId===null || !S.protectChain.accessToken || isLocalPreview()) return;
+  const common={protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,requestHash};
+  try{
+    // requestRelease가 실제 블록에 반영될 때까지 자동 재시도한 뒤 전화 확인 기록을 전송합니다.
+    const phoneResult=await apiCallRetry('/api/protection/phone-verify',{
+      ...common,
+      verificationHash
+    },16,1500);
+    S.protectChain.txPhoneVerify=phoneResult.txHash||S.protectChain.txPhoneVerify||null;
+    if(S.protectRelease.requestHash===requestHash){
+      S.protectRelease.txPhoneVerify=phoneResult.txHash||S.protectRelease.txPhoneVerify||null;
+    }
+
+    // 전화 확인 트랜잭션이 블록에 반영되면 완료 기록을 자동 전송합니다.
+    const completeResult=await apiCallRetry('/api/protection/release-complete',common,16,1500);
+    S.protectChain.txReleaseComplete=completeResult.txHash||S.protectChain.txReleaseComplete||null;
+    if(S.protectRelease.requestHash===requestHash){
+      S.protectRelease.txComplete=completeResult.txHash||S.protectRelease.txComplete||null;
+    }
+  }catch(e){
+    console.warn('release blockchain background sync pending',e);
+  }
+}
+
 async function processPhoneVerifiedRelease(){
   const r=S.protectRelease; if(!r.active || r.status!=='requested') return;
   const verificationHash=await hashPayload({requestHash:r.requestHash,method:'registered-phone-verification',verifiedAt:new Date().toISOString()});
-  let phoneResult=null;
-  if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
-    phoneResult=await apiCall('/api/protection/phone-verify',{
-      protectionId:S.protectChain.protectionId,
-      accessToken:S.protectChain.accessToken,
-      requestHash:r.requestHash,
-      verificationHash
-    });
-    r.txPhoneVerify=phoneResult.txHash||null;
-    S.protectChain.txPhoneVerify=phoneResult.txHash||null;
-  }
   r.verificationHash=verificationHash;
   r.status='phone';
   S.protectLogs.unshift({text:'등록 전화번호를 통한 본인 확인이 완료되었습니다.',sub:r.purpose+' · '+releaseDisplayAmount(r.amountManwon)+' · 금융기관 처리 진행 중'});
   renderProtectionRelease(); renderProtectionLog();
-  await new Promise(r=>setTimeout(r,650));
-  await completePhoneVerifiedRelease();
+
+  // 실제 블록체인 기록은 순서를 지키며 뒤에서 진행합니다.
+  void syncReleaseChainInBackground(r.requestHash,verificationHash);
+  setTimeout(()=>{ void completePhoneVerifiedRelease(); },850);
 }
+
 async function completePhoneVerifiedRelease(){
   const r=S.protectRelease; if(!r.active || r.status!=='phone') return;
-  let completeResult=null;
-  if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
-    completeResult=await apiCall('/api/protection/release-complete',{
-      protectionId:S.protectChain.protectionId,
-      accessToken:S.protectChain.accessToken,
-      requestHash:r.requestHash
-    });
-    S.protectChain.txReleaseComplete=completeResult.txHash||null;
-    r.txComplete=completeResult.txHash||null;
-  }
   const released=Math.min(Number(r.amountMillion||0),S.protectAmount);
   const before=S.protectAmount;
   S.protectAmount=Math.max(0,Math.round((S.protectAmount-released)*100)/100);
@@ -2357,6 +2368,7 @@ async function completePhoneVerifiedRelease(){
   renderProtection(); renderDash();
   toast('보호 자금 사용 처리가 완료되었습니다.');
 }
+
 function renderProtectionLog(){
   const el=document.getElementById('protectLog'); if(!el) return;
   const base=S.protectLogs.length?S.protectLogs:[{text:'보호 기록이 아직 없습니다.',sub:'보호 설정이나 사용 요청 내역이 이곳에 표시됩니다.'}];
@@ -2537,6 +2549,18 @@ async function apiCall(url, body){
   let data={}; try{ data=await res.json(); }catch(_){}
   if(!res.ok){ throw new Error(data.error || '서버 요청에 실패했습니다.'); }
   return data;
+}
+async function apiCallRetry(url, body, attempts=12, delayMs=1500){
+  let lastError=null;
+  for(let i=0;i<attempts;i++){
+    try{ return await apiCall(url,body); }
+    catch(e){
+      lastError=e;
+      if(i===attempts-1) break;
+      await new Promise(r=>setTimeout(r,delayMs));
+    }
+  }
+  throw lastError || new Error('서버 요청에 실패했습니다.');
 }
 function isLocalPreview(){ return location.protocol==='file:' || location.hostname==='localhost' || location.hostname==='127.0.0.1'; }
 function escapeHtml(v){ return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])); }
