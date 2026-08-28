@@ -53,7 +53,8 @@ module.exports = async function handler(req, res) {
       typeof fileBase64 === 'string' &&
       fileBase64.trim().length > 0;
 
-    const hasText = linkedText.length > 0;
+    const hasText =
+      linkedText.length > 0;
 
     if (!hasFile && !hasText) {
       return res.status(400).json({
@@ -61,7 +62,10 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    if (hasFile && !allowedMimeTypes.has(mimeType)) {
+    if (
+      hasFile &&
+      !allowedMimeTypes.has(mimeType)
+    ) {
       return res.status(400).json({
         error: '지원하지 않는 의료정보 형식입니다.'
       });
@@ -74,15 +78,10 @@ module.exports = async function handler(req, res) {
         ? fileBase64.split(',').pop()
         : fileBase64;
 
-      let fileBytes;
-
-      try {
-        fileBytes = Buffer.from(cleanBase64, 'base64');
-      } catch (_) {
-        return res.status(400).json({
-          error: '의료정보 파일 형식을 읽을 수 없습니다.'
-        });
-      }
+      const fileBytes = Buffer.from(
+        cleanBase64,
+        'base64'
+      );
 
       if (!fileBytes.length) {
         return res.status(400).json({
@@ -90,14 +89,20 @@ module.exports = async function handler(req, res) {
         });
       }
 
-      if (fileBytes.length > 2 * 1024 * 1024) {
+      if (
+        fileBytes.length >
+        2 * 1024 * 1024
+      ) {
         return res.status(413).json({
           error: '분석 파일은 2MB 이하로 사용해주세요.'
         });
       }
     }
 
-    if (hasText && linkedText.length > 2500) {
+    if (
+      hasText &&
+      linkedText.length > 2500
+    ) {
       return res.status(400).json({
         error: '의료정보 요약이 너무 깁니다.'
       });
@@ -105,58 +110,42 @@ module.exports = async function handler(req, res) {
 
     const safeNumber = (value) => {
       const n = Number(value);
-      return Number.isFinite(n) ? n : 0;
+
+      return Number.isFinite(n)
+        ? n
+        : 0;
     };
 
-    const age = safeNumber(context.age);
-    const monthlyLiving = safeNumber(context.monthlyLiving);
-    const monthlyIncome = safeNumber(context.monthlyIncome);
-    const netAssetMillionWon =
-      safeNumber(context.netAssetMillionWon);
-
-    const insurance =
-      typeof context.insurance === 'string'
-        ? context.insurance.slice(0, 50)
-        : 'unknown';
-
     const prompt = `
-당신은 대한민국 금융안심 서비스 '이음(IEUM)'의
-의료정보 보조 분석기입니다.
+당신은 대한민국 금융안심 서비스 '이음(IEUM)'의 의료정보 보조 분석기입니다.
 
-이 분석은 의료 진단, 치료 지시, 수명 예측 또는
-개인의 미래 병원비를 정확하게 예측하는 작업이 아닙니다.
+이 분석은 의료 진단, 치료 지시, 수명 예측 또는 개인의 미래 병원비를 정확하게 예측하는 작업이 아닙니다.
 
-제공된 의료정보에 이미 포함된 내용만 바탕으로
-향후 지속적인 진료 또는 관리 필요성의 수준을 분류하세요.
+제공된 의료정보에 이미 포함된 내용만 바탕으로 향후 지속적인 진료 또는 관리 필요성의 수준을 분류하세요.
 
-분석 결과는 사용자가 생활비와 의료비를 고려하여
-생전 보호자금을 설정할 때 참고자료로만 사용됩니다.
+결과는 사용자가 생활비와 의료비를 고려하여 생전 보호자금을 설정할 때 참고자료로만 사용됩니다.
 
-반드시 다음 규칙을 지키세요.
+규칙:
 
 1. 새로운 질병을 진단하지 마세요.
 2. 제공된 정보에 없는 사실을 추정하지 마세요.
 3. 미래의 구체적인 치료비를 예측하지 마세요.
-4. 질병명, 주민등록번호, 병원명 등 상세 개인정보를
-   결과에 다시 출력하지 마세요.
+4. 질병명, 주민등록번호, 병원명 등 상세 개인정보를 결과에 다시 출력하지 마세요.
 5. careLevel은 low, moderate, high 중 하나만 사용하세요.
 6. ongoingCare는 지속적인 진료 또는 관리 필요 여부입니다.
 7. confidence는 low, medium, high 중 하나만 사용하세요.
-8. reserveAddMillionWon은 반드시
-   0, 10, 20, 30 중 하나만 사용하세요.
-9. reserveAddMillionWon의 단위는 백만원입니다.
-   10은 1천만원을 의미합니다.
-10. 자료가 불명확한 경우 confidence를 low로 설정하고
-    예비자금을 과도하게 높이지 마세요.
-11. summary와 reason은 질병명이나 상세 개인정보 없이
-    짧고 일반적인 표현으로 작성하세요.
+8. reserveAddMillionWon은 0, 10, 20, 30 중 하나만 사용하세요.
+9. reserveAddMillionWon의 단위는 백만원입니다. 10은 1천만원입니다.
+10. 자료가 불명확하면 confidence를 low로 설정하고 예비자금을 과도하게 높이지 마세요.
+11. summary와 reason은 질병명이나 상세 개인정보 없이 짧고 일반적인 표현으로 작성하세요.
 
 회원 및 금융 참고정보:
-- 나이: ${age}세
-- 월평균 생활비: ${monthlyLiving}만원
-- 월 연금 또는 정기소득: ${monthlyIncome}만원
-- 보험 보장 수준: ${insurance}
-- 순금융자산: ${netAssetMillionWon}백만원
+
+- 나이: ${safeNumber(context.age)}세
+- 월평균 생활비: ${safeNumber(context.monthlyLiving)}만원
+- 월 연금 또는 정기소득: ${safeNumber(context.monthlyIncome)}만원
+- 보험 보장 수준: ${String(context.insurance || 'unknown').slice(0, 50)}
+- 순금융자산: ${safeNumber(context.netAssetMillionWon)}백만원
 - 정보 유형: ${hasFile ? '의료서류' : '의료기관 전자문서 연계 요약'}
 - 문서명: ${String(fileName || '의료기관 전자문서').slice(0, 100)}
 `;
@@ -167,6 +156,7 @@ module.exports = async function handler(req, res) {
       properties: {
         careLevel: {
           type: 'string',
+
           enum: [
             'low',
             'moderate',
@@ -180,6 +170,7 @@ module.exports = async function handler(req, res) {
 
         confidence: {
           type: 'string',
+
           enum: [
             'low',
             'medium',
@@ -189,6 +180,7 @@ module.exports = async function handler(req, res) {
 
         reserveAddMillionWon: {
           type: 'integer',
+
           enum: [
             0,
             10,
@@ -198,15 +190,11 @@ module.exports = async function handler(req, res) {
         },
 
         summary: {
-          type: 'string',
-          description:
-            '질병명을 포함하지 않고 지속적인 진료·관리 필요성을 짧게 설명'
+          type: 'string'
         },
 
         reason: {
-          type: 'string',
-          description:
-            '의료 예비자금 보정 이유를 개인정보 없이 짧게 설명'
+          type: 'string'
         }
       },
 
@@ -230,28 +218,35 @@ module.exports = async function handler(req, res) {
     ];
 
     if (hasFile) {
-      const inputType =
-        mimeType === 'application/pdf'
-          ? 'document'
-          : 'image';
-
       input.push({
-        type: inputType,
-        data: cleanBase64,
-        mime_type: mimeType
+        type:
+          mimeType === 'application/pdf'
+            ? 'document'
+            : 'image',
+
+        data:
+          cleanBase64,
+
+        mime_type:
+          mimeType
       });
     } else {
       input.push({
         type: 'text',
-        text: `의료기관 전자문서 연계 요약:\n${linkedText}`
+
+        text:
+          `의료기관 전자문서 연계 요약:\n${linkedText}`
       });
     }
 
-    const controller = new AbortController();
+    const controller =
+      new AbortController();
 
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, 25000);
+    const timeout =
+      setTimeout(
+        () => controller.abort(),
+        25000
+      );
 
     let response;
 
@@ -262,11 +257,15 @@ module.exports = async function handler(req, res) {
           method: 'POST',
 
           headers: {
-            'Content-Type': 'application/json',
-            'x-goog-api-key': apiKey
+            'Content-Type':
+              'application/json',
+
+            'x-goog-api-key':
+              apiKey
           },
 
-          signal: controller.signal,
+          signal:
+            controller.signal,
 
           body: JSON.stringify({
             model,
@@ -275,10 +274,18 @@ module.exports = async function handler(req, res) {
 
             input,
 
+            generation_config: {
+              thinking_level: 'low'
+            },
+
             response_format: {
               type: 'text',
-              mime_type: 'application/json',
-              schema: responseSchema
+
+              mime_type:
+                'application/json',
+
+              schema:
+                responseSchema
             }
           })
         }
@@ -287,7 +294,8 @@ module.exports = async function handler(req, res) {
       clearTimeout(timeout);
     }
 
-    const raw = await response.json();
+    const raw =
+      await response.json();
 
     if (!response.ok) {
       console.error(
@@ -305,58 +313,56 @@ module.exports = async function handler(req, res) {
     let outputText = '';
 
     if (
-      typeof raw.output_text === 'string' &&
+      typeof raw.output_text ===
+        'string' &&
       raw.output_text.trim()
     ) {
-      outputText = raw.output_text.trim();
+      outputText =
+        raw.output_text.trim();
     }
 
-    if (!outputText && Array.isArray(raw.steps)) {
-      const modelOutputs = raw.steps.filter(
-        (step) =>
-          step &&
-          step.type === 'model_output' &&
-          Array.isArray(step.content)
-      );
-
-      outputText = modelOutputs
-        .flatMap((step) => step.content)
-        .filter(
-          (item) =>
-            item &&
-            item.type === 'text' &&
-            typeof item.text === 'string'
-        )
-        .map((item) => item.text)
-        .join('')
-        .trim();
+    if (
+      !outputText &&
+      Array.isArray(raw.steps)
+    ) {
+      outputText =
+        raw.steps
+          .filter(
+            (step) =>
+              step?.type ===
+                'model_output' &&
+              Array.isArray(
+                step.content
+              )
+          )
+          .flatMap(
+            (step) =>
+              step.content
+          )
+          .filter(
+            (item) =>
+              item?.type ===
+                'text' &&
+              typeof item.text ===
+                'string'
+          )
+          .map(
+            (item) =>
+              item.text
+          )
+          .join('')
+          .trim();
     }
 
     if (!outputText) {
-      console.error(
-        'Gemini empty response:',
-        JSON.stringify(raw)
-      );
-
       return res.status(502).json({
-        error: 'AI 분석 결과가 비어 있습니다.'
+        error:
+          'AI 분석 결과가 비어 있습니다.'
       });
     }
 
-    let analysis;
-
-    try {
-      analysis = JSON.parse(outputText);
-    } catch (error) {
-      console.error(
-        'Gemini JSON parse error:',
-        outputText
-      );
-
-      return res.status(502).json({
-        error: 'AI 분석 결과 형식을 읽을 수 없습니다.'
-      });
-    }
+    const analysis =
+      JSON.parse(outputText);
 
     const allowedCareLevels = [
       'low',
@@ -382,7 +388,8 @@ module.exports = async function handler(req, res) {
         analysis.careLevel
       )
     ) {
-      analysis.careLevel = 'moderate';
+      analysis.careLevel =
+        'moderate';
     }
 
     if (
@@ -390,39 +397,58 @@ module.exports = async function handler(req, res) {
         analysis.confidence
       )
     ) {
-      analysis.confidence = 'low';
+      analysis.confidence =
+        'low';
     }
 
     analysis.ongoingCare =
       analysis.ongoingCare === true;
 
     const reserveNumber =
-      Number(analysis.reserveAddMillionWon);
+      Number(
+        analysis.reserveAddMillionWon
+      );
 
-    if (allowedReserve.includes(reserveNumber)) {
-      analysis.reserveAddMillionWon =
-        reserveNumber;
-    } else {
-      analysis.reserveAddMillionWon =
-        allowedReserve.reduce(
-          (nearest, value) =>
-            Math.abs(value - reserveNumber) <
-            Math.abs(nearest - reserveNumber)
-              ? value
-              : nearest,
-          0
-        );
-    }
+    analysis.reserveAddMillionWon =
+      allowedReserve.includes(
+        reserveNumber
+      )
+        ? reserveNumber
+        : allowedReserve.reduce(
+            (
+              nearest,
+              value
+            ) =>
+              Math.abs(
+                value -
+                  reserveNumber
+              ) <
+              Math.abs(
+                nearest -
+                  reserveNumber
+              )
+                ? value
+                : nearest,
+            0
+          );
 
-    analysis.summary = String(
-      analysis.summary ||
-        '지속적인 진료·관리 필요성을 의료 예비자금에 반영했습니다.'
-    ).slice(0, 220);
+    analysis.summary =
+      String(
+        analysis.summary ||
+          '지속적인 진료·관리 필요성을 의료 예비자금에 반영했습니다.'
+      ).slice(
+        0,
+        220
+      );
 
-    analysis.reason = String(
-      analysis.reason ||
-        '확인된 의료정보를 바탕으로 의료 예비자금 수준을 보수적으로 산정했습니다.'
-    ).slice(0, 260);
+    analysis.reason =
+      String(
+        analysis.reason ||
+          '확인된 의료정보를 바탕으로 의료 예비자금 수준을 보수적으로 산정했습니다.'
+      ).slice(
+        0,
+        260
+      );
 
     return res.status(200).json({
       ok: true,
@@ -435,7 +461,10 @@ module.exports = async function handler(req, res) {
       error
     );
 
-    if (error?.name === 'AbortError') {
+    if (
+      error?.name ===
+      'AbortError'
+    ) {
       return res.status(504).json({
         error:
           'AI 분석 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.'
