@@ -1,4 +1,4 @@
-const { getClient, isBytes32, makeAccessToken } = require('../../lib/protection');
+const { getClient, isBytes32, makeAccessToken, parseEvent } = require('../../lib/protection');
 
 module.exports = async function handler(req, res) {
 
@@ -18,16 +18,27 @@ module.exports = async function handler(req, res) {
 
     const { contract } = getClient();
 
-    const protectionId = Number(
-      await contract.createProtection.staticCall(ruleHash)
+    const tx = await contract.createProtection(ruleHash);
+    const receipt = await tx.wait();
+
+    const ev = parseEvent(
+      receipt,
+      contract,
+      'ProtectionCreated'
     );
 
-    const tx = await contract.createProtection(ruleHash);
+    if (!ev) {
+      throw new Error('ProtectionCreated 이벤트를 확인하지 못했습니다.');
+    }
+
+    const protectionId = Number(
+      ev.args.protectionId
+    );
 
     return res.status(200).json({
       ok:true,
       protectionId,
-      txHash:tx.hash,
+      txHash:receipt.hash || tx.hash,
       accessToken:makeAccessToken(protectionId)
     });
 
