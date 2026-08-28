@@ -1056,7 +1056,7 @@ input,select,textarea{ font-family:inherit; }
           </div>
           <button class="btn btn-msg btn-block mt24" onclick="saveMsg()">메시지 저장하기</button>
         </div>
-        <div class="note warn" style="margin-top:18px;"><b>메시지는 선택사항입니다.</b> 원문은 블록체인에 공개하지 않으며, 확인 절차가 끝난 뒤 지정된 사람에게만 함께 보여줍니다.</div>
+        <div class="note warn" style="margin-top:18px;"><b>메시지는 선택사항입니다.</b> 원문은 공개하지 않으며, 확인 절차가 끝난 뒤 지정된 사람에게만 함께 보여줍니다.</div>
       </div>
 
       <button class="btn btn-primary btn-block mt24" id="finishBtn" onclick="finish()">사후 전달 설정 저장하기</button>
@@ -1103,7 +1103,6 @@ input,select,textarea{ font-family:inherit; }
           <div><span>자유 사용 자금</span><b id="statusFree">2억 원</b></div>
           <div><span>보호 자금</span><b id="statusProtected">4억 원</b></div>
         </div>
-        <div id="protectChainProof" style="display:none;margin-top:13px;padding:11px 13px;border:1px solid #4B453F;border-radius:12px;background:#302C27;color:#CFC8BE;font-size:11.5px;line-height:1.6;"></div>
         <div class="pending-change" id="pendingChange"></div>
       </div>
 
@@ -1386,13 +1385,6 @@ input,select,textarea{ font-family:inherit; }
     <div class="note mt16">
       <b>안전 안내</b> · 이음은 돈을 직접 지급하지 않습니다. 실제 수령은 가족이 각 금융기관을 방문해 정식 상속 절차로 진행하므로, 금전 사고나 탈취의 위험이 없습니다.
     </div>
-
-    <!-- 블록체인 증빙 (실제 기록된 경우만 표시) -->
-    <div class="note mt16" id="bcProof" style="display:none;background:var(--teal-pale);border-color:var(--teal-soft);">
-      <b>⛓ 블록체인 기록 확인</b> · 등록, 사망 확인, 열람 기록이 실제 Sepolia 테스트넷에 남습니다.
-      <div id="bcProofLinks" style="margin-top:8px;font-size:12.5px;"></div>
-    </div>
-
     <div class="center mt24"><button class="btn btn-ghost" onclick="resetAll()">처음부터 다시 보기</button></div>
   </div>
 </section>
@@ -1469,14 +1461,14 @@ input,select,textarea{ font-family:inherit; }
   <div class="sheet" style="max-width:500px;">
     <div class="sheet-h" style="background:#24211D;"><b>의료정보 확인</b><small>연결된 의료기관의 전자문서에서 필요한 정보를 확인합니다.</small></div>
     <div class="sheet-b">
-      <div class="profile-help">확인된 의료정보는 지속적인 진료·관리 필요성을 분석해 생활·의료 예비자금 산정에 반영됩니다. 의료정보 원문은 블록체인에 저장하지 않습니다.</div>
+      <div class="profile-help">확인된 의료정보는 지속적인 진료·관리 필요성을 분석해 생활·의료 예비자금 산정에 반영됩니다. 의료정보 원문은 서비스 화면에 별도로 보관하지 않습니다.</div>
       <button type="button" class="upload medical-upload" id="medicalLinkedBtn" onclick="analyzeLinkedMedicalInfo()">
         <div class="u-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#24211D" stroke-width="2" stroke-linecap="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></div>
         <b id="medicalLinkedBtnText">의료 전자문서 확인 요청하기</b>
         <span class="medical-upload-sub" id="medicalLinkedSub">진료·관리 정보를 안전하게 확인해 AI 분석에 반영합니다.</span>
       </button>
       <div class="medical-summary" id="medicalModalSummary" style="display:none;"></div>
-      <div class="medical-chain-proof" id="medicalChainProof" style="display:none;"></div>
+      
     </div>
     <div class="sheet-f"><button class="cancel" style="flex:1;" onclick="closeMedicalModal()">닫기</button></div>
   </div>
@@ -1495,7 +1487,7 @@ input,select,textarea{ font-family:inherit; }
       <label class="field"><span>필요 금액</span><input class="input" id="protectUseAmount" inputmode="numeric" placeholder="예: 5000 (만원 단위)"></label>
       <div class="note" style="background:#FFFBEA;border-color:#EFE0A3;color:#665442;">보호 자금은 일반 이체와 분리되어 있으며, 사용 요청 시 본인 확인과 목적 확인 절차를 거치도록 설계됩니다.</div>
     </div>
-    <div class="sheet-f"><button class="cancel" onclick="closeProtectUse()">취소</button><button class="go" style="background:#FFD84D;color:#3A2E0A;" onclick="submitProtectionUse()">사용 요청</button></div>
+    <div class="sheet-f"><button class="cancel" onclick="closeProtectUse()">취소</button><button class="go" id="protectUseSubmitBtn" style="background:#FFD84D;color:#3A2E0A;" onclick="submitProtectionUse()">사용 요청</button></div>
   </div>
 </div>
 
@@ -1690,7 +1682,7 @@ async function finish(){
   }catch(e){
     if(!isLocalPreview()){
       if(btn){ btn.disabled=false; btn.innerHTML='사후 전달 설정 저장하기'; }
-      toast('블록체인 등록 실패: '+(e.message||'서버 연결을 확인해 주세요.')); return;
+      toast('설정을 저장하지 못했습니다. 잠시 후 다시 시도해주세요.'); console.error(e); return;
     }
   }
 
@@ -1699,7 +1691,7 @@ async function finish(){
   document.getElementById('smsBody').textContent = `${S.owner}님이 ${f.n}님을 ‘이음’ 금융정보 수령자로 지정하셨습니다.`;
   document.getElementById('pName').value=f.n; document.getElementById('pPhone').value=f.p;
   S.legacyConfigured=true; renderLegacySummary(); renderDash();
-  toast(chainRegistered?'사후 전달 설정이 Sepolia에 안전하게 기록되었습니다.':'사후 전달 설정을 미리보기로 저장했습니다. 배포 주소에서는 Sepolia에 기록됩니다.');
+  toast(chainRegistered?'사후 전달 설정이 안전하게 저장되었습니다.':'사후 전달 설정이 저장되었습니다.');
   go('dash');
 }
 
@@ -1882,7 +1874,11 @@ function updatePresetLabels(){
 function renderProtection(){
   syncProtectionTotal(); renderAIProtection(); updatePresetLabels();
   const r=document.getElementById('protectRange');
-  if(r){ r.min=0; r.max=Math.max(0,S.protectTotal); r.step=10; r.disabled=!S.linked; r.value=Math.min(S.protectDraft,S.protectTotal); }
+  if(r){
+    r.min=0; r.max=Math.max(0,S.protectTotal); r.step=10;
+    r.disabled=!S.linked || protectionActionBusy || S.protectPending!==null;
+    r.value=Math.min(S.protectDraft,S.protectTotal);
+  }
   updateProtectionPreview(Math.min(S.protectDraft,S.protectTotal));
   const chip=document.getElementById('protectTotalChip'); if(chip) chip.textContent=S.linked?'연동 순금융자산 · '+formatEok(S.protectTotal):'금융정보 연동 필요';
   const stTotal=document.getElementById('statusTotal'); if(stTotal) stTotal.textContent=S.linked?formatEok(S.protectTotal):'—';
@@ -1893,47 +1889,42 @@ function renderProtection(){
   const btn=document.getElementById('protectStartBtn');
   const title=document.getElementById('protectSetupTitle');
   const pending=document.getElementById('pendingChange');
-  if(btn) btn.disabled=!S.linked;
+
+  if(btn){
+    btn.disabled=!S.linked || protectionActionBusy || S.protectPending!==null;
+  }
   if(title && !S.linked) title.textContent='먼저 금융정보를 연동해주세요';
 
   if(S.protectEnabled){
     st?.classList.add('show');
     if(actions) actions.style.display='grid';
     if(logCard) logCard.style.display='block';
-    if(btn) btn.textContent='변경 내용 신청하기';
+    if(btn){
+      if(protectionActionBusy) btn.innerHTML='<span class="spinner"></span> 보호 설정을 처리하고 있어요';
+      else if(S.protectPending!==null) btn.textContent='보호 설정 변경 진행 중';
+      else btn.textContent='변경 내용 신청하기';
+    }
     if(title) title.textContent='보호 금액을 조정할까요?';
     document.getElementById('statusFree').textContent=formatEok(S.protectFree);
     document.getElementById('statusProtected').textContent=formatEok(S.protectAmount);
     if(pending){
       if(S.protectPending!==null){
         pending.classList.add('show');
-        const eta=S.protectChain.executeAfter?new Date(S.protectChain.executeAfter*1000).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):null;
-        pending.innerHTML='<b>보호 금액 변경 절차가 진행 중이에요.</b><br>현재 '+formatEok(S.protectAmount)+' 보호 상태는 유지되며, '+formatEok(S.protectPending)+'으로의 변경은 보호 대기와 본인 재확인 뒤 자동 적용됩니다.'+(eta?'<br><span style="font-size:11px;color:#8A837A;">테스트넷 적용 예정 시각 · '+eta+'</span>':'');
+        const eta=S.protectChain.executeAfter?new Date(S.protectChain.executeAfter*1000).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):null;
+        pending.innerHTML='<b>보호 금액 변경 절차가 진행 중이에요.</b><br>현재 '+formatEok(S.protectAmount)+' 보호 상태는 유지되며, '+formatEok(S.protectPending)+'으로의 변경은 보호 대기와 본인 재확인 뒤 자동 적용됩니다.'+(eta?'<br><span style="font-size:11px;color:#8A837A;">적용 예정 · '+eta+'</span>':'');
       }else pending.classList.remove('show');
-    }
-    const proof=document.getElementById('protectChainProof');
-    if(proof){
-      if(S.protectChain.txCreate || S.protectChain.txChangeRequest || S.protectChain.txChangeComplete || S.protectChain.txRelease || S.protectChain.txPhoneVerify || S.protectChain.txReleaseComplete){
-        proof.style.display='block';
-        const links=[];
-        if(S.protectChain.txCreate) links.push('보호 설정 <a style="color:#FFD84D" href="'+BC.SCAN+S.protectChain.txCreate+'" target="_blank">Etherscan ↗</a>');
-        if(S.protectChain.txChangeRequest) links.push('변경 요청 <a style="color:#FFD84D" href="'+BC.SCAN+S.protectChain.txChangeRequest+'" target="_blank">Etherscan ↗</a>');
-        if(S.protectChain.txChangeComplete) links.push('변경 적용 <a style="color:#FFD84D" href="'+BC.SCAN+S.protectChain.txChangeComplete+'" target="_blank">Etherscan ↗</a>');
-        if(S.protectChain.txPhoneVerify) links.push('전화 확인 <a style="color:#FFD84D" href="'+BC.SCAN+S.protectChain.txPhoneVerify+'" target="_blank">Etherscan ↗</a>');
-        if(S.protectChain.txRelease) links.push('사용 요청 <a style="color:#FFD84D" href="'+BC.SCAN+S.protectChain.txRelease+'" target="_blank">Etherscan ↗</a>');
-        if(S.protectChain.txReleaseComplete) links.push('사용 완료 <a style="color:#FFD84D" href="'+BC.SCAN+S.protectChain.txReleaseComplete+'" target="_blank">Etherscan ↗</a>');
-        proof.innerHTML='<b style="color:#fff">Sepolia 보호 기록</b><br>'+links.join(' · ');
-      }else{ proof.style.display='none'; }
     }
     renderProtectionChange();
     renderProtectionRelease();
     renderProtectionLog();
   }else{
-    const proof=document.getElementById('protectChainProof'); if(proof) proof.style.display='none';
     st?.classList.remove('show');
     if(actions) actions.style.display='none';
     if(logCard) logCard.style.display='none';
-    if(btn) btn.textContent=S.linked?'이 금액으로 생전 보호 설정하기':'금융정보를 먼저 연동해주세요';
+    if(btn){
+      if(protectionActionBusy) btn.innerHTML='<span class="spinner"></span> 보호 설정을 저장하고 있어요';
+      else btn.textContent=S.linked?'이 금액으로 생전 보호 설정하기':'금융정보를 먼저 연동해주세요';
+    }
     if(title && S.linked) title.textContent='보호할 금액을 정해주세요';
     pending?.classList.remove('show');
     const releaseCard=document.getElementById('protectReleaseCard'); if(releaseCard) releaseCard.classList.remove('show');
@@ -1941,6 +1932,8 @@ function renderProtection(){
   }
 }
 let protectionChangeTimer=null;
+let protectionActionBusy=false;
+
 function renderProtectionChange(){
   const c=document.getElementById('protectChangeCard');
   if(!c) return;
@@ -1957,19 +1950,19 @@ function renderProtectionChange(){
   steps.forEach(s=>s?.classList.remove('active','done'));
   chip.classList.remove('done'); note.classList.remove('show'); note.innerHTML='';
   if(ch.status==='requested'){
-    steps[0]?.classList.add('active'); chip.textContent='변경 요청 기록 중';
-    body.innerHTML='<b>새 보호 금액 변경 요청을 기록하고 있어요.</b><br>현재 보호 금액은 그대로 유지됩니다.';
+    steps[0]?.classList.add('active'); chip.textContent='변경 요청 처리 중';
+    body.innerHTML='<b>새 보호 금액 변경 요청을 처리하고 있어요.</b><br>현재 보호 금액은 그대로 유지됩니다.';
   }else if(ch.status==='waiting'){
     steps[0]?.classList.add('done'); steps[1]?.classList.add('active'); chip.textContent='보호 대기 중';
-    const eta=S.protectChain.executeAfter?new Date(S.protectChain.executeAfter*1000).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):null;
+    const eta=S.protectChain.executeAfter?new Date(S.protectChain.executeAfter*1000).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):null;
     body.innerHTML='<b>갑작스러운 축소·해제를 막기 위한 보호 대기와 본인 재확인 단계입니다.</b><br>'+(eta?'변경 적용 예정 · '+eta:'보호 대기와 재확인이 끝나면 자동으로 다음 단계로 넘어갑니다.');
   }else if(ch.status==='applying'){
     steps[0]?.classList.add('done'); steps[1]?.classList.add('done'); steps[2]?.classList.add('active'); chip.textContent='변경 적용 중';
-    body.innerHTML='<b>보호 대기 조건을 확인하고 새 보호 설정을 반영하고 있어요.</b><br>변경 적용 결과는 블록체인 기록으로 남겨 이후에도 확인할 수 있습니다.';
+    body.innerHTML='<b>보호 대기 조건을 확인하고 새 보호 설정을 반영하고 있어요.</b><br>완료되면 현재 보호 금액에 바로 반영됩니다.';
   }else if(ch.status==='done'){
     steps.forEach(s=>s?.classList.add('done')); chip.textContent='변경 완료'; chip.classList.add('done');
     body.innerHTML='<b>보호 설정 변경이 완료되었습니다.</b><br>새 보호 금액이 현재 보호 기준으로 적용되었습니다.';
-    note.classList.add('show'); note.innerHTML='<b>'+formatEok(ch.to)+' 보호로 변경 완료</b><br>현재 보호 자금 '+formatEok(S.protectAmount)+' · 자유 사용 자금 '+formatEok(S.protectFree)+(S.protectChain.txChangeComplete?' · Sepolia 변경 적용 기록 완료':'');
+    note.classList.add('show'); note.innerHTML='<b>'+formatEok(ch.to)+' 보호로 변경 완료</b><br>현재 보호 자금 '+formatEok(S.protectAmount)+' · 자유 사용 자금 '+formatEok(S.protectFree);
   }
 }
 function scheduleProtectionChangeExecution(){
@@ -1980,69 +1973,98 @@ function scheduleProtectionChangeExecution(){
   }
   protectionChangeTimer=setTimeout(()=>executeProtectionChange(true),wait);
 }
+async function recordMedicalBasisInBackground(){
+  if(isLocalPreview() || !S.medicalBasisHash || S.protectChain.protectionId===null || !S.protectChain.accessToken) return;
+  try{
+    const br=await apiCall('/api/protection/medical-basis',{
+      protectionId:S.protectChain.protectionId,
+      accessToken:S.protectChain.accessToken,
+      basisHash:S.medicalBasisHash
+    });
+    S.protectChain.txMedicalBasis=br.txHash||null;
+  }catch(e){
+    console.warn('medical basis record skipped',e);
+  }
+}
 async function enableProtection(){
+  if(protectionActionBusy){ toast('보호 설정을 처리하고 있어요. 잠시만 기다려주세요.'); return; }
   if(!S.linked){ toast('금융정보를 먼저 연동해주세요.'); go('assets'); return; }
   const requested=Number(S.protectDraft);
   if(requested<=0){ toast('보호할 금액을 선택해주세요.'); return; }
+  if(S.protectPending!==null){ toast('진행 중인 보호 설정 변경이 완료된 뒤 다시 시도해주세요.'); return; }
+  if(S.protectEnabled && requested===S.protectAmount){ toast('현재 보호 금액과 동일합니다.'); return; }
 
-  if(!S.protectEnabled){
-    const rulePayload={
-      total:S.protectTotal, protected:requested, free:S.protectTotal-requested,
-      changePolicy:'delayed_reauthentication', essentialExpenseRelease:true,
-      medicalBasisHash:S.medicalBasisHash||null,
-      createdAt:new Date().toISOString()
-    };
-    const ruleHash=await hashPayload(rulePayload);
-    let chainResult=null;
-    if(!isLocalPreview()){
-      try{ chainResult=await apiCall('/api/protection/create',{ruleHash}); }
-      catch(e){ toast('생전 보호 블록체인 미연결: '+(e.message||'설정을 확인해 주세요.')); }
-    }
-    if(chainResult){
-      S.protectChain.connected=true;
-      S.protectChain.protectionId=Number(chainResult.protectionId);
-      S.protectChain.accessToken=chainResult.accessToken;
-      S.protectChain.txCreate=chainResult.txHash;
-      if(S.medicalBasisHash){
-        try{ const br=await apiCall('/api/protection/medical-basis',{protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,basisHash:S.medicalBasisHash}); S.protectChain.txMedicalBasis=br.txHash||null; }
-        catch(e){ /* 보호 설정 자체는 유지하고 의료 근거 기록만 별도 확인 */ }
+  protectionActionBusy=true;
+  renderProtection();
+  try{
+    if(!S.protectEnabled){
+      const rulePayload={
+        total:S.protectTotal, protected:requested, free:S.protectTotal-requested,
+        changePolicy:'delayed_reauthentication', essentialExpenseRelease:true,
+        medicalBasisHash:S.medicalBasisHash||null,
+        createdAt:new Date().toISOString()
+      };
+      const ruleHash=await hashPayload(rulePayload);
+      let chainResult=null;
+      if(!isLocalPreview()){
+        chainResult=await apiCall('/api/protection/create',{ruleHash});
       }
+      if(chainResult){
+        S.protectChain.connected=true;
+        S.protectChain.protectionId=Number(chainResult.protectionId);
+        S.protectChain.accessToken=chainResult.accessToken;
+        S.protectChain.txCreate=chainResult.txHash;
+      }
+      S.protectEnabled=true;
+      S.protectAmount=requested;
+      S.protectFree=S.protectTotal-S.protectAmount;
+      S.protectPending=null;
+      S.protectLogs.unshift({text:'생전 보호 설정이 완료되었습니다.',sub:'보호 자금 '+formatEok(S.protectAmount)+' · 자유 사용 자금 '+formatEok(S.protectFree)});
+      renderDash();
+      toast('생전 보호 설정이 완료되었습니다.');
+      void recordMedicalBasisInBackground();
+      return;
     }
-    S.protectEnabled=true; S.protectAmount=requested; S.protectFree=S.protectTotal-S.protectAmount; S.protectPending=null;
-    S.protectLogs.unshift({text:'생전 보호 설정이 완료되었습니다.',sub:'보호 자금 '+formatEok(S.protectAmount)+' · 자유 사용 자금 '+formatEok(S.protectFree)+(chainResult?' · Sepolia 기록 완료':'')});
-    renderProtection(); renderDash(); toast(chainResult?'생전 보호 설정과 Sepolia 기록이 완료되었습니다.':'생전 보호 설정이 완료되었습니다.');
-    setTimeout(()=>document.getElementById('protectStatus')?.scrollIntoView({behavior:'smooth',block:'center'}),120); return;
-  }
-  if(requested===S.protectAmount){ toast('현재 보호 금액과 동일합니다.'); return; }
 
-  const old=S.protectAmount;
-  S.protectProcessMode='change';
-  S.protectChange={active:true,status:'requested',from:old,to:requested};
-  S.protectPending=requested;
-  renderProtectionChange();
-  setTimeout(()=>document.getElementById('protectChangeCard')?.scrollIntoView({behavior:'smooth',block:'center'}),100);
+    const old=S.protectAmount;
+    S.protectProcessMode='change';
+    S.protectChange={active:true,status:'requested',from:old,to:requested};
+    S.protectPending=requested;
+    renderProtectionChange();
 
-  const changePayload={from:old,to:requested,total:S.protectTotal,requestedAt:new Date().toISOString()};
-  const newRuleHash=await hashPayload(changePayload);
-  let chainResult=null;
-  if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
-    try{
+    const changePayload={from:old,to:requested,total:S.protectTotal,requestedAt:new Date().toISOString()};
+    const newRuleHash=await hashPayload(changePayload);
+    let chainResult=null;
+    if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
       chainResult=await apiCall('/api/protection/change-request',{
-        protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,newRuleHash
+        protectionId:S.protectChain.protectionId,
+        accessToken:S.protectChain.accessToken,
+        newRuleHash
       });
       S.protectChain.txChangeRequest=chainResult.txHash;
       S.protectChain.executeAfter=Number(chainResult.executeAfter||0)||null;
-    }catch(e){
-      S.protectChange.status='waiting';
-      toast('변경 요청의 Sepolia 기록 실패: '+(e.message||'서버 연결을 확인해 주세요.'));
+    }else if(isLocalPreview()){
+      S.protectChain.executeAfter=Math.floor((Date.now()+2400)/1000);
     }
-  }else if(isLocalPreview()){
-    S.protectChain.executeAfter=Math.floor((Date.now()+2400)/1000);
+    S.protectChange.status='waiting';
+    S.protectLogs.unshift({text:'보호 금액 변경을 신청했습니다.',sub:formatEok(old)+' → '+formatEok(requested)+' · 보호 대기 후 자동 적용'});
+    renderDash();
+    toast('보호 금액 변경 절차가 시작되었습니다.');
+    scheduleProtectionChangeExecution();
+  }catch(e){
+    console.error(e);
+    if(!S.protectEnabled){
+      S.protectPending=null;
+      toast('보호 설정을 완료하지 못했습니다. 잠시 후 다시 시도해주세요.');
+    }else{
+      S.protectPending=null;
+      S.protectChange={active:false,status:'',from:0,to:0};
+      toast('보호 금액 변경 요청을 완료하지 못했습니다. 잠시 후 다시 시도해주세요.');
+    }
+  }finally{
+    protectionActionBusy=false;
+    renderProtection();
   }
-  S.protectChange.status='waiting';
-  S.protectLogs.unshift({text:'보호 금액 변경을 신청했습니다.',sub:formatEok(old)+' → '+formatEok(requested)+' · 보호 대기 후 자동 적용'+(chainResult?' · Sepolia 요청 기록 완료':'')});
-  renderProtection(); renderDash(); toast('보호 금액 변경 절차가 시작되었습니다.');
-  scheduleProtectionChangeExecution();
 }
 
 async function executeProtectionChange(auto=false){
@@ -2050,7 +2072,7 @@ async function executeProtectionChange(auto=false){
   S.protectChange.status='applying'; renderProtectionChange();
   const old=S.protectAmount, next=S.protectPending;
   if(S.protectChain.protectionId===null || !S.protectChain.accessToken || isLocalPreview()){
-    await new Promise(r=>setTimeout(r,900));
+    await new Promise(r=>setTimeout(r,700));
     S.protectAmount=next; S.protectFree=S.protectTotal-next; S.protectPending=null; S.protectChain.executeAfter=null;
     S.protectChange={active:true,status:'done',from:old,to:next};
     S.protectLogs.unshift({text:'보호 금액 변경이 적용되었습니다.',sub:formatEok(old)+' → '+formatEok(next)+' · 보호 대기 및 재확인 완료'});
@@ -2061,7 +2083,7 @@ async function executeProtectionChange(auto=false){
     const r=await apiCall('/api/protection/change-execute',{protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken});
     S.protectAmount=next; S.protectFree=S.protectTotal-next; S.protectPending=null; S.protectChain.executeAfter=null; S.protectChain.txChangeComplete=r.txHash||null;
     S.protectChange={active:true,status:'done',from:old,to:next};
-    S.protectLogs.unshift({text:'보호 금액 변경이 적용되었습니다.',sub:formatEok(old)+' → '+formatEok(next)+' · 보호 대기 및 재확인 조건 충족 · Sepolia 변경 적용 기록 완료'});
+    S.protectLogs.unshift({text:'보호 금액 변경이 적용되었습니다.',sub:formatEok(old)+' → '+formatEok(next)+' · 보호 대기 및 재확인 완료'});
     renderProtection(); renderDash(); toast('보호 금액 변경이 완료되었습니다.');
   }catch(e){
     const msg=e.message||'';
@@ -2071,7 +2093,8 @@ async function executeProtectionChange(auto=false){
       return;
     }
     S.protectChange.status='waiting'; renderProtectionChange();
-    toast('변경 적용 대기 중입니다: '+(msg||'보호 대기 시간이 필요합니다.'));
+    toast('보호 대기 시간이 아직 끝나지 않았습니다. 자동으로 다시 확인합니다.');
+    if(auto) protectionChangeTimer=setTimeout(()=>executeProtectionChange(true),1800);
   }
 }
 function openProfileModal(){
@@ -2090,39 +2113,46 @@ function saveProfileInfo(){
   if(!S.protectEnabled) S.protectDraft=S.aiRecommended;
   renderProtection(); toast('분석 기준 정보를 반영했습니다.');
 }
+let medicalAnalysisBusy=false;
+let protectionUseBusy=false;
+
 function openMedicalModal(){
   document.getElementById('medicalModal').classList.add('show');
   const summary=document.getElementById('medicalModalSummary');
-  const proof=document.getElementById('medicalChainProof');
-  const btn=document.getElementById('medicalLinkedBtn'); if(btn) btn.disabled=false;
+  const btn=document.getElementById('medicalLinkedBtn');
   const txt=document.getElementById('medicalLinkedBtnText');
   const sub=document.getElementById('medicalLinkedSub');
+  if(btn) btn.disabled=medicalAnalysisBusy;
   if(S.medicalLoaded){
-    if(summary){ summary.style.display='block'; summary.innerHTML='<b>의료정보 확인 및 AI 분석 완료</b><br>'+escapeHtml(S.medicalSummary||'확인된 의료정보가 AI 분석에 반영되어 있습니다.')+'<br><span style="font-size:11px;color:#8A837A;">마지막 확인 '+escapeHtml(S.medicalCheckedAt||'최근')+' · 다시 확인하기 전까지 현재 분석 결과가 유지됩니다.</span>'; }
-    if(txt) txt.textContent='의료 전자문서 다시 확인하기';
-    if(sub) sub.textContent='최신 진료·관리 정보로 AI 분석을 갱신합니다.';
-    if(proof){
-      proof.style.display='block';
-      proof.innerHTML=S.protectChain.txMedicalBasis
-        ? '의료정보 원문은 저장하지 않고 <b>분석 근거 해시만 Sepolia에 기록</b>했습니다. <a href="https://sepolia.etherscan.io/tx/'+encodeURIComponent(S.protectChain.txMedicalBasis)+'" target="_blank" rel="noopener">기록 확인 ↗</a>'
-        : (S.medicalBasisHash ? '의료정보 원문은 저장하지 않습니다. 보호 설정이 생성되면 <b>분석 근거 해시</b>를 블록체인 신뢰 기록에 연결합니다.' : '');
+    if(summary){
+      summary.style.display='block';
+      summary.innerHTML='<b>의료정보 확인 및 AI 분석 완료</b><br>'+escapeHtml(S.medicalSummary||'확인된 의료정보가 AI 분석에 반영되어 있습니다.')+'<br><span style="font-size:11px;color:#8A837A;">마지막 확인 '+escapeHtml(S.medicalCheckedAt||'최근')+' · 다시 확인하기 전까지 현재 분석 결과가 유지됩니다.</span>';
     }
+    if(txt) txt.textContent=medicalAnalysisBusy?'의료정보 확인 중…':'의료 전자문서 다시 확인하기';
+    if(sub) sub.textContent=medicalAnalysisBusy?'AI가 필요한 정보만 분석하고 있습니다.':'최신 진료·관리 정보로 AI 분석을 갱신합니다.';
   }else{
-    if(summary){ summary.style.display='none'; summary.textContent=''; }
-    if(proof) proof.style.display='none';
-    if(txt) txt.textContent='의료 전자문서 확인 요청하기';
-    if(sub) sub.textContent='진료·관리 정보를 안전하게 확인해 AI 분석에 반영합니다.';
+    if(summary){
+      summary.style.display=medicalAnalysisBusy?'block':'none';
+      if(!medicalAnalysisBusy) summary.textContent='';
+    }
+    if(txt) txt.textContent=medicalAnalysisBusy?'의료정보 확인 중…':'의료 전자문서 확인 요청하기';
+    if(sub) sub.textContent=medicalAnalysisBusy?'AI가 필요한 정보만 분석하고 있습니다.':'진료·관리 정보를 안전하게 확인해 AI 분석에 반영합니다.';
   }
 }
 function closeMedicalModal(){ document.getElementById('medicalModal').classList.remove('show'); }
 async function analyzeLinkedMedicalInfo(){
+  if(medicalAnalysisBusy){ toast('의료정보를 분석하고 있어요. 잠시만 기다려주세요.'); return; }
+  medicalAnalysisBusy=true;
   const beforeRecommendation=calculateAIRecommendation();
   const btn=document.getElementById('medicalLinkedBtn');
   const btnText=document.getElementById('medicalLinkedBtnText');
   const btnSub=document.getElementById('medicalLinkedSub');
   const summary=document.getElementById('medicalModalSummary');
-  summary.style.display='block'; summary.textContent='의료기관 전자문서를 확인하고 AI 분석에 반영하고 있어요.';
-  btn.disabled=true; if(btnText) btnText.textContent='의료정보 확인 중…'; if(btnSub) btnSub.textContent='연결된 의료기관의 확인 결과를 기다리고 있습니다.';
+  if(summary){ summary.style.display='block'; summary.innerHTML='<b>의료정보 확인 중</b><br>연결된 전자문서에서 보호금액 산정에 필요한 정보만 확인하고 있습니다.'; }
+  if(btn){ btn.disabled=true; }
+  if(btnText) btnText.textContent='의료정보 확인 중…';
+  if(btnSub) btnSub.textContent='확인이 끝나면 이 화면에서 바로 결과를 보여드려요.';
+
   const documentText='의료기관 전자문서 연계 결과 요약입니다. 정기적인 외래 추적 관찰과 지속적인 약물 관리가 필요하며, 정기 검진이 권고되어 있습니다. 장기 입원이나 즉각적인 수술 예정 정보는 확인되지 않았습니다.';
   try{
     let analysis=null;
@@ -2133,49 +2163,73 @@ async function analyzeLinkedMedicalInfo(){
       });
       analysis=r.analysis||null; S.aiMode='api';
     }else{
-      await new Promise(r=>setTimeout(r,900));
-      analysis={careLevel:'moderate',reserveAddMillionWon:10,summary:'정기적인 진료·관리 필요성을 보수적으로 반영했습니다.',reason:'연결된 의료정보의 지속 관리 필요성 반영'};
+      await new Promise(r=>setTimeout(r,650));
+      analysis={careLevel:'moderate',ongoingCare:true,confidence:'medium',reserveAddMillionWon:10,summary:'정기적인 진료·관리 필요성을 보수적으로 반영했습니다.',reason:'연결된 의료정보의 지속 관리 필요성 반영'};
       S.aiMode='local';
     }
-    if(analysis){
-      const add=Number(analysis.reserveAddMillionWon||0);
-      if(analysis.careLevel==='moderate' && add<10) analysis.reserveAddMillionWon=10;
-      if(analysis.careLevel==='high' && add<20) analysis.reserveAddMillionWon=20;
-    }
+    if(!analysis) throw new Error('AI 분석 결과를 확인할 수 없습니다.');
+    const add=Number(analysis.reserveAddMillionWon||0);
+    if(analysis.careLevel==='moderate' && add<10) analysis.reserveAddMillionWon=10;
+    if(analysis.careLevel==='high' && add<20) analysis.reserveAddMillionWon=20;
+
     S.aiPreviousRecommended=beforeRecommendation;
-    S.medicalAnalysis=analysis; S.medicalLoaded=true; S.medicalDocName='의료기관 전자문서';
+    S.medicalAnalysis=analysis;
+    S.medicalLoaded=true;
+    S.medicalDocName='의료기관 전자문서';
     S.medicalCheckedAt=new Date().toLocaleString('ko-KR',{month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
-    S.medicalSummary=(analysis&&analysis.summary)||'정기적인 진료·관리 필요성을 의료 예비자금에 반영했습니다.';
-    S.medicalBasisHash=await hashPayload({source:'medical_e_document',careLevel:analysis?.careLevel||'moderate',ongoingCare:!!analysis?.ongoingCare,confidence:analysis?.confidence||'medium',reserveAddMillionWon:Number(analysis?.reserveAddMillionWon||10),checkedAt:new Date().toISOString()});
-    if(!isLocalPreview() && S.protectChain.connected && S.protectChain.protectionId!==null && S.protectChain.accessToken){
-      try{
-        const br=await apiCall('/api/protection/medical-basis',{protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,basisHash:S.medicalBasisHash});
-        S.protectChain.txMedicalBasis=br.txHash||null;
-      }catch(e){ toast('의료 분석은 반영됐지만 블록체인 근거 기록을 확인하지 못했습니다.'); }
+    S.medicalSummary=analysis.summary||'정기적인 진료·관리 필요성을 의료 예비자금에 반영했습니다.';
+    S.medicalBasisHash=await hashPayload({
+      source:'medical_e_document',
+      careLevel:analysis.careLevel||'moderate',
+      ongoingCare:!!analysis.ongoingCare,
+      confidence:analysis.confidence||'medium',
+      reserveAddMillionWon:Number(analysis.reserveAddMillionWon||10),
+      checkedAt:new Date().toISOString()
+    });
+
+    calculateAIRecommendation();
+    if(!S.protectEnabled) S.protectDraft=S.aiRecommended;
+    renderProtection();
+
+    if(summary){
+      summary.style.display='block';
+      summary.innerHTML='<b>의료정보 확인 및 AI 분석 완료</b><br>'+escapeHtml(S.medicalSummary)+'<br><span style="font-size:11px;color:#8A837A;">질병을 새로 진단하거나 미래 치료비를 단정하지 않고, 보호금액 산정을 위한 의료 예비자금 수준에만 반영합니다.</span>';
     }
-    summary.innerHTML='<b>의료정보 확인 및 AI 분석 완료</b><br>'+escapeHtml(S.medicalSummary)+'<br><span style="font-size:11px;color:#8A837A;">질병을 새로 진단하거나 미래 치료비를 단정하지 않고, 보호금액 산정을 위한 의료 예비자금 수준에만 반영합니다.</span>';
-    calculateAIRecommendation(); if(!S.protectEnabled) S.protectDraft=S.aiRecommended; renderProtection();
-    const recEl=document.getElementById('aiRecommendAmount'); if(recEl){ recEl.classList.remove('ai-recommend-flash'); void recEl.offsetWidth; recEl.classList.add('ai-recommend-flash'); }
-    openMedicalModal();
-    if(btnText) btnText.textContent='의료정보 확인 완료';
+    if(btnText) btnText.textContent='의료 전자문서 다시 확인하기';
     if(btnSub) btnSub.textContent='확인된 의료정보가 현재 AI 보호금액 분석에 반영되었습니다.';
+    const recEl=document.getElementById('aiRecommendAmount');
+    if(recEl){ recEl.classList.remove('ai-recommend-flash'); void recEl.offsetWidth; recEl.classList.add('ai-recommend-flash'); }
     toast('의료정보가 AI 보호금액 분석에 반영되었습니다.');
+
+    // 화면 완료를 기다리게 하지 않고 신뢰 기록은 뒤에서 처리합니다.
+    void recordMedicalBasisInBackground();
   }catch(e){
-    summary.innerHTML='<b>의료정보 분석에 연결하지 못했습니다.</b><br>'+escapeHtml(e.message||'서버 연결을 확인해주세요.');
-    if(btnText) btnText.textContent='의료 전자문서 다시 확인하기'; if(btnSub) btnSub.textContent='연결 상태를 확인한 뒤 다시 요청해주세요.';
-  }finally{ btn.disabled=false; }
+    console.error(e);
+    if(summary){ summary.style.display='block'; summary.innerHTML='<b>의료정보를 확인하지 못했습니다.</b><br>잠시 후 다시 시도해주세요.'; }
+    if(btnText) btnText.textContent='의료 전자문서 다시 확인하기';
+    if(btnSub) btnSub.textContent='연결 상태를 확인한 뒤 다시 요청해주세요.';
+  }finally{
+    medicalAnalysisBusy=false;
+    if(btn) btn.disabled=false;
+  }
 }
+
 function openProtectUse(){
+  if(!S.protectEnabled){ toast('먼저 생전 보호를 설정해주세요.'); return; }
+  if(protectionUseBusy || (S.protectRelease.active && S.protectRelease.status!=='completed')){
+    toast('보호 자금 사용 요청을 처리하고 있어요. 잠시만 기다려주세요.');
+    return;
+  }
   S.protectProcessMode='release';
   renderProtectionChange(); renderProtectionRelease();
-  if(!S.protectEnabled){ toast('먼저 생전 보호를 설정해주세요.'); return; }
-  if(S.protectRelease.active && S.protectRelease.status!=='completed'){
-    toast('진행 중인 보호 자금 사용 요청을 먼저 완료해주세요.');
-    document.getElementById('protectReleaseCard')?.scrollIntoView({behavior:'smooth',block:'center'}); return;
-  }
-  document.getElementById('protectUseAmount').value=''; document.getElementById('protectUsePurpose').selectedIndex=0; document.getElementById('protectUseModal').classList.add('show');
+  document.getElementById('protectUseAmount').value='';
+  document.getElementById('protectUsePurpose').selectedIndex=0;
+  document.getElementById('protectUseModal').classList.add('show');
 }
-function closeProtectUse(){ document.getElementById('protectUseModal').classList.remove('show'); }
+function closeProtectUse(){
+  if(protectionUseBusy) return;
+  document.getElementById('protectUseModal').classList.remove('show');
+}
 function releaseDisplayAmount(amountManwon){
   const amount=Number(amountManwon||0);
   return amount>=10000 ? (amount/10000).toFixed(amount%10000?1:0)+'억 원' : amount.toLocaleString()+'만 원';
@@ -2203,84 +2257,105 @@ function renderProtectionRelease(){
   note.classList.remove('show');
   if(actions) actions.style.display='none';
   if(r.status==='requested'){
-    chip.textContent='전화 본인확인 대기';
-    txt.innerHTML='<b>보호 자금 사용 요청이 접수되었습니다.</b><br>등록된 전화번호를 통해 금융기관이 본인 확인을 진행합니다. 사용자가 화면에서 단계를 하나씩 누를 필요는 없습니다.'+(r.txRequest?' <a href="'+BC.SCAN+r.txRequest+'" target="_blank" style="color:#7A5B00;font-weight:800;">요청 기록 확인 ↗</a>':'');
+    chip.textContent='전화 본인확인 진행 중';
+    txt.innerHTML='<b>보호 자금 사용 요청이 접수되었습니다.</b><br>등록된 전화번호를 기준으로 본인 확인을 진행하고 있습니다. 이 화면에서 추가로 누를 버튼은 없습니다.';
   }else if(r.status==='phone'){
-    chip.textContent='전화 본인확인 완료';
-    txt.innerHTML='<b>전화 본인확인 결과가 확인되었습니다.</b><br>통화 내용은 블록체인에 저장하지 않고, 본인 확인이 완료되었다는 검증 결과의 해시만 Sepolia에 기록합니다. 이제 금융기관의 지급 처리로 자동 이어집니다.'+(r.txPhoneVerify?' <a href="'+BC.SCAN+r.txPhoneVerify+'" target="_blank" style="color:#7A5B00;font-weight:800;">본인확인 기록 확인 ↗</a>':'');
+    chip.textContent='본인확인 완료 · 지급 처리 중';
+    txt.innerHTML='<b>전화 본인확인이 완료되었습니다.</b><br>이제 금융기관의 지급 처리로 자동 이어집니다. 잠시만 기다려주세요.';
   }else if(r.status==='completed'){
     chip.textContent='금융기관 지급 완료';
-    txt.innerHTML='<b>보호 자금 사용 처리가 완료되었습니다.</b><br>확인 절차가 끝나 금융기관에서 요청 금액을 본인이 사용할 수 있는 자금으로 처리한 것으로 반영되었습니다.';
+    txt.innerHTML='<b>보호 자금 사용 처리가 완료되었습니다.</b><br>확인 절차가 끝나 요청 금액을 사용할 수 있는 자금으로 반영했습니다.';
     note.classList.add('show');
-    const links=[];
-    if(r.txRequest) links.push('<a href="'+BC.SCAN+r.txRequest+'" target="_blank" style="color:#2E6B35;font-weight:800;">요청 기록 ↗</a>');
-    if(r.txPhoneVerify) links.push('<a href="'+BC.SCAN+r.txPhoneVerify+'" target="_blank" style="color:#2E6B35;font-weight:800;">전화 본인확인 기록 ↗</a>');
-    if(r.txComplete) links.push('<a href="'+BC.SCAN+r.txComplete+'" target="_blank" style="color:#2E6B35;font-weight:800;">지급 완료 기록 ↗</a>');
-    note.innerHTML='<b>'+releaseDisplayAmount(r.amountManwon)+' 사용 가능 처리 완료</b><br>현재 보호 자금 '+formatEok(S.protectAmount)+' · 자유 사용 자금 '+formatEok(S.protectFree)+(links.length?'<br>'+links.join(' · '):'');
+    note.innerHTML='<b>'+releaseDisplayAmount(r.amountManwon)+' 사용 가능 처리 완료</b><br>현재 보호 자금 '+formatEok(S.protectAmount)+' · 자유 사용 자금 '+formatEok(S.protectFree);
   }
 }
 async function submitProtectionUse(){
-  const purpose=document.getElementById('protectUsePurpose').value, raw=document.getElementById('protectUseAmount').value.replace(/[^0-9]/g,''), amount=Number(raw);
+  if(protectionUseBusy){ toast('사용 요청을 처리하고 있어요. 잠시만 기다려주세요.'); return; }
+  const purpose=document.getElementById('protectUsePurpose').value;
+  const raw=document.getElementById('protectUseAmount').value.replace(/[^0-9]/g,'');
+  const amount=Number(raw);
   if(!amount){ toast('필요 금액을 입력해주세요.'); return; }
   const amountMillion=amount/100;
   if(amountMillion>S.protectAmount){ toast('현재 보호 중인 금액보다 큰 금액은 요청할 수 없습니다.'); return; }
-  const display=releaseDisplayAmount(amount);
-  const requestHash=await hashPayload({purpose,amountManwon:amount,requestedAt:new Date().toISOString()});
-  let chainResult=null;
-  if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
-    try{
-      chainResult=await apiCall('/api/protection/release-request',{protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,requestHash});
-      S.protectChain.txRelease=chainResult.txHash;
-    }catch(e){ toast('사용 요청의 Sepolia 기록 실패: '+(e.message||'서버 연결을 확인해주세요.')); }
+
+  protectionUseBusy=true;
+  const submitBtn=document.getElementById('protectUseSubmitBtn');
+  if(submitBtn){ submitBtn.disabled=true; submitBtn.innerHTML='<span class="spinner"></span> 요청 처리 중'; }
+
+  try{
+    const display=releaseDisplayAmount(amount);
+    const requestHash=await hashPayload({purpose,amountManwon:amount,requestedAt:new Date().toISOString()});
+    let chainResult=null;
+    if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
+      chainResult=await apiCall('/api/protection/release-request',{
+        protectionId:S.protectChain.protectionId,
+        accessToken:S.protectChain.accessToken,
+        requestHash
+      });
+      S.protectChain.txRelease=chainResult.txHash||null;
+    }
+
+    S.protectProcessMode='release';
+    S.protectRelease={active:true,status:'requested',purpose,amountManwon:amount,amountMillion,requestHash,verificationHash:null,txRequest:chainResult?.txHash||null,txPhoneVerify:null,txComplete:null};
+    S.protectLogs.unshift({text:purpose+' 목적으로 보호 자금 사용을 요청했습니다.',sub:'요청 금액 '+display+' · 등록 전화번호 본인확인 진행 중'});
+    document.getElementById('protectUseModal').classList.remove('show');
+    renderProtectionRelease(); renderProtectionLog();
+    toast('보호 자금 사용 요청이 접수되었습니다. 확인 절차가 자동으로 진행됩니다.');
+
+    await new Promise(r=>setTimeout(r,650));
+    await processPhoneVerifiedRelease();
+  }catch(e){
+    console.error(e);
+    S.protectRelease={active:false,status:'',purpose:'',amountManwon:0,amountMillion:0,requestHash:null,verificationHash:null,txRequest:null,txPhoneVerify:null,txComplete:null};
+    renderProtectionRelease(); renderProtectionLog();
+    toast('보호 자금 사용 요청을 완료하지 못했습니다. 잠시 후 다시 시도해주세요.');
+  }finally{
+    protectionUseBusy=false;
+    if(submitBtn){ submitBtn.disabled=false; submitBtn.textContent='사용 요청'; }
   }
-  S.protectProcessMode='release';
-  S.protectRelease={active:true,status:'requested',purpose,amountManwon:amount,amountMillion,requestHash,verificationHash:null,txRequest:chainResult?.txHash||null,txPhoneVerify:null,txComplete:null};
-  S.protectLogs.unshift({text:purpose+' 목적으로 보호 자금 사용을 요청했습니다.',sub:'요청 금액 '+display+' · 등록 전화번호 본인확인 대기'+(chainResult?' · Sepolia 요청 기록 완료':'')});
-  closeProtectUse(); renderProtection(); toast('보호 자금 사용 요청이 접수되었습니다. 전화 본인확인으로 이어집니다.');
-  setTimeout(()=>document.getElementById('protectReleaseCard')?.scrollIntoView({behavior:'smooth',block:'center'}),120);
-  setTimeout(()=>processPhoneVerifiedRelease(),1200);
 }
 async function processPhoneVerifiedRelease(){
   const r=S.protectRelease; if(!r.active || r.status!=='requested') return;
   const verificationHash=await hashPayload({requestHash:r.requestHash,method:'registered-phone-verification',verifiedAt:new Date().toISOString()});
   let phoneResult=null;
   if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
-    try{
-      phoneResult=await apiCall('/api/protection/phone-verify',{
-        protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,requestHash:r.requestHash,verificationHash
-      });
-      r.txPhoneVerify=phoneResult.txHash; S.protectChain.txPhoneVerify=phoneResult.txHash;
-    }catch(e){
-      toast('전화 본인확인 블록체인 기록 실패: '+(e.message||'서버 연결을 확인해주세요.'));
-      return;
-    }
+    phoneResult=await apiCall('/api/protection/phone-verify',{
+      protectionId:S.protectChain.protectionId,
+      accessToken:S.protectChain.accessToken,
+      requestHash:r.requestHash,
+      verificationHash
+    });
+    r.txPhoneVerify=phoneResult.txHash||null;
+    S.protectChain.txPhoneVerify=phoneResult.txHash||null;
   }
-  r.verificationHash=verificationHash; r.status='phone';
-  S.protectLogs.unshift({text:'등록 전화번호를 통한 본인 확인이 완료되었습니다.',sub:r.purpose+' · '+releaseDisplayAmount(r.amountManwon)+(phoneResult?' · Sepolia 본인확인 기록 완료':' · 로컬 시뮬레이션')});
-  renderProtection(); toast('전화 본인확인이 완료되었습니다. 금융기관 처리로 이어집니다.');
-  setTimeout(()=>completePhoneVerifiedRelease(),1400);
+  r.verificationHash=verificationHash;
+  r.status='phone';
+  S.protectLogs.unshift({text:'등록 전화번호를 통한 본인 확인이 완료되었습니다.',sub:r.purpose+' · '+releaseDisplayAmount(r.amountManwon)+' · 금융기관 처리 진행 중'});
+  renderProtectionRelease(); renderProtectionLog();
+  await new Promise(r=>setTimeout(r,650));
+  await completePhoneVerifiedRelease();
 }
 async function completePhoneVerifiedRelease(){
   const r=S.protectRelease; if(!r.active || r.status!=='phone') return;
   let completeResult=null;
   if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
-    try{
-      completeResult=await apiCall('/api/protection/release-complete',{
-        protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,requestHash:r.requestHash
-      });
-      S.protectChain.txReleaseComplete=completeResult.txHash; r.txComplete=completeResult.txHash;
-    }catch(e){
-      toast('금융기관 처리 완료 기록 실패: '+(e.message||'서버 연결을 확인해주세요.'));
-      return;
-    }
+    completeResult=await apiCall('/api/protection/release-complete',{
+      protectionId:S.protectChain.protectionId,
+      accessToken:S.protectChain.accessToken,
+      requestHash:r.requestHash
+    });
+    S.protectChain.txReleaseComplete=completeResult.txHash||null;
+    r.txComplete=completeResult.txHash||null;
   }
   const released=Math.min(Number(r.amountMillion||0),S.protectAmount);
   const before=S.protectAmount;
   S.protectAmount=Math.max(0,Math.round((S.protectAmount-released)*100)/100);
   S.protectFree=Math.max(0,Math.round((S.protectTotal-S.protectAmount)*100)/100);
-  S.protectDraft=S.protectAmount; r.status='completed';
-  S.protectLogs.unshift({text:'금융기관의 보호 자금 사용 처리가 완료되었습니다.',sub:releaseDisplayAmount(r.amountManwon)+' · 보호 '+formatEok(before)+' → '+formatEok(S.protectAmount)+(completeResult?' · Sepolia 지급 완료 기록':'')});
-  renderProtection(); renderDash(); toast('보호 자금 사용 처리가 완료되었습니다.');
+  S.protectDraft=S.protectAmount;
+  r.status='completed';
+  S.protectLogs.unshift({text:'금융기관의 보호 자금 사용 처리가 완료되었습니다.',sub:releaseDisplayAmount(r.amountManwon)+' · 보호 '+formatEok(before)+' → '+formatEok(S.protectAmount)});
+  renderProtection(); renderDash();
+  toast('보호 자금 사용 처리가 완료되었습니다.');
 }
 function renderProtectionLog(){
   const el=document.getElementById('protectLog'); if(!el) return;
@@ -2290,7 +2365,9 @@ function renderProtectionLog(){
 function scrollProtectionSetup(){
   S.protectProcessMode='change';
   renderProtectionChange(); renderProtectionRelease();
-  S.protectDraft=S.protectAmount; const r=document.getElementById('protectRange'); if(r) r.value=S.protectAmount; updateProtectionPreview(S.protectAmount);
+  S.protectDraft=S.protectAmount;
+  const r=document.getElementById('protectRange'); if(r) r.value=S.protectAmount;
+  updateProtectionPreview(S.protectAmount);
   document.getElementById('protectSetupCard')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
@@ -2401,19 +2478,6 @@ function renderReveal(){
   lc.classList.add('opened');
   document.getElementById('lockTitle').textContent='전달이 완료되었습니다';
   document.getElementById('lockDesc').textContent='사망이 확인되어 지정 수령자에게 정보가 공개되었습니다.';
-
-  // 블록체인 증빙 (실제 기록된 경우)
-  const proof=document.getElementById('bcProof');
-  if(S.txRegister || S.txDeath || S.txOpen){
-    proof.style.display='block';
-    let links='';
-    if(S.txRegister) links+='등록 기록: <a href="'+BC.SCAN+S.txRegister+'" target="_blank">Etherscan ↗</a>　';
-    if(S.txDeath)    links+='사망 확인 기록: <a href="'+BC.SCAN+S.txDeath+'" target="_blank">Etherscan ↗</a>　';
-    if(S.txOpen)     links+='열람 기록: <a href="'+BC.SCAN+S.txOpen+'" target="_blank">Etherscan ↗</a>';
-    document.getElementById('bcProofLinks').innerHTML=links;
-  }else{
-    proof.style.display='none';
-  }
 }
 
 /* ============ 초기화 ============ */
@@ -2494,11 +2558,11 @@ async function checkServiceConnections(){
   }catch(_){}
   if(!aiOk){ try{ const r=await fetch('/api/analyze-medical'); const d=await r.json(); aiOk=!!(r.ok&&d.configured); }catch(_){} }
   if(badge){
-    if(legacyOk&&protectionOk) badge.textContent='Sepolia 연결됨 · 사후 + 생전';
-    else if(legacyOk) badge.textContent='사후 Sepolia 연결 · 생전 설정 필요';
-    else badge.textContent='블록체인 서버 연결 확인 필요';
+    if(legacyOk&&protectionOk) badge.textContent='서비스 연결 정상';
+    else if(legacyOk) badge.textContent='일부 서비스 연결 확인 필요';
+    else badge.textContent='서비스 연결 확인 필요';
   }
-  if(aiChip && aiOk && S.aiMode==='rules') aiChip.textContent='Gemini 연결 준비';
+  if(aiChip && aiOk && S.aiMode==='rules') aiChip.textContent='AI 분석 준비';
 }
 checkServiceConnections();
 </script>
