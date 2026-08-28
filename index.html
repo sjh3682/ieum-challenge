@@ -1910,8 +1910,7 @@ function renderProtection(){
     if(pending){
       if(S.protectPending!==null){
         pending.classList.add('show');
-        const eta=S.protectChain.executeAfter?new Date(S.protectChain.executeAfter*1000).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):null;
-        pending.innerHTML='<b>보호 금액 변경 절차가 진행 중이에요.</b><br>현재 '+formatEok(S.protectAmount)+' 보호 상태는 유지되며, '+formatEok(S.protectPending)+'으로의 변경은 보호 대기와 본인 재확인 뒤 자동 적용됩니다.'+(eta?'<br><span style="font-size:11px;color:#8A837A;">적용 예정 · '+eta+'</span>':'');
+        pending.innerHTML='<b>보호 금액 변경 절차가 진행 중이에요.</b><br>현재 '+formatEok(S.protectAmount)+' 보호 상태는 유지되며, 본인 재확인 후 변경 내용이 자동으로 적용됩니다.';
       }else pending.classList.remove('show');
     }
     renderProtectionChange();
@@ -1953,9 +1952,8 @@ function renderProtectionChange(){
     steps[0]?.classList.add('active'); chip.textContent='변경 요청 처리 중';
     body.innerHTML='<b>새 보호 금액 변경 요청을 처리하고 있어요.</b><br>현재 보호 금액은 그대로 유지됩니다.';
   }else if(ch.status==='waiting'){
-    steps[0]?.classList.add('done'); steps[1]?.classList.add('active'); chip.textContent='보호 대기 중';
-    const eta=S.protectChain.executeAfter?new Date(S.protectChain.executeAfter*1000).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):null;
-    body.innerHTML='<b>갑작스러운 축소·해제를 막기 위한 60초 보호 대기와 본인 재확인 단계입니다.</b><br>'+(eta?'변경 적용 예정 · '+eta:'보호 대기와 재확인이 끝나면 자동으로 다음 단계로 넘어갑니다.');
+    steps[0]?.classList.add('done'); steps[1]?.classList.add('active'); chip.textContent='보호 확인 중';
+    body.innerHTML='<b>보호 설정 변경을 안전하게 처리하고 있어요.</b><br>본인 재확인 후 변경 내용이 자동으로 적용됩니다.';
   }else if(ch.status==='applying'){
     steps[0]?.classList.add('done'); steps[1]?.classList.add('done'); steps[2]?.classList.add('active'); chip.textContent='변경 적용 중';
     body.innerHTML='<b>보호 대기 조건을 확인하고 새 보호 설정을 반영하고 있어요.</b><br>완료되면 현재 보호 금액에 바로 반영됩니다.';
