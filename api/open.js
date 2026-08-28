@@ -1,36 +1,14 @@
-import { getChain, verifyAccessToken, sendError } from "./_chain.js";
-
-export default async function handler(req, res){
-  if(req.method !== "POST"){
-    return res.status(405).json({ error:"POST 요청만 허용됩니다." });
-  }
-
+const { getClient, requireAccess } = require('./_lib/vault');
+module.exports = async function handler(req,res){
+  if(req.method!=='POST') return res.status(405).json({error:'METHOD_NOT_ALLOWED'});
   try{
-    const { vaultId, registrationTx, accessToken } = req.body || {};
-    if(vaultId === undefined || vaultId === null){
-      return res.status(400).json({ error:"금고 번호가 없습니다." });
-    }
-    if(!verifyAccessToken(vaultId, registrationTx, accessToken)){
-      return res.status(403).json({ error:"이 금고를 열람할 권한을 확인할 수 없습니다." });
-    }
-
-    const { contract } = getChain();
-
-    // 1) 먼저 조건을 읽기 방식으로 검증
-    const [dataHash, dataURI] = await contract.openVault.staticCall(Number(vaultId));
-
-    // 2) 실제 열람 사실도 Sepolia 트랜잭션으로 남김
-    const tx = await contract.recordOpen(Number(vaultId));
-    const receipt = await tx.wait();
-
-    return res.status(200).json({
-      ok:true,
-      dataHash,
-      dataURI,
-      openTxHash:tx.hash,
-      blockNumber:receipt.blockNumber
-    });
-  }catch(e){
-    return sendError(res,e);
-  }
-}
+    const {vaultId,registrationTx,accessToken}=req.body||{};
+    const id=Number(vaultId);
+    if(!Number.isInteger(id) || id<0 || !registrationTx) return res.status(400).json({error:'요청값을 확인해주세요.'});
+    requireAccess(id,registrationTx,accessToken);
+    const {contract}=getClient();
+    const result=await contract.openVault(id);
+    const tx=await contract.recordOpen(id); const receipt=await tx.wait();
+    return res.status(200).json({ok:true,dataHash:result[0],dataURI:result[1],openTxHash:receipt.hash||tx.hash});
+  }catch(e){ console.error(e); return res.status(500).json({error:e.shortMessage||e.reason||e.message||'정보 열람 실패'}); }
+};

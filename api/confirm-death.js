@@ -1,34 +1,13 @@
-import { getChain, verifyAccessToken, sendError } from "./_chain.js";
-
-export default async function handler(req, res){
-  if(req.method !== "POST"){
-    return res.status(405).json({ error:"POST 요청만 허용됩니다." });
-  }
-
+const { getClient, requireAccess } = require('./_lib/vault');
+module.exports = async function handler(req,res){
+  if(req.method!=='POST') return res.status(405).json({error:'METHOD_NOT_ALLOWED'});
   try{
-    const { vaultId, registrationTx, accessToken } = req.body || {};
-    if(vaultId === undefined || vaultId === null){
-      return res.status(400).json({ error:"금고 번호가 없습니다." });
-    }
-    if(!verifyAccessToken(vaultId, registrationTx, accessToken)){
-      return res.status(403).json({ error:"이 금고를 변경할 권한을 확인할 수 없습니다." });
-    }
-
-    const { wallet, contract } = getChain();
-    const verifier = await contract.verifier();
-    if(verifier.toLowerCase() !== wallet.address.toLowerCase()){
-      return res.status(403).json({
-        error:"현재 서버 지갑이 이 컨트랙트의 사망 검증 권한자가 아닙니다.",
-        serverWallet:wallet.address,
-        contractVerifier:verifier
-      });
-    }
-
-    const tx = await contract.confirmDeath(Number(vaultId));
-    const receipt = await tx.wait();
-
-    return res.status(200).json({ ok:true, txHash:tx.hash, blockNumber:receipt.blockNumber });
-  }catch(e){
-    return sendError(res,e);
-  }
-}
+    const {vaultId,registrationTx,accessToken}=req.body||{};
+    const id=Number(vaultId);
+    if(!Number.isInteger(id) || id<0 || !registrationTx) return res.status(400).json({error:'요청값을 확인해주세요.'});
+    requireAccess(id,registrationTx,accessToken);
+    const {contract}=getClient();
+    const tx=await contract.confirmDeath(id); const receipt=await tx.wait();
+    return res.status(200).json({ok:true,txHash:receipt.hash||tx.hash});
+  }catch(e){ console.error(e); return res.status(500).json({error:e.shortMessage||e.reason||e.message||'사망 확인 결과 반영 실패'}); }
+};
