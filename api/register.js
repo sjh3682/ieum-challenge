@@ -1,4 +1,4 @@
-const { getClient, isBytes32, makeAccessToken, parseEvent } = require('./_lib/vault');
+const { getClient, isBytes32, makeAccessToken, parseEvent } = require('../lib/vault');
 module.exports = async function handler(req,res){
   if(req.method!=='POST') return res.status(405).json({error:'METHOD_NOT_ALLOWED'});
   try{
