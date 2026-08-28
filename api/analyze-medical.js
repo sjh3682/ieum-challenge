@@ -1,27 +1,84 @@
 module.exports = async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   const apiKey = process.env.GEMINI_API_KEY;
-  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+  const model = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
 
   if (req.method === 'GET') {
-    return res.status(200).json({ ok: true, configured: Boolean(apiKey), model });
+    return res.status(200).json({
+      ok: true,
+      configured: Boolean(apiKey),
+      model
+    });
   }
-  if (req.method !== 'POST') return res.status(405).json({ error: 'METHOD_NOT_ALLOWED' });
-  if (!apiKey) return res.status(503).json({ error: 'GEMINI_API_KEY가 설정되지 않았습니다.' });
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({
+      error: 'METHOD_NOT_ALLOWED'
+    });
+  }
+
+  if (!apiKey) {
+    return res.status(503).json({
+      error: 'GEMINI_API_KEY가 설정되지 않았습니다.'
+    });
+  }
 
   try {
-    const { fileName, mimeType, fileBase64, documentText, demoText, context = {} } = req.body || {};
-    const linkedText = (typeof documentText === 'string' && documentText.trim()) ? documentText : demoText;
-    const allowed = new Set(['application/pdf','image/png','image/jpeg','image/jpg','image/webp']);
+    const {
+      fileName,
+      mimeType,
+      fileBase64,
+      documentText,
+      demoText,
+      context = {}
+    } = req.body || {};
+
+    const linkedText =
+      typeof documentText === 'string' && documentText.trim()
+        ? documentText
+        : demoText;
+
+    const allowed = new Set([
+      'application/pdf',
+      'image/png',
+      'image/jpeg',
+      'image/jpg',
+      'image/webp'
+    ]);
+
     const hasFile = Boolean(fileBase64);
-    const hasDemoText = typeof linkedText === 'string' && linkedText.trim().length > 0;
-    if (!hasFile && !hasDemoText) return res.status(400).json({ error: '연결된 의료정보 또는 지원되는 의료서류 정보가 필요합니다.' });
-    if (hasFile && !allowed.has(mimeType)) return res.status(400).json({ error: '지원하지 않는 의료정보 형식입니다.' });
+
+    const hasDemoText =
+      typeof linkedText === 'string' &&
+      linkedText.trim().length > 0;
+
+    if (!hasFile && !hasDemoText) {
+      return res.status(400).json({
+        error: '연결된 의료정보 또는 지원되는 의료서류 정보가 필요합니다.'
+      });
+    }
+
+    if (hasFile && !allowed.has(mimeType)) {
+      return res.status(400).json({
+        error: '지원하지 않는 의료정보 형식입니다.'
+      });
+    }
+
     if (hasFile) {
       const bytes = Buffer.from(fileBase64, 'base64');
-      if (!bytes.length || bytes.length > 2 * 1024 * 1024) return res.status(413).json({ error: '분석 파일은 2MB 이하로 사용해주세요.' });
+
+      if (!bytes.length || bytes.length > 2 * 1024 * 1024) {
+        return res.status(413).json({
+          error: '분석 파일은 2MB 이하로 사용해주세요.'
+        });
+      }
     }
-    if (hasDemoText && linkedText.length > 2500) return res.status(400).json({ error: '의료정보 요약이 너무 깁니다.' });
+
+    if (hasDemoText && linkedText.length > 2500) {
+      return res.status(400).json({
+        error: '의료정보 요약이 너무 깁니다.'
+      });
+    }
 
     const prompt = `
 당신은 대한민국 금융안심 서비스 '이음(IEUM)'의 의료정보 보조 분석기입니다.
@@ -53,49 +110,188 @@ module.exports = async function handler(req, res) {
     const schema = {
       type: 'OBJECT',
       properties: {
-        careLevel: { type: 'STRING', enum: ['low','moderate','high'] },
-        ongoingCare: { type: 'BOOLEAN' },
-        confidence: { type: 'STRING', enum: ['low','medium','high'] },
-        reserveAddMillionWon: { type: 'INTEGER' },
-        summary: { type: 'STRING', description: '질병명 없이 지속 진료·관리 필요성만 1~2문장으로 설명' },
-        reason: { type: 'STRING', description: '보정치가 선택된 이유를 개인정보 없이 간단히 설명' }
+        careLevel: {
+          type: 'STRING',
+          enum: ['low', 'moderate', 'high']
+        },
+
+        ongoingCare: {
+          type: 'BOOLEAN'
+        },
+
+        confidence: {
+          type: 'STRING',
+          enum: ['low', 'medium', 'high']
+        },
+
+        reserveAddMillionWon: {
+          type: 'INTEGER'
+        },
+
+        summary: {
+          type: 'STRING',
+          description:
+            '질병명 없이 지속 진료·관리 필요성만 1~2문장으로 설명'
+        },
+
+        reason: {
+          type: 'STRING',
+          description:
+            '보정치가 선택된 이유를 개인정보 없이 간단히 설명'
+        }
       },
-      required: ['careLevel','ongoingCare','confidence','reserveAddMillionWon','summary','reason']
+
+      required: [
+        'careLevel',
+        'ongoingCare',
+        'confidence',
+        'reserveAddMillionWon',
+        'summary',
+        'reason'
+      ]
     };
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts: fileBase64
-          ? [{ text: prompt }, { inlineData: { mimeType, data: fileBase64 } }]
-          : [{ text: prompt }, { text: `의료기관 전자문서 연계 요약:
-${linkedText}` }] }],
-        generationConfig: { temperature: 0.15, responseMimeType: 'application/json', responseSchema: schema }
-      })
-    });
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+      {
+        method: 'POST',
+
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey
+        },
+
+        body: JSON.stringify({
+          contents: [
+            {
+              role: 'user',
+
+              parts: fileBase64
+                ? [
+                    {
+                      text: prompt
+                    },
+                    {
+                      inlineData: {
+                        mimeType,
+                        data: fileBase64
+                      }
+                    }
+                  ]
+                : [
+                    {
+                      text: prompt
+                    },
+                    {
+                      text: `의료기관 전자문서 연계 요약:
+${linkedText}`
+                    }
+                  ]
+            }
+          ],
+
+          generationConfig: {
+            temperature: 0.15,
+            responseMimeType: 'application/json',
+            responseSchema: schema
+          }
+        })
+      }
+    );
 
     const raw = await response.json();
+
     if (!response.ok) {
       console.error('Gemini error', raw);
-      return res.status(502).json({ error: raw?.error?.message || 'Gemini API 요청에 실패했습니다.' });
-    }
-    const text = (raw?.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('').trim();
-    if (!text) return res.status(502).json({ error: 'AI 분석 결과가 비어 있습니다.' });
-    const analysis = JSON.parse(text);
-    const allowedAdd = [0,10,20,30];
-    const n = Number(analysis.reserveAddMillionWon || 0);
-    analysis.reserveAddMillionWon = allowedAdd.reduce((best, v) => Math.abs(v-n) < Math.abs(best-n) ? v : best, 0);
-    if (!['low','moderate','high'].includes(analysis.careLevel)) analysis.careLevel = 'moderate';
-    if (analysis.careLevel === 'moderate' && analysis.reserveAddMillionWon < 10) analysis.reserveAddMillionWon = 10;
-    if (analysis.careLevel === 'high' && analysis.reserveAddMillionWon < 20) analysis.reserveAddMillionWon = 20;
-    if (!['low','medium','high'].includes(analysis.confidence)) analysis.confidence = 'low';
-    analysis.summary = String(analysis.summary || '지속적인 진료·관리 필요성을 의료 예비자금에 반영했습니다.').slice(0, 220);
-    analysis.reason = String(analysis.reason || '').slice(0, 260);
 
-    return res.status(200).json({ ok: true, model, analysis });
+      return res.status(502).json({
+        error:
+          raw?.error?.message ||
+          'Gemini API 요청에 실패했습니다.'
+      });
+    }
+
+    const text = (
+      raw?.candidates?.[0]?.content?.parts || []
+    )
+      .map((p) => p.text || '')
+      .join('')
+      .trim();
+
+    if (!text) {
+      return res.status(502).json({
+        error: 'AI 분석 결과가 비어 있습니다.'
+      });
+    }
+
+    const analysis = JSON.parse(text);
+
+    const allowedAdd = [0, 10, 20, 30];
+
+    const n = Number(
+      analysis.reserveAddMillionWon || 0
+    );
+
+    analysis.reserveAddMillionWon =
+      allowedAdd.reduce(
+        (best, v) =>
+          Math.abs(v - n) < Math.abs(best - n)
+            ? v
+            : best,
+        0
+      );
+
+    if (
+      !['low', 'moderate', 'high'].includes(
+        analysis.careLevel
+      )
+    ) {
+      analysis.careLevel = 'moderate';
+    }
+
+    if (
+      analysis.careLevel === 'moderate' &&
+      analysis.reserveAddMillionWon < 10
+    ) {
+      analysis.reserveAddMillionWon = 10;
+    }
+
+    if (
+      analysis.careLevel === 'high' &&
+      analysis.reserveAddMillionWon < 20
+    ) {
+      analysis.reserveAddMillionWon = 20;
+    }
+
+    if (
+      !['low', 'medium', 'high'].includes(
+        analysis.confidence
+      )
+    ) {
+      analysis.confidence = 'low';
+    }
+
+    analysis.summary = String(
+      analysis.summary ||
+        '지속적인 진료·관리 필요성을 의료 예비자금에 반영했습니다.'
+    ).slice(0, 220);
+
+    analysis.reason = String(
+      analysis.reason || ''
+    ).slice(0, 260);
+
+    return res.status(200).json({
+      ok: true,
+      model,
+      analysis
+    });
   } catch (e) {
     console.error(e);
-    return res.status(500).json({ error: e.message || 'AI 분석 중 오류가 발생했습니다.' });
+
+    return res.status(500).json({
+      error:
+        e.message ||
+        'AI 분석 중 오류가 발생했습니다.'
+    });
   }
 };
