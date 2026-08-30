@@ -248,6 +248,9 @@ input,select,textarea{ font-family:inherit; }
 .field span{ display:block; font-size:14px; color:var(--text); margin-bottom:7px; font-weight:600; }
 .input{ width:100%; font-size:16px; color:var(--text); background:#fff; border:1.5px solid var(--line); border-radius:var(--r-sm); padding:14px 16px; transition:.15s; }
 .input:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 4px rgba(255,216,77,.20); }
+.input-unit{ position:relative; }
+.input-unit .input{ padding-right:68px; }
+.input-unit-suffix{ position:absolute; right:16px; top:50%; transform:translateY(-50%); font-size:14px; font-weight:700; color:#8A837A; pointer-events:none; }
 .row{ display:flex; gap:12px; } .row > *{ flex:1; }
 
 .recipient{ display:flex; align-items:center; gap:13px; background:#F8FAFC; border:1px solid var(--line); border-radius:var(--r-md); padding:14px 16px; margin-bottom:10px; }
@@ -1216,8 +1219,8 @@ input,select,textarea{ font-family:inherit; }
             <div class="safety-rule-badge">내가 정하는 기준</div>
           </div>
           <div class="safety-rule-grid">
-            <label class="field"><span>추가 확인 금액 기준</span><input class="input" id="protectSafetyAmount" inputmode="numeric" value="3000" placeholder="예: 3000 (만원)"></label>
-            <label class="field"><span>자산 대비 비율 기준</span><input class="input" id="protectSafetyRatio" inputmode="numeric" value="15" placeholder="예: 15 (%)"></label>
+            <label class="field"><span>추가 확인 금액 기준</span><div class="input-unit"><input class="input" id="protectSafetyAmount" inputmode="numeric" value="3000" placeholder="예: 3000"><b class="input-unit-suffix">만원</b></div></label>
+            <label class="field"><span>자산 대비 비율 기준</span><div class="input-unit"><input class="input" id="protectSafetyRatio" inputmode="numeric" value="15" placeholder="예: 15"><b class="input-unit-suffix">%</b></div></label>
             <label class="field"><span>신뢰 연락처 이름</span><input class="input" id="protectTrustedName" value="김민지" maxlength="20" placeholder="예: 김민지"></label>
             <label class="field"><span>신뢰 연락처 전화번호</span><input class="input" id="protectTrustedPhone" value="010-2468-4821" inputmode="tel" maxlength="20" placeholder="010-0000-0000"></label>
           </div>
@@ -2278,10 +2281,10 @@ async function analyzeLinkedMedicalInfo(){
   try{
     let analysis=null;
     if(!isLocalPreview()){
-      const r=await apiCall('/api/analyze-medical',{
+      const r=await apiCallRetry('/api/analyze-medical',{
         documentText,
         context:{age:S.member.age,monthlyLiving:S.member.monthlyLiving,monthlyIncome:S.member.monthlyIncome,insurance:S.member.insurance,netAssetMillionWon:S.protectTotal}
-      });
+      },3,900);
       analysis=r.analysis||null; S.aiMode='api';
     }else{
       await new Promise(r=>setTimeout(r,650));
@@ -2329,7 +2332,7 @@ async function analyzeLinkedMedicalInfo(){
     void recordMedicalBasisInBackground();
   }catch(e){
     console.error(e);
-    if(summary){ summary.style.display='block'; summary.innerHTML='<b>의료정보를 확인하지 못했습니다.</b><br>잠시 후 다시 시도해주세요.'; }
+    if(summary){ summary.style.display='block'; summary.innerHTML='<b>의료정보 확인이 지연되고 있습니다.</b><br>연결 상태를 다시 확인하고 자동 재시도했지만 완료되지 않았습니다. 잠시 후 다시 요청해주세요.'; }
     if(btnText) btnText.textContent='의료 전자문서 다시 확인하기';
     if(btnSub) btnSub.textContent='연결 상태를 확인한 뒤 다시 요청해주세요.';
   }finally{
@@ -2727,7 +2730,7 @@ async function hashPayload(payload){
 async function apiCall(url, body){
   let res;
   try{
-    res = await fetch(url, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body||{})});
+    res = await fetch(url, {method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},cache:'no-store',body:JSON.stringify(body||{})});
   }catch(_){ throw new Error('서비스 서버에 연결할 수 없습니다.'); }
   let data={}; try{ data=await res.json(); }catch(_){}
   if(!res.ok){ throw new Error(data.error || '서버 요청에 실패했습니다.'); }
