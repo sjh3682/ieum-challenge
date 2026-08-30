@@ -125,7 +125,8 @@ input,select,textarea{ font-family:inherit; }
 .hero h1{ font-size:clamp(29px,3.7vw,42px); font-weight:800; line-height:1.34; color:#24211D; letter-spacing:-.03em; word-break:keep-all; }
 .hero h1 .accent{ color:var(--gold-deep); }
 .hero p{ margin:20px 0 30px; font-size:16.5px; color:var(--text-sub); max-width:440px; }
-.hero .cta-row{ display:flex; gap:12px; flex-wrap:wrap; }
+.hero .cta-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; }
+.hero .cta-row .btn{ width:100%; }
 .trust-row{ display:flex; gap:20px; flex-wrap:wrap; margin-top:28px; padding-top:22px; border-top:1px solid var(--line); }
 .trust-row span{ display:flex; align-items:center; gap:7px; font-size:13.5px; color:var(--text-sub); font-weight:500; }
 .trust-row svg{ width:17px; height:17px; flex-shrink:0; }
@@ -471,6 +472,24 @@ input,select,textarea{ font-family:inherit; }
 .release-complete-note{ display:none; margin:0 24px 22px; padding:15px 16px; background:#F5FAF4; border:1px solid #D8EAD5; border-radius:14px; font-size:12px; color:#35573A; line-height:1.65; }
 .release-complete-note.show{ display:block; }
 .release-complete-note b{ color:#214D28; }
+.safety-rule-box{ margin-top:24px; padding:20px; border:1px solid #E9DFC9; border-radius:18px; background:#FFFDF7; }
+.safety-rule-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:15px; }
+.safety-rule-head h3{ font-size:15px; color:#24211D; margin:0 0 4px; }
+.safety-rule-head p{ font-size:11.5px; color:#7B746B; line-height:1.55; margin:0; }
+.safety-rule-badge{ flex-shrink:0; padding:6px 9px; border-radius:999px; background:#FFF2A8; color:#6A5200; font-size:10.5px; font-weight:850; }
+.safety-rule-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.safety-rule-grid .field{ margin:0; }
+.safety-rule-note{ margin-top:12px; padding:11px 13px; border-radius:12px; background:#FFF7D4; color:#65531D; font-size:11.2px; line-height:1.55; }
+.safety-current{ display:none; margin-top:12px; padding:11px 13px; border:1px solid #E4DDCD; border-radius:12px; background:#fff; font-size:11.3px; color:#625B53; line-height:1.6; }
+.safety-current.show{ display:block; }
+.release-steps.four{ grid-template-columns:repeat(4,1fr); }
+.release-check-result{ display:none; margin:14px 24px 0; border-radius:14px; padding:13px 15px; font-size:11.8px; line-height:1.6; border:1px solid #E8DFC9; background:#FFFDF7; color:#5E574D; }
+.release-check-result.show{ display:block; }
+.release-check-result.safe{ background:#F5FAF4; border-color:#D7E8D4; color:#35573A; }
+.release-check-result.hold{ background:#FFF9DE; border-color:#EBD37E; color:#66510C; }
+.release-check-result.blocked{ background:#FFF1EC; border-color:#F1C1B5; color:#7A3B2E; }
+.release-check-result b{ display:block; margin-bottom:3px; color:inherit; }
+
 
 .protect-log-wrap{ margin-top:18px; }
 .protect-log-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:6px; }
@@ -620,6 +639,7 @@ input,select,textarea{ font-family:inherit; }
 
 @media(max-width:860px){
   .hero-service-grid,.legacy-summary-grid{ grid-template-columns:1fr; }
+  .hero .cta-row{ grid-template-columns:1fr; }
   .shared-data-callout{ align-items:flex-start; flex-direction:column; }
   .shared-data-callout .actions{ width:100%; }
   .shared-data-callout .actions button{ flex:1; }
@@ -641,6 +661,8 @@ input,select,textarea{ font-family:inherit; }
   .protect-money,.protect-guide,.protect-actions,.lifetime-inner,.protect-sums{ grid-template-columns:1fr; }
   .release-summary{ grid-template-columns:1fr; }
   .release-steps{ grid-template-columns:repeat(2,1fr); row-gap:18px; }
+  .release-steps.four{ grid-template-columns:repeat(2,1fr); }
+  .safety-rule-grid{ grid-template-columns:1fr; }
   .release-step::after{ display:none; }
   .protect-overview-head,.protect-section-title{ flex-direction:column; }
 }
@@ -1085,7 +1107,7 @@ input,select,textarea{ font-family:inherit; }
         <div class="hero-points">
           <span>✓ 가족 승인 없이 본인이 직접 설정</span>
           <span>✓ 생활 자금은 자유롭게 사용</span>
-          <span>✓ 보호 변경은 즉시 적용되지 않음</span>
+          <span>✓ 큰 송금 기준과 신뢰 연락처를 직접 설정</span>
         </div>
       </div>
 
@@ -1094,7 +1116,7 @@ input,select,textarea{ font-family:inherit; }
           <div>
             <div class="live">보호 중</div>
             <h3>내 자산이 설정한 기준대로 보호되고 있어요.</h3>
-            <p>생활에 필요한 자금과 장기간 지켜둘 자금을 분리해 관리합니다.</p>
+            <p>생활 자금과 보호 자금을 분리하고, 큰 타인 송금에는 내가 정한 추가 확인 기준을 적용합니다.</p>
           </div>
           <button class="status-action" onclick="scrollProtectionSetup()">보호 설정 변경</button>
         </div>
@@ -1185,6 +1207,24 @@ input,select,textarea{ font-family:inherit; }
           </div>
         </div>
 
+        <div class="safety-rule-box" id="protectSafetyRuleBox">
+          <div class="safety-rule-head">
+            <div>
+              <h3>큰 송금을 위한 안전 기준</h3>
+              <p>판단력이 충분할 때 내가 직접 기준과 신뢰 연락처를 정해둡니다.</p>
+            </div>
+            <div class="safety-rule-badge">내가 정하는 기준</div>
+          </div>
+          <div class="safety-rule-grid">
+            <label class="field"><span>추가 확인 금액 기준</span><input class="input" id="protectSafetyAmount" inputmode="numeric" value="3000" placeholder="예: 3000 (만원)"></label>
+            <label class="field"><span>자산 대비 비율 기준</span><input class="input" id="protectSafetyRatio" inputmode="numeric" value="15" placeholder="예: 15 (%)"></label>
+            <label class="field"><span>신뢰 연락처 이름</span><input class="input" id="protectTrustedName" value="김민지" maxlength="20" placeholder="예: 김민지"></label>
+            <label class="field"><span>신뢰 연락처 전화번호</span><input class="input" id="protectTrustedPhone" value="010-2468-4821" inputmode="tel" maxlength="20" placeholder="010-0000-0000"></label>
+          </div>
+          <div class="safety-rule-note">타인에게 보내는 금액이 위 두 기준 중 하나라도 넘으면 금융기관이 즉시 송금하지 않고 일시 보류한 뒤, 지정한 신뢰 연락처 확인을 거쳐 처리합니다.</div>
+          <div class="safety-current" id="protectSafetyCurrent"></div>
+        </div>
+
         <button class="btn btn-primary btn-block mt24" id="protectStartBtn" onclick="enableProtection()">이 금액으로 생전 보호 설정하기</button>
       </div>
 
@@ -1197,7 +1237,7 @@ input,select,textarea{ font-family:inherit; }
         </div>
         <div class="protect-guide">
           <div class="protect-guide-item"><div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="#765A00" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="M7 10h5"/></svg></div><div><b>생활 자금은 그대로 사용</b><span>자유 사용 자금은 평소 금융생활을 방해하지 않습니다.</span></div></div>
-          <div class="protect-guide-item"><div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="#765A00" stroke-width="2"><path d="M12 21s-7-4.5-7-11a7 7 0 0114 0c0 6.5-7 11-7 11z"/><path d="M9 10h6M12 7v6"/></svg></div><div><b>병원·요양비는 사용 요청</b><span>큰 의료비처럼 꼭 필요한 지출은 본인 확인 후 보호 자금에서 사용할 수 있습니다.</span></div></div>
+          <div class="protect-guide-item"><div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="#765A00" stroke-width="2"><path d="M12 21s-7-4.5-7-11a7 7 0 0114 0c0 6.5-7 11-7 11z"/><path d="M9 10h6M12 7v6"/></svg></div><div><b>송금 전 수취 계좌 확인</b><span>수취 계좌의 금융사기 위험정보를 확인한 뒤 보호 자금 사용 절차를 진행합니다.</span></div></div>
           <div class="protect-guide-item"><div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="#765A00" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><b>갑작스러운 해제는 잠시 보류</b><span>보호 금액 축소나 해제는 대기시간과 본인 재확인을 거쳐 적용합니다.</span></div></div>
           <div class="protect-guide-item"><div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="#765A00" stroke-width="2"><path d="M4 19h16M6 19V9l6-4 6 4v10"/><path d="M9 13h6"/></svg></div><div><b>사망 후에는 상속재산으로 유지</b><span>보호 자금이 특정 가족에게 자동 송금되지는 않으며 기존 상속 절차를 따릅니다.</span></div></div>
         </div>
@@ -1206,7 +1246,7 @@ input,select,textarea{ font-family:inherit; }
       <div class="protect-actions" id="protectActions" style="display:none;">
         <div class="protect-action-card">
           <div class="action-top"><div class="action-ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#765A00" stroke-width="2"><path d="M12 21s-7-4.5-7-11a7 7 0 0114 0c0 6.5-7 11-7 11z"/><path d="M9 10h6M12 7v6"/></svg></div><h3>보호 자금 사용</h3></div>
-          <p>병원비·요양비 등 꼭 필요한 큰 지출이 생겼다면 금액을 요청할 수 있습니다. 이후 등록 전화번호 본인확인과 금융기관 처리가 자동으로 이어집니다.</p>
+          <p>보호 자금을 사용할 때 수취 계좌 위험정보와 내가 정한 큰 송금 기준을 먼저 확인합니다. 필요한 경우 신뢰 연락처 확인 후 금융기관 처리가 이어집니다.</p>
           <button class="dark" onclick="openProtectUse()">보호 자금 사용 요청</button>
         </div>
         <div class="protect-action-card">
@@ -1243,20 +1283,24 @@ input,select,textarea{ font-family:inherit; }
           <div>
             <div class="ey">PROTECTED FUND USE</div>
             <h3>보호 자금 사용 절차</h3>
-            <p>금액을 요청하면 등록된 전화번호를 통한 본인 확인을 거쳐 금융기관 처리로 자동 이어집니다. 통화 화면이나 통화 내용은 저장하지 않습니다.</p>
+            <p>수취 계좌 위험정보와 내가 정한 큰 송금 기준을 먼저 확인합니다. 기준을 넘는 타인 송금은 신뢰 연락처 확인 후 금융기관 처리로 이어집니다.</p>
           </div>
           <div class="release-chip" id="releaseStatusChip">처리 중</div>
         </div>
         <div class="release-summary">
           <div class="rs"><span>사용 목적</span><b id="releasePurposeText">—</b></div>
           <div class="rs"><span>요청 금액</span><b id="releaseAmountText">—</b></div>
+          <div class="rs"><span>지급 대상</span><b id="releaseTargetText">—</b></div>
+          <div class="rs"><span>수취 계좌</span><b id="releaseAccountText">—</b></div>
         </div>
-        <div class="release-steps">
-          <div class="release-step" id="releaseStep1"><div class="sc">1</div><b>금액 요청</b></div>
-          <div class="release-step" id="releaseStep2"><div class="sc">2</div><b>전화 본인확인</b></div>
-          <div class="release-step" id="releaseStep3"><div class="sc">3</div><b>금융기관 지급</b></div>
+        <div class="release-check-result" id="releaseCheckResult"></div>
+        <div class="release-steps four">
+          <div class="release-step" id="releaseStep1"><div class="sc">1</div><b>사용 요청</b></div>
+          <div class="release-step" id="releaseStep2"><div class="sc">2</div><b>계좌 위험 확인</b></div>
+          <div class="release-step" id="releaseStep3"><div class="sc">3</div><b id="releaseVerifyLabel">본인확인</b></div>
+          <div class="release-step" id="releaseStep4"><div class="sc">4</div><b>금융기관 처리</b></div>
         </div>
-        <div class="release-status-body" id="releaseStatusText">사용 요청이 접수되었습니다.</div>
+        <div class="release-status-body" id="releaseStatusText">사용 요청을 준비하고 있습니다.</div>
         <div class="release-complete-note" id="releaseCompleteNote"></div>
         <div class="release-status-actions" id="releaseStatusActions" style="display:none;"></div>
       </div>
@@ -1476,16 +1520,29 @@ input,select,textarea{ font-family:inherit; }
 
 <!-- ===== 생전 보호 자금 사용 요청 ===== -->
 <div class="modal-bg" id="protectUseModal">
-  <div class="sheet" style="max-width:420px;">
-    <div class="sheet-h" style="background:#24211D;"><b>보호 자금 사용 요청</b><small>필요한 목적과 금액을 확인해주세요.</small></div>
+  <div class="sheet" style="max-width:440px;">
+    <div class="sheet-h" style="background:#24211D;"><b>보호 자금 사용 요청</b><small>지급 대상과 금액을 확인해주세요.</small></div>
     <div class="sheet-b">
       <label class="field"><span>사용 목적</span>
         <select class="input" id="protectUsePurpose">
-          <option>병원비</option><option>요양비</option><option>주거비</option><option>기타 필수 지출</option>
+          <option>병원비</option><option>요양비</option><option>주거비</option><option>가족 지원</option><option>기타 필수 지출</option>
         </select>
       </label>
+      <label class="field"><span>지급 대상</span>
+        <select class="input" id="protectUseTarget">
+          <option value="institution">병원·요양기관 등 기관</option>
+          <option value="self">본인 명의 계좌</option>
+          <option value="other">타인 명의 계좌</option>
+        </select>
+      </label>
+      <label class="field"><span>수취 금융기관</span>
+        <select class="input" id="protectUseBank">
+          <option>국민은행</option><option>신한은행</option><option>iM뱅크</option><option>농협은행</option><option>하나은행</option><option>우리은행</option>
+        </select>
+      </label>
+      <label class="field"><span>수취 계좌번호</span><input class="input" id="protectUseAccount" inputmode="numeric" placeholder="계좌번호를 입력해주세요"></label>
       <label class="field"><span>필요 금액</span><input class="input" id="protectUseAmount" inputmode="numeric" placeholder="예: 5000 (만원 단위)"></label>
-      <div class="note" style="background:#FFFBEA;border-color:#EFE0A3;color:#665442;">보호 자금은 일반 이체와 분리되어 있으며, 사용 요청 시 본인 확인과 목적 확인 절차를 거치도록 설계됩니다.</div>
+      <div class="note" style="background:#FFFBEA;border-color:#EFE0A3;color:#665442;">수취 계좌의 위험정보를 먼저 확인합니다. 타인 송금이 내가 정한 금액 또는 자산 비율 기준을 넘으면 금융기관이 일시 보류하고 신뢰 연락처 확인을 진행합니다.</div>
     </div>
     <div class="sheet-f"><button class="cancel" onclick="closeProtectUse()">취소</button><button class="go" id="protectUseSubmitBtn" style="background:#FFD84D;color:#3A2E0A;" onclick="submitProtectionUse()">사용 요청</button></div>
   </div>
@@ -1500,10 +1557,11 @@ const S = {
   msg:'', msgSaved:false, legacyConfigured:false, filter:'all', verified:false, cert:false,
   theme:{bg:'#FFFCF5',bd:'#F3E8D0'},
   txRegister:null, txDeath:null, txOpen:null, openedHash:null, openedURI:null, dataHash:null,
-  protectEnabled:false, protectTotal:0, protectAmount:0, protectFree:0, protectDraft:0, protectPending:null, protectLogs:[],
-  protectChange:{active:false,status:'',from:0,to:0},
+  protectEnabled:false, protectTotal:0, protectAmount:0, protectFree:0, protectDraft:0, protectPending:null, protectPendingSafety:null, protectLogs:[],
+  protectSafety:{amountThresholdManwon:3000,ratioThresholdPercent:15,trustedName:'김민지',trustedPhone:'010-2468-4821'},
+  protectChange:{active:false,status:'',from:0,to:0,safetyChanged:false},
   protectProcessMode:'',
-  protectRelease:{active:false,status:'',purpose:'',amountManwon:0,amountMillion:0,requestHash:null,verificationHash:null,txRequest:null,txPhoneVerify:null,txComplete:null},
+  protectRelease:{active:false,status:'',purpose:'',recipientType:'institution',bank:'',account:'',amountManwon:0,amountMillion:0,requestHash:null,verificationHash:null,risk:null,txRequest:null,txPhoneVerify:null,txComplete:null},
   member:{age:72, monthlyLiving:230, monthlyIncome:160, insurance:'partial'},
   medicalLoaded:false, medicalDocName:'', medicalSummary:'', medicalAnalysis:null, medicalBasisHash:null, medicalCheckedAt:null, aiMode:'rules', aiRecommended:0, aiPreviousRecommended:null, aiLivingReserve:0, aiMedicalReserve:0, aiEmergencyReserve:0,
   protectChain:{connected:false,protectionId:null,accessToken:null,txCreate:null,txMedicalBasis:null,txChangeRequest:null,txChangeComplete:null,txRelease:null,txPhoneVerify:null,txReleaseComplete:null,executeAfter:null}
@@ -1871,8 +1929,38 @@ function updatePresetLabels(){
   const labels=['절반 보호 · ','AI 권장 · ','더 많이 보호 · '];
   presets.forEach((b,i)=>{ b.textContent=labels[i]+formatEok(vals[i]).replace(' 원',''); b.onclick=()=>setProtectPreset(vals[i],b); });
 }
+function normalizePhone(v){ return String(v||'').replace(/[^0-9]/g,''); }
+function maskPhone(v){ const n=normalizePhone(v); return n.length>=8 ? n.slice(0,3)+'-****-'+n.slice(-4) : '등록됨'; }
+function readProtectionSafetyForm(){
+  const amount=Number(String(document.getElementById('protectSafetyAmount')?.value||'').replace(/[^0-9]/g,''));
+  const ratio=Number(String(document.getElementById('protectSafetyRatio')?.value||'').replace(/[^0-9]/g,''));
+  const trustedName=String(document.getElementById('protectTrustedName')?.value||'').trim();
+  const trustedPhone=String(document.getElementById('protectTrustedPhone')?.value||'').trim();
+  if(!amount || amount<100){ toast('추가 확인 금액 기준을 100만 원 이상으로 설정해주세요.'); return null; }
+  if(!ratio || ratio<1 || ratio>100){ toast('자산 대비 비율 기준은 1~100% 사이로 설정해주세요.'); return null; }
+  if(!trustedName){ toast('신뢰 연락처 이름을 입력해주세요.'); return null; }
+  if(normalizePhone(trustedPhone).length<9){ toast('신뢰 연락처 전화번호를 확인해주세요.'); return null; }
+  return {amountThresholdManwon:amount,ratioThresholdPercent:ratio,trustedName,trustedPhone};
+}
+function safetySame(a,b){
+  if(!a||!b) return false;
+  return Number(a.amountThresholdManwon)===Number(b.amountThresholdManwon) && Number(a.ratioThresholdPercent)===Number(b.ratioThresholdPercent) && String(a.trustedName)===String(b.trustedName) && normalizePhone(a.trustedPhone)===normalizePhone(b.trustedPhone);
+}
+function fillProtectionSafetyForm(s){
+  if(!s) return;
+  const map={protectSafetyAmount:s.amountThresholdManwon,protectSafetyRatio:s.ratioThresholdPercent,protectTrustedName:s.trustedName,protectTrustedPhone:s.trustedPhone};
+  Object.entries(map).forEach(([id,v])=>{ const el=document.getElementById(id); if(el) el.value=v; });
+}
+function renderProtectionSafety(){
+  const el=document.getElementById('protectSafetyCurrent'); if(!el) return;
+  if(!S.protectEnabled){ el.classList.remove('show'); return; }
+  const s=S.protectSafety;
+  el.classList.add('show');
+  el.innerHTML='<b>현재 안전 기준</b> · 타인 송금 '+Number(s.amountThresholdManwon).toLocaleString()+'만 원 이상 또는 연결 자산의 '+Number(s.ratioThresholdPercent)+'% 이상 → '+escapeHtml(s.trustedName)+' ('+maskPhone(s.trustedPhone)+') 확인';
+}
+
 function renderProtection(){
-  syncProtectionTotal(); renderAIProtection(); updatePresetLabels();
+  syncProtectionTotal(); renderAIProtection(); updatePresetLabels(); renderProtectionSafety();
   const r=document.getElementById('protectRange');
   if(r){
     r.min=0; r.max=Math.max(0,S.protectTotal); r.step=10;
@@ -1893,6 +1981,9 @@ function renderProtection(){
   if(btn){
     btn.disabled=!S.linked || protectionActionBusy || S.protectPending!==null;
   }
+  ['protectSafetyAmount','protectSafetyRatio','protectTrustedName','protectTrustedPhone'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.disabled=protectionActionBusy || S.protectPending!==null;
+  });
   if(title && !S.linked) title.textContent='먼저 금융정보를 연동해주세요';
 
   if(S.protectEnabled){
@@ -1989,39 +2080,42 @@ async function enableProtection(){
   if(protectionActionBusy){ toast('보호 설정을 처리하고 있어요. 잠시만 기다려주세요.'); return; }
   if(!S.linked){ toast('금융정보를 먼저 연동해주세요.'); go('assets'); return; }
   const requested=Number(S.protectDraft);
+  const safety=readProtectionSafetyForm();
+  if(!safety) return;
   if(requested<=0){ toast('보호할 금액을 선택해주세요.'); return; }
   if(S.protectPending!==null){ toast('진행 중인 보호 설정 변경이 완료된 뒤 다시 시도해주세요.'); return; }
-  if(S.protectEnabled && requested===S.protectAmount){ toast('현재 보호 금액과 동일합니다.'); return; }
+  const safetyChanged=S.protectEnabled && !safetySame(safety,S.protectSafety);
+  if(S.protectEnabled && requested===S.protectAmount && !safetyChanged){ toast('현재 보호 설정과 동일합니다.'); return; }
 
   protectionActionBusy=true;
   const protectionFlowStartedAt=Date.now();
   renderProtection();
   try{
+    const trustedContactHash=await hashPayload({name:safety.trustedName,phone:normalizePhone(safety.trustedPhone)});
     if(!S.protectEnabled){
       const rulePayload={
         total:S.protectTotal, protected:requested, free:S.protectTotal-requested,
         changePolicy:'delayed_reauthentication', essentialExpenseRelease:true,
+        transferSafety:{amountThresholdManwon:safety.amountThresholdManwon,ratioThresholdPercent:safety.ratioThresholdPercent,trustedContactHash},
         medicalBasisHash:S.medicalBasisHash||null,
         createdAt:new Date().toISOString()
       };
       const ruleHash=await hashPayload(rulePayload);
       let chainResult=null;
-      if(!isLocalPreview()){
-        chainResult=await apiCall('/api/protection/create',{ruleHash});
-      }
+      if(!isLocalPreview()) chainResult=await apiCall('/api/protection/create',{ruleHash});
       if(chainResult){
         S.protectChain.connected=true;
         S.protectChain.protectionId=Number(chainResult.protectionId);
         S.protectChain.accessToken=chainResult.accessToken;
         S.protectChain.txCreate=chainResult.txHash;
       }
-      // 최초 설정은 한 번의 클릭으로 진행되며 약 9초 동안 처리 상태를 명확히 보여줍니다.
       await waitUntil(protectionFlowStartedAt,IEUM_FLOW_MS.initialProtection);
       S.protectEnabled=true;
       S.protectAmount=requested;
       S.protectFree=S.protectTotal-S.protectAmount;
-      S.protectPending=null;
-      S.protectLogs.unshift({text:'생전 보호 설정이 완료되었습니다.',sub:'보호 자금 '+formatEok(S.protectAmount)+' · 자유 사용 자금 '+formatEok(S.protectFree)});
+      S.protectSafety={...safety};
+      S.protectPending=null; S.protectPendingSafety=null;
+      S.protectLogs.unshift({text:'생전 보호 설정이 완료되었습니다.',sub:'보호 자금 '+formatEok(S.protectAmount)+' · 큰 송금 안전 기준 함께 적용'});
       renderDash();
       toast('생전 보호 설정이 완료되었습니다.');
       void recordMedicalBasisInBackground();
@@ -2030,41 +2124,37 @@ async function enableProtection(){
 
     const old=S.protectAmount;
     S.protectProcessMode='change';
-    S.protectChange={active:true,status:'requested',from:old,to:requested};
+    S.protectChange={active:true,status:'requested',from:old,to:requested,safetyChanged};
     S.protectPending=requested;
+    S.protectPendingSafety={...safety};
     renderProtectionChange();
 
-    const changePayload={from:old,to:requested,total:S.protectTotal,requestedAt:new Date().toISOString()};
+    const changePayload={from:old,to:requested,total:S.protectTotal,transferSafety:{amountThresholdManwon:safety.amountThresholdManwon,ratioThresholdPercent:safety.ratioThresholdPercent,trustedContactHash},requestedAt:new Date().toISOString()};
     const newRuleHash=await hashPayload(changePayload);
     let chainResult=null;
     if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
-      chainResult=await apiCall('/api/protection/change-request',{
-        protectionId:S.protectChain.protectionId,
-        accessToken:S.protectChain.accessToken,
-        newRuleHash
-      });
+      chainResult=await apiCall('/api/protection/change-request',{protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,newRuleHash});
       S.protectChain.txChangeRequest=chainResult.txHash;
       S.protectChain.executeAfter=Number(chainResult.executeAfter||0)||null;
     }else if(isLocalPreview()){
       S.protectChain.executeAfter=Math.floor((Date.now()+60000)/1000);
     }
 
-    // 변경 요청 접수·확인 단계는 약 15초 보여주고, 이후 60초 안전 대기의 남은 시간을 자동으로 이어갑니다.
     await waitUntil(protectionFlowStartedAt,IEUM_FLOW_MS.changeRequest);
     S.protectChange.status='waiting';
-    S.protectLogs.unshift({text:'보호 금액 변경을 신청했습니다.',sub:formatEok(old)+' → '+formatEok(requested)+' · 보호 대기 후 자동 적용'});
+    S.protectLogs.unshift({text:'보호 설정 변경을 신청했습니다.',sub:(requested===old?'송금 안전 기준 변경':formatEok(old)+' → '+formatEok(requested))+' · 확인 후 자동 적용'});
     renderDash();
-    toast('보호 금액 변경 절차가 시작되었습니다.');
+    toast('보호 설정 변경 절차가 시작되었습니다.');
     scheduleProtectionChangeExecution();
   }catch(e){
     console.error(e);
     if(!S.protectEnabled){
-      S.protectPending=null;
+      S.protectPending=null; S.protectPendingSafety=null;
       toast('보호 설정을 완료하지 못했습니다. 잠시 후 다시 시도해주세요.');
     }else{
-      S.protectPending=null;
-      S.protectChange={active:false,status:'',from:0,to:0};
-      toast('보호 금액 변경 요청을 완료하지 못했습니다. 잠시 후 다시 시도해주세요.');
+      S.protectPending=null; S.protectPendingSafety=null;
+      S.protectChange={active:false,status:'',from:0,to:0,safetyChanged:false};
+      toast('보호 설정 변경 요청을 완료하지 못했습니다. 잠시 후 다시 시도해주세요.');
     }
   }finally{
     protectionActionBusy=false;
@@ -2078,7 +2168,7 @@ async function executeProtectionChange(auto=false){
   const old=S.protectAmount, next=S.protectPending;
   if(S.protectChain.protectionId===null || !S.protectChain.accessToken || isLocalPreview()){
     await new Promise(r=>setTimeout(r,700));
-    S.protectAmount=next; S.protectFree=S.protectTotal-next; S.protectPending=null; S.protectChain.executeAfter=null;
+    S.protectAmount=next; S.protectFree=S.protectTotal-next; if(S.protectPendingSafety) S.protectSafety={...S.protectPendingSafety}; S.protectPending=null; S.protectPendingSafety=null; S.protectChain.executeAfter=null;
     S.protectChange={active:true,status:'done',from:old,to:next};
     S.protectLogs.unshift({text:'보호 금액 변경이 적용되었습니다.',sub:formatEok(old)+' → '+formatEok(next)+' · 보호 대기 및 재확인 완료'});
     renderProtection(); renderDash(); toast('보호 금액 변경이 완료되었습니다.');
@@ -2086,7 +2176,7 @@ async function executeProtectionChange(auto=false){
   }
   try{
     const r=await apiCall('/api/protection/change-execute',{protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken});
-    S.protectAmount=next; S.protectFree=S.protectTotal-next; S.protectPending=null; S.protectChain.executeAfter=null; S.protectChain.txChangeComplete=r.txHash||null;
+    S.protectAmount=next; S.protectFree=S.protectTotal-next; if(S.protectPendingSafety) S.protectSafety={...S.protectPendingSafety}; S.protectPending=null; S.protectPendingSafety=null; S.protectChain.executeAfter=null; S.protectChain.txChangeComplete=r.txHash||null;
     S.protectChange={active:true,status:'done',from:old,to:next};
     S.protectLogs.unshift({text:'보호 금액 변경이 적용되었습니다.',sub:formatEok(old)+' → '+formatEok(next)+' · 보호 대기 및 재확인 완료'});
     renderProtection(); renderDash(); toast('보호 금액 변경이 완료되었습니다.');
@@ -2126,8 +2216,9 @@ const IEUM_FLOW_MS={
   medical:10000,          // 의료 전자문서 확인 + AI 분석: 약 10초
   initialProtection:9000, // 최초 생전 보호 설정: 약 9초
   changeRequest:15000,    // 보호 설정 변경 요청 처리 화면: 약 15초
-  releaseToPhone:6000,    // 보호자금 사용 요청 → 전화 본인확인
-  phoneToComplete:8500    // 전화 본인확인 → 금융기관 처리 완료
+  releaseRisk:4500,       // 사용 요청 → 수취 계좌 위험정보 확인
+  releaseVerify:6000,     // 계좌 확인 → 본인/신뢰 연락처 확인
+  releaseComplete:6500    // 확인 완료 → 금융기관 처리
 };
 function waitMs(ms){ return new Promise(resolve=>setTimeout(resolve,Math.max(0,ms))); }
 function waitUntil(startedAt,minMs){ return waitMs(minMs-(Date.now()-startedAt)); }
@@ -2251,14 +2342,17 @@ async function analyzeLinkedMedicalInfo(){
 
 function openProtectUse(){
   if(!S.protectEnabled){ toast('먼저 생전 보호를 설정해주세요.'); return; }
-  if(protectionUseBusy || (S.protectRelease.active && S.protectRelease.status!=='completed')){
+  if(protectionUseBusy || (S.protectRelease.active && !['completed','held'].includes(S.protectRelease.status))){
     toast('보호 자금 사용 요청을 처리하고 있어요. 잠시만 기다려주세요.');
     return;
   }
   S.protectProcessMode='release';
   renderProtectionChange(); renderProtectionRelease();
   document.getElementById('protectUseAmount').value='';
+  document.getElementById('protectUseAccount').value='';
   document.getElementById('protectUsePurpose').selectedIndex=0;
+  document.getElementById('protectUseTarget').selectedIndex=0;
+  document.getElementById('protectUseBank').selectedIndex=0;
   document.getElementById('protectUseModal').classList.add('show');
 }
 function closeProtectUse(){
@@ -2269,6 +2363,17 @@ function releaseDisplayAmount(amountManwon){
   const amount=Number(amountManwon||0);
   return amount>=10000 ? (amount/10000).toFixed(amount%10000?1:0)+'억 원' : amount.toLocaleString()+'만 원';
 }
+function recipientTypeLabel(v){ return v==='other'?'타인 명의 계좌':(v==='self'?'본인 명의 계좌':'병원·요양기관 등 기관'); }
+function maskAccount(v){ const n=String(v||'').replace(/[^0-9]/g,''); return n.length>6 ? n.slice(0,3)+'-****-'+n.slice(-4) : (n||'—'); }
+function localAccountRisk(account,recipientType,amountManwon){
+  const n=String(account||'').replace(/[^0-9]/g,'');
+  const reported=['3333123456789','110999999999'].includes(n);
+  const totalManwon=Math.max(1,Number(S.protectTotal||0)*100);
+  const ratio=Number(amountManwon||0)/totalManwon*100;
+  const amountExceeded=recipientType==='other' && Number(amountManwon)>=Number(S.protectSafety.amountThresholdManwon);
+  const ratioExceeded=recipientType==='other' && ratio>=Number(S.protectSafety.ratioThresholdPercent);
+  return {reported,amountExceeded,ratioExceeded,ratioPercent:Math.round(ratio*10)/10,requireTrustedContact:!reported&&(amountExceeded||ratioExceeded),action:reported?'manual_review':((amountExceeded||ratioExceeded)?'trusted_contact':'normal')};
+}
 function renderProtectionRelease(){
   const card=document.getElementById('protectReleaseCard'); if(!card) return;
   const r=S.protectRelease;
@@ -2277,74 +2382,118 @@ function renderProtectionRelease(){
   card.classList.add('show');
   document.getElementById('releasePurposeText').textContent=r.purpose||'—';
   document.getElementById('releaseAmountText').textContent=releaseDisplayAmount(r.amountManwon);
-  const order=['requested','phone','completed'];
-  const idx=order.indexOf(r.status);
-  [1,2,3].forEach((n,i)=>{
+  document.getElementById('releaseTargetText').textContent=recipientTypeLabel(r.recipientType);
+  document.getElementById('releaseAccountText').textContent=(r.bank?r.bank+' ':'')+maskAccount(r.account);
+  const verifyLabel=document.getElementById('releaseVerifyLabel');
+  if(verifyLabel) verifyLabel.textContent=r.risk?.requireTrustedContact?'신뢰 연락처 확인':'본인확인';
+
+  const order=['requested','account','verified','completed'];
+  let idx=order.indexOf(r.status);
+  [1,2,3,4].forEach((n,i)=>{
     const el=document.getElementById('releaseStep'+n); if(!el) return;
     el.classList.remove('done','active');
-    if(r.status==='completed' || i<idx) el.classList.add('done');
+    if(r.status==='held'){
+      if(i<2) el.classList.add('done');
+      else if(i===2) el.classList.add('active');
+    }else if(r.status==='completed' || i<idx) el.classList.add('done');
     else if(i===idx) el.classList.add('active');
   });
-  const chip=document.getElementById('releaseStatusChip'), txt=document.getElementById('releaseStatusText');
-  const actions=document.getElementById('releaseStatusActions');
+
+  const chip=document.getElementById('releaseStatusChip');
+  const txt=document.getElementById('releaseStatusText');
   const note=document.getElementById('releaseCompleteNote');
+  const result=document.getElementById('releaseCheckResult');
   chip.classList.toggle('done',r.status==='completed');
   note.classList.remove('show');
-  if(actions) actions.style.display='none';
+  result.className='release-check-result';
+  if(r.risk && ['account','verified','completed','held'].includes(r.status)){
+    result.classList.add('show');
+    if(r.risk.reported){
+      result.classList.add('blocked');
+      result.innerHTML='<b>수취 계좌 추가 확인 필요</b>연계된 금융사기 위험정보에서 확인이 필요한 계좌로 분류되었습니다. 즉시 송금하지 않고 금융기관 확인으로 전환합니다.';
+    }else if(r.risk.requireTrustedContact){
+      result.classList.add('hold');
+      const reasons=[];
+      if(r.risk.amountExceeded) reasons.push('설정 금액 기준 초과');
+      if(r.risk.ratioExceeded) reasons.push('자산 비율 기준 초과');
+      result.innerHTML='<b>큰 송금 안전 기준 적용</b>'+escapeHtml(reasons.join(' · '))+' · '+escapeHtml(S.protectSafety.trustedName)+' ('+maskPhone(S.protectSafety.trustedPhone)+') 확인 후 처리합니다.';
+    }else{
+      result.classList.add('safe');
+      result.innerHTML='<b>수취 계좌 위험정보 확인 완료</b>확인된 위험정보가 없고, 설정한 큰 송금 재확인 기준에도 해당하지 않습니다.';
+    }
+  }
+
   if(r.status==='requested'){
-    chip.textContent='전화 본인확인 진행 중';
-    txt.innerHTML='<b>보호 자금 사용 요청이 접수되었습니다.</b><br>등록된 전화번호를 기준으로 본인 확인을 진행하고 있습니다. 이 화면에서 추가로 누를 버튼은 없습니다.';
-  }else if(r.status==='phone'){
-    chip.textContent='본인확인 완료 · 지급 처리 중';
-    txt.innerHTML='<b>전화 본인확인이 완료되었습니다.</b><br>이제 금융기관의 지급 처리로 자동 이어집니다. 잠시만 기다려주세요.';
+    chip.textContent='사용 요청 확인 중';
+    txt.innerHTML='<b>보호 자금 사용 요청을 확인하고 있어요.</b><br>수취 계좌와 요청 금액을 확인한 뒤 안전 절차를 결정합니다.';
+  }else if(r.status==='account'){
+    chip.textContent=r.risk?.requireTrustedContact?'송금 일시 보류 · 확인 진행':'계좌 확인 완료';
+    txt.innerHTML=r.risk?.requireTrustedContact
+      ? '<b>내가 정한 큰 송금 기준이 적용되었습니다.</b><br>금융기관이 송금을 잠시 보류하고 신뢰 연락처 확인을 진행합니다.'
+      : '<b>수취 계좌 확인이 완료되었습니다.</b><br>본인 확인 후 금융기관 처리로 자동 이어집니다.';
+  }else if(r.status==='verified'){
+    chip.textContent=r.risk?.requireTrustedContact?'신뢰 연락처 확인 완료':'본인확인 완료';
+    txt.innerHTML=r.risk?.requireTrustedContact
+      ? '<b>신뢰 연락처 확인이 완료되었습니다.</b><br>금융기관이 최종 송금 처리를 진행하고 있습니다.'
+      : '<b>본인확인이 완료되었습니다.</b><br>금융기관이 최종 처리를 진행하고 있습니다.';
+  }else if(r.status==='held'){
+    chip.textContent='금융기관 추가 확인';
+    txt.innerHTML='<b>송금이 자동으로 진행되지 않습니다.</b><br>수취 계좌 위험정보가 확인되어 금융기관의 강화 확인 절차로 전환되었습니다.';
   }else if(r.status==='completed'){
-    chip.textContent='금융기관 지급 완료';
-    txt.innerHTML='<b>보호 자금 사용 처리가 완료되었습니다.</b><br>확인 절차가 끝나 요청 금액을 사용할 수 있는 자금으로 반영했습니다.';
+    chip.textContent='금융기관 처리 완료'; chip.classList.add('done');
+    txt.innerHTML='<b>보호 자금 사용 처리가 완료되었습니다.</b><br>필요한 안전 확인을 마친 뒤 요청 금액이 처리되었습니다.';
     note.classList.add('show');
-    note.innerHTML='<b>'+releaseDisplayAmount(r.amountManwon)+' 사용 가능 처리 완료</b><br>현재 보호 자금 '+formatEok(S.protectAmount)+' · 자유 사용 자금 '+formatEok(S.protectFree);
+    note.innerHTML='<b>'+releaseDisplayAmount(r.amountManwon)+' 사용 처리 완료</b><br>현재 보호 자금 '+formatEok(S.protectAmount)+' · 자유 사용 자금 '+formatEok(S.protectFree);
   }
 }
 async function submitProtectionUse(){
   if(protectionUseBusy){ toast('사용 요청을 처리하고 있어요. 잠시만 기다려주세요.'); return; }
   const purpose=document.getElementById('protectUsePurpose').value;
-  const raw=document.getElementById('protectUseAmount').value.replace(/[^0-9]/g,'');
-  const amount=Number(raw);
+  const recipientType=document.getElementById('protectUseTarget').value;
+  const bank=document.getElementById('protectUseBank').value;
+  const account=document.getElementById('protectUseAccount').value.trim();
+  const accountDigits=account.replace(/[^0-9]/g,'');
+  const amount=Number(document.getElementById('protectUseAmount').value.replace(/[^0-9]/g,''));
+  if(accountDigits.length<7){ toast('수취 계좌번호를 확인해주세요.'); return; }
   if(!amount){ toast('필요 금액을 입력해주세요.'); return; }
   const amountMillion=amount/100;
   if(amountMillion>S.protectAmount){ toast('현재 보호 중인 금액보다 큰 금액은 요청할 수 없습니다.'); return; }
 
   protectionUseBusy=true;
+  const startedAt=Date.now();
   const submitBtn=document.getElementById('protectUseSubmitBtn');
-  if(submitBtn){ submitBtn.disabled=true; submitBtn.innerHTML='<span class="spinner"></span> 요청 접수 중'; }
-
+  if(submitBtn){ submitBtn.disabled=true; submitBtn.innerHTML='<span class="spinner"></span> 계좌 위험정보 확인 중'; }
   try{
-    const display=releaseDisplayAmount(amount);
-    const requestHash=await hashPayload({purpose,amountManwon:amount,requestedAt:new Date().toISOString()});
+    const requestHash=await hashPayload({purpose,recipientType,bank,account:accountDigits,amountManwon:amount,requestedAt:new Date().toISOString()});
     let chainResult=null;
-
-    // 첫 트랜잭션은 '전송 성공'까지만 확인합니다. 블록 확정은 기다리지 않습니다.
+    let risk=null;
     if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
       chainResult=await apiCallRetry('/api/protection/release-request',{
         protectionId:S.protectChain.protectionId,
         accessToken:S.protectChain.accessToken,
-        requestHash
+        requestHash,
+        transfer:{recipientType,bank,account:accountDigits,amountManwon:amount,totalAssetMillionWon:S.protectTotal,thresholdAmountManwon:S.protectSafety.amountThresholdManwon,thresholdPercent:S.protectSafety.ratioThresholdPercent}
       },8,1200);
+      risk=chainResult.risk||null;
       S.protectChain.txRelease=chainResult.txHash||S.protectChain.txRelease||null;
+    }else{
+      risk=localAccountRisk(accountDigits,recipientType,amount);
+      await waitMs(700);
     }
+    if(!risk) risk=localAccountRisk(accountDigits,recipientType,amount);
 
     S.protectProcessMode='release';
-    S.protectRelease={active:true,status:'requested',purpose,amountManwon:amount,amountMillion,requestHash,verificationHash:null,txRequest:chainResult?.txHash||null,txPhoneVerify:null,txComplete:null};
-    S.protectLogs.unshift({text:purpose+' 목적으로 보호 자금 사용을 요청했습니다.',sub:'요청 금액 '+display+' · 등록 전화번호 본인확인 진행 중'});
+    S.protectRelease={active:true,status:'requested',purpose,recipientType,bank,account:accountDigits,amountManwon:amount,amountMillion,requestHash,verificationHash:null,risk,txRequest:chainResult?.txHash||null,txPhoneVerify:null,txComplete:null};
+    S.protectLogs.unshift({text:'보호 자금 사용을 요청했습니다.',sub:releaseDisplayAmount(amount)+' · 수취 계좌 위험정보 확인 중'});
     document.getElementById('protectUseModal').classList.remove('show');
     renderProtectionRelease(); renderProtectionLog();
-    toast('보호 자금 사용 요청이 접수되었습니다. 확인 절차가 자동으로 진행됩니다.');
+    toast('보호 자금 사용 요청이 접수되었습니다. 안전 확인이 자동으로 진행됩니다.');
 
-    // 한 번의 요청으로 약 15~20초 동안 세 단계가 자연스럽게 진행됩니다.
-    // 실제 기록 동기화는 뒤에서 계속 진행하되, 사용자가 버튼을 다시 누를 필요는 없습니다.
-    setTimeout(()=>{ void processPhoneVerifiedRelease(); },IEUM_FLOW_MS.releaseToPhone);
+    await waitUntil(startedAt,IEUM_FLOW_MS.releaseRisk);
+    processReleaseAccountCheck();
   }catch(e){
     console.error(e);
-    S.protectRelease={active:false,status:'',purpose:'',amountManwon:0,amountMillion:0,requestHash:null,verificationHash:null,txRequest:null,txPhoneVerify:null,txComplete:null};
+    S.protectRelease={active:false,status:'',purpose:'',recipientType:'institution',bank:'',account:'',amountManwon:0,amountMillion:0,requestHash:null,verificationHash:null,risk:null,txRequest:null,txPhoneVerify:null,txComplete:null};
     renderProtectionRelease(); renderProtectionLog();
     toast('보호 자금 사용 요청을 완료하지 못했습니다. 잠시 후 다시 시도해주세요.');
   }finally{
@@ -2352,47 +2501,45 @@ async function submitProtectionUse(){
     if(submitBtn){ submitBtn.disabled=false; submitBtn.textContent='사용 요청'; }
   }
 }
-
+function processReleaseAccountCheck(){
+  const r=S.protectRelease; if(!r.active || r.status!=='requested') return;
+  if(r.risk?.reported){
+    r.status='held';
+    S.protectLogs.unshift({text:'수취 계좌 확인 후 금융기관 추가 확인으로 전환되었습니다.',sub:releaseDisplayAmount(r.amountManwon)+' · 자동 송금 보류'});
+    renderProtectionRelease(); renderProtectionLog();
+    toast('수취 계좌에 추가 확인이 필요해 금융기관 확인으로 전환되었습니다.');
+    return;
+  }
+  r.status='account';
+  S.protectLogs.unshift({text:'수취 계좌 위험정보 확인이 완료되었습니다.',sub:r.risk?.requireTrustedContact?'큰 송금 기준 적용 · 신뢰 연락처 확인 진행':'확인된 위험정보 없음 · 본인확인 진행'});
+  renderProtectionRelease(); renderProtectionLog();
+  setTimeout(()=>{ void processReleaseVerification(); },IEUM_FLOW_MS.releaseVerify);
+}
 async function syncReleaseChainInBackground(requestHash,verificationHash){
   if(S.protectChain.protectionId===null || !S.protectChain.accessToken || isLocalPreview()) return;
   const common={protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,requestHash};
   try{
-    // requestRelease가 실제 블록에 반영될 때까지 자동 재시도한 뒤 전화 확인 기록을 전송합니다.
-    const phoneResult=await apiCallRetry('/api/protection/phone-verify',{
-      ...common,
-      verificationHash
-    },16,1500);
+    const phoneResult=await apiCallRetry('/api/protection/phone-verify',{...common,verificationHash},16,1500);
     S.protectChain.txPhoneVerify=phoneResult.txHash||S.protectChain.txPhoneVerify||null;
-    if(S.protectRelease.requestHash===requestHash){
-      S.protectRelease.txPhoneVerify=phoneResult.txHash||S.protectRelease.txPhoneVerify||null;
-    }
-
-    // 전화 확인 트랜잭션이 블록에 반영되면 완료 기록을 자동 전송합니다.
+    if(S.protectRelease.requestHash===requestHash) S.protectRelease.txPhoneVerify=phoneResult.txHash||S.protectRelease.txPhoneVerify||null;
     const completeResult=await apiCallRetry('/api/protection/release-complete',common,16,1500);
     S.protectChain.txReleaseComplete=completeResult.txHash||S.protectChain.txReleaseComplete||null;
-    if(S.protectRelease.requestHash===requestHash){
-      S.protectRelease.txComplete=completeResult.txHash||S.protectRelease.txComplete||null;
-    }
-  }catch(e){
-    console.warn('release blockchain background sync pending',e);
-  }
+    if(S.protectRelease.requestHash===requestHash) S.protectRelease.txComplete=completeResult.txHash||S.protectRelease.txComplete||null;
+  }catch(e){ console.warn('release blockchain background sync pending',e); }
 }
-
-async function processPhoneVerifiedRelease(){
-  const r=S.protectRelease; if(!r.active || r.status!=='requested') return;
-  const verificationHash=await hashPayload({requestHash:r.requestHash,method:'registered-phone-verification',verifiedAt:new Date().toISOString()});
+async function processReleaseVerification(){
+  const r=S.protectRelease; if(!r.active || r.status!=='account') return;
+  const method=r.risk?.requireTrustedContact?'trusted-contact-confirmation':'registered-phone-verification';
+  const verificationHash=await hashPayload({requestHash:r.requestHash,method,verifiedAt:new Date().toISOString()});
   r.verificationHash=verificationHash;
-  r.status='phone';
-  S.protectLogs.unshift({text:'등록 전화번호를 통한 본인 확인이 완료되었습니다.',sub:r.purpose+' · '+releaseDisplayAmount(r.amountManwon)+' · 금융기관 처리 진행 중'});
+  r.status='verified';
+  S.protectLogs.unshift({text:r.risk?.requireTrustedContact?'신뢰 연락처 확인이 완료되었습니다.':'등록 전화번호 본인확인이 완료되었습니다.',sub:r.purpose+' · '+releaseDisplayAmount(r.amountManwon)+' · 금융기관 처리 진행 중'});
   renderProtectionRelease(); renderProtectionLog();
-
-  // 실제 블록체인 기록은 순서를 지키며 뒤에서 진행합니다.
   void syncReleaseChainInBackground(r.requestHash,verificationHash);
-  setTimeout(()=>{ void completePhoneVerifiedRelease(); },IEUM_FLOW_MS.phoneToComplete);
+  setTimeout(()=>{ void completeProtectionRelease(); },IEUM_FLOW_MS.releaseComplete);
 }
-
-async function completePhoneVerifiedRelease(){
-  const r=S.protectRelease; if(!r.active || r.status!=='phone') return;
+async function completeProtectionRelease(){
+  const r=S.protectRelease; if(!r.active || r.status!=='verified') return;
   const released=Math.min(Number(r.amountMillion||0),S.protectAmount);
   const before=S.protectAmount;
   S.protectAmount=Math.max(0,Math.round((S.protectAmount-released)*100)/100);
@@ -2411,6 +2558,7 @@ function renderProtectionLog(){
 }
 function scrollProtectionSetup(){
   S.protectProcessMode='change';
+  if(S.protectEnabled) fillProtectionSafetyForm(S.protectSafety);
   renderProtectionChange(); renderProtectionRelease();
   S.protectDraft=S.protectAmount;
   const r=document.getElementById('protectRange'); if(r) r.value=S.protectAmount;
