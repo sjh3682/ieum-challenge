@@ -78,28 +78,22 @@ module.exports = async function handler(req, res) {
           ) * 100
         : 0;
 
-    // 본인 계좌가 아닌 경우에만
-    // 금융사기 신고 계좌 여부 확인
     const reported =
       recipientType !== 'self' &&
       REPORTED_ACCOUNTS.has(account);
 
-    // 사용자가 미리 설정한 금액 기준 초과
     const amountExceeded =
       recipientType === 'other' &&
       thresholdAmountManwon > 0 &&
       amountManwon >=
         thresholdAmountManwon;
 
-    // 사용자가 미리 설정한 자산 비율 기준 초과
     const ratioExceeded =
       recipientType === 'other' &&
       thresholdPercent > 0 &&
       ratioPercent >=
         thresholdPercent;
 
-    // 신고 계좌는 신뢰 연락처 확인만으로
-    // 바로 처리하지 않고 별도 강화 확인
     const requireTrustedContact =
       !reported &&
       (
@@ -115,7 +109,6 @@ module.exports = async function handler(req, res) {
         requestHash
       );
 
-    // 이미 사용 요청이 기록된 경우
     if (Boolean(status[0])) {
       return res.status(200).json({
         ok: true,
@@ -144,7 +137,6 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // 보호자금 사용 요청을 블록체인에 전송
     const tx =
       await contract.requestRelease(
         id,
