@@ -690,13 +690,289 @@ input,select,textarea{ font-family:inherit; }
 }
 
 
+
+
+/* =========================================================
+   FINAL UI REFINEMENT — 심사/시니어 접근성 보강
+   기능 로직은 유지하고 가독성·터치영역·정보 위계를 개선합니다.
+   ========================================================= */
+:root{
+  --text:#302C27;
+  --text-sub:#6F675E;
+  --line:#E8DDC9;
+  --sh:0 6px 22px rgba(36,33,29,.07);
+}
+body{ font-size:16px; line-height:1.72; }
+button,a,input,select,textarea{ -webkit-tap-highlight-color:transparent; }
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:3px solid rgba(245,184,0,.42);
+  outline-offset:3px;
+}
+
+/* 상단 내비게이션 */
+.topbar{ min-height:70px; padding:15px 30px; }
+.logo .name{ font-size:25px; }
+.logo .name small{ font-size:9.5px; }
+.topnav a{ font-size:15px; font-weight:650; padding:8px 2px; }
+.role-chip{ font-size:13.5px; padding:7px 15px; }
+
+/* 공통 카드/버튼/폼 */
+.card{ padding:30px; }
+.card-h h2{ font-size:21px; }
+.card .sub{ font-size:15.5px; line-height:1.7; }
+.btn{ min-height:54px; font-size:16.5px; font-weight:750; padding:15px 26px; }
+.input{ min-height:52px; font-size:17px; padding:14px 16px; border-color:#E3D7C2; }
+.field span{ font-size:15px; margin-bottom:8px; }
+.input-unit .input{ padding-right:76px; }
+.input-unit-suffix{ font-size:15.5px; color:#5F574F; }
+.note{ font-size:14.5px; line-height:1.7; padding:15px 17px; }
+.empty{ font-size:15px; }
+
+/* 랜딩 — 첫 화면의 핵심 메시지를 더 빠르게 읽히게 */
+.hero{ gap:48px; padding-top:70px; padding-bottom:48px; }
+.hero h1{ font-size:clamp(32px,3.8vw,46px); line-height:1.3; }
+.hero p{ font-size:17px; line-height:1.75; max-width:470px; }
+.hero-service-grid{ gap:14px; margin:24px 0 20px; }
+.hero-service-card{ padding:20px; border-radius:20px; }
+.hero-service-card .tag{ font-size:12px; padding:6px 10px; }
+.hero-service-card h3{ font-size:18px; margin:11px 0 7px; }
+.hero-service-card p{ font-size:14.5px!important; line-height:1.7!important; }
+.hero-service-card button{ min-height:40px; margin-top:13px; font-size:13.5px; }
+.trust-row{ gap:22px; margin-top:30px; padding-top:24px; }
+.trust-row span{ font-size:14.5px; }
+
+/* 소개 영역 */
+.problem{ padding-bottom:66px; }
+.problem-inner{ padding:34px 36px; }
+.problem-kicker,.blockchain .kicker{ font-size:12.5px; }
+.problem h3{ font-size:24px; }
+.problem .lead{ font-size:15.5px; line-height:1.75; }
+.problem-card{ padding:20px; }
+.problem-card b{ font-size:15.5px; }
+.problem-card span{ font-size:14px; line-height:1.7; }
+.features{ padding-bottom:76px; }
+.features h3{ font-size:24px; }
+.feat{ padding:26px 22px; }
+.feat b{ font-size:16.5px; }
+.feat span{ font-size:14px; line-height:1.65; }
+.blockchain-inner{ padding:36px; }
+.blockchain h3{ font-size:25px; }
+.blockchain .intro{ font-size:15px; line-height:1.75; }
+.block-card{ padding:22px; }
+.block-card b{ font-size:15.5px; }
+.block-card span{ font-size:14px; line-height:1.7; }
+.blockchain-note{ font-size:14px; line-height:1.7; }
+
+/* 대시보드/사이드바 */
+.dash{ grid-template-columns:220px 1fr; gap:28px; padding-top:36px; }
+.side{ padding:15px; top:102px; }
+.side a{ min-height:48px; font-size:15px; padding:12px 14px; }
+.greet h2{ font-size:25px; }
+.greet p{ font-size:15px; }
+.stat .n{ font-size:28px; }
+.stat .l{ font-size:13.5px; }
+.act-list .act{ font-size:14.5px; padding:13px 0; }
+.act .when{ font-size:13px; }
+.setup-item{ padding:15px; }
+.setup-item .check-copy b{ font-size:14.5px; }
+.setup-item .check-copy span{ font-size:13px; line-height:1.6; }
+.setup-item button{ min-height:40px; font-size:12.5px; padding:9px 12px; }
+
+/* 금융정보 */
+.asset-sum{ padding:18px 20px; }
+.asset-sum b{ font-size:18px; }
+.asset-sum span{ font-size:14px; }
+.asset{ padding:18px 19px; }
+.asset .info b{ font-size:16px; }
+.asset .info span{ font-size:14px; }
+.asset .asset-amt{ font-size:14.5px; }
+.badge{ font-size:12px; padding:6px 11px; }
+.tab{ min-height:42px; font-size:14.5px; padding:10px 18px; }
+
+/* 생전 보호 — 정보량은 유지하되 덩어리별 위계를 더 크게 */
+.protect-hero{ padding:32px 34px; }
+.protect-hero .protect-kicker{ font-size:12px; }
+.protect-hero h2{ font-size:31px; }
+.protect-hero p{ font-size:15.5px; line-height:1.75; }
+.protect-hero .hero-points span{ font-size:13px; padding:8px 11px; }
+.protect-overview{ padding:28px; }
+.protect-overview .live{ font-size:12px; }
+.protect-overview h3{ font-size:23px; }
+.protect-overview p{ font-size:14.5px; line-height:1.65; }
+.protect-overview .status-action{ min-height:42px; font-size:13px; }
+.protect-sums span{ font-size:12.5px; }
+.protect-sums b{ font-size:21px; }
+.protect-section-title h2{ font-size:22px; }
+.protect-section-title p{ font-size:14.5px; line-height:1.65; }
+.asset-total-chip{ font-size:13px; padding:10px 13px; }
+.split-labels{ font-size:13px; }
+.protect-range{ min-height:34px; }
+.preset{ min-height:42px; font-size:13.5px; padding:9px 14px; }
+.money-card{ padding:22px; }
+.money-card .cap{ font-size:13.5px; }
+.money-card .amt{ font-size:31px; }
+.money-card .desc{ font-size:13.8px; line-height:1.7; }
+.protect-guide-item{ padding:18px; }
+.protect-guide-item b{ font-size:14.5px; }
+.protect-guide-item span{ font-size:13.5px; line-height:1.65; }
+.protect-action-card{ padding:22px; }
+.protect-action-card h3{ font-size:16px; }
+.protect-action-card p{ font-size:13.8px; line-height:1.65; min-height:44px; }
+.protect-action-card button{ min-height:46px; font-size:13.5px; }
+
+/* AI 분석 — 4열을 2열로 바꿔 숫자/근거 가독성 확보 */
+.ai-protect-card{ padding:32px; }
+.ai-head h2{ font-size:22px; }
+.ai-head p{ font-size:14.5px; line-height:1.7; }
+.ai-chip{ font-size:12px; padding:7px 11px; }
+.ai-source-grid{ grid-template-columns:repeat(2,1fr); gap:11px; }
+.ai-source{ min-height:86px; padding:15px 16px; }
+.ai-source span{ font-size:12px; }
+.ai-source b{ font-size:14.5px; }
+.ai-source small{ font-size:11.8px; }
+.ai-mini-btn{ min-height:42px; font-size:12.8px; padding:10px 13px; }
+.ai-analysis{ padding:22px; }
+.ai-analysis-empty{ font-size:14px; }
+.ai-result-top .label{ font-size:12.5px; }
+.ai-result-top .recommend{ font-size:34px; }
+.ai-result-top .range{ font-size:12.5px; }
+.ai-apply{ min-height:44px; font-size:13px; }
+.ai-breakdown span{ font-size:11.8px; }
+.ai-breakdown b{ font-size:16px; }
+.ai-reason{ font-size:13px; line-height:1.7; }
+.ai-change-note{ font-size:13px; }
+.ai-data-note{ font-size:12.5px; line-height:1.65; }
+
+/* 안전 기준 */
+.safety-rule-box{ padding:22px; }
+.safety-rule-head h3{ font-size:17px; }
+.safety-rule-head p{ font-size:13px; line-height:1.6; }
+.safety-rule-badge{ font-size:11.8px; padding:7px 10px; }
+.safety-rule-note,.safety-current{ font-size:13px; line-height:1.7; padding:13px 14px; }
+
+/* 상태/처리 절차 */
+.release-status-top{ padding:24px 26px 19px; }
+.release-status-top .ey{ font-size:11.5px; }
+.release-status-top h3{ font-size:20px; }
+.release-status-top p{ font-size:13.8px; line-height:1.65; }
+.release-chip{ font-size:12px; padding:8px 12px; }
+.release-summary{ padding:20px 26px 6px; }
+.release-summary .rs span{ font-size:11.8px; }
+.release-summary .rs b{ font-size:15px; }
+.release-step b{ font-size:12.5px; white-space:normal; line-height:1.4; }
+.release-status-body{ font-size:13.5px; line-height:1.7; padding:14px 16px; }
+.release-check-result{ font-size:13px; line-height:1.7; }
+.release-complete-note,.change-complete-note{ font-size:13px; }
+.protect-log .pl{ font-size:13.8px; }
+.protect-log small{ font-size:12.5px; }
+
+/* 사후 전달 */
+.legacy-overview{ padding:24px; }
+.legacy-overview h2{ font-size:27px; }
+.legacy-overview p{ font-size:14.5px; line-height:1.7; }
+.legacy-summary-grid span{ font-size:12px; }
+.legacy-summary-grid b{ font-size:16px; }
+.legacy-section-title h3{ font-size:19px; }
+.legacy-section-title p{ font-size:13.8px; line-height:1.65; }
+.optional-chip{ font-size:11.5px; }
+.msg-paper textarea{ font-size:16.5px; }
+.legacy-open .q{ font-size:17px; }
+
+/* 모달 — 읽기/터치 접근성 */
+#consentModal .sheet,#profileModal .sheet,#medicalModal .sheet,#protectUseModal .sheet{ max-width:540px!important; }
+.sheet-h{ padding:22px 26px; }
+.sheet-h b{ font-size:18.5px; }
+.sheet-h small{ font-size:13.5px; line-height:1.55; }
+.sheet-b{ padding:24px 26px; }
+.sheet-f button{ min-height:56px; font-size:16px; }
+.cs-item .k{ font-size:13px; }
+.cs-item .v{ font-size:15px; line-height:1.65; }
+.cs-hl{ font-size:14.5px; }
+.chk{ font-size:14.5px; padding:12px 0; }
+.profile-help{ font-size:13.5px; line-height:1.7; padding:14px; }
+.medical-upload{ min-height:160px; }
+.medical-upload .medical-upload-sub{ font-size:13px; line-height:1.6; }
+.medical-summary{ font-size:13.5px; line-height:1.7; }
+
+/* 토스트 */
+.toast{ max-width:min(680px,calc(100vw - 32px)); font-size:15px; line-height:1.55; padding:15px 22px; text-align:center; }
+
+/* 모바일에서 글자와 조작 영역을 더 단순하게 */
+@media(max-width:860px){
+  .topbar{ padding:13px 18px; }
+  .dash{ padding:22px 16px 70px; gap:18px; }
+  .side{ margin:0 -2px; padding:9px; }
+  .side a{ min-height:46px; padding:10px 12px; font-size:14px; }
+  .hero{ padding:46px 18px 34px; }
+  .features,.problem,.blockchain,.compare,.lifetime-callout{ padding-left:18px; padding-right:18px; }
+  .card{ padding:24px 20px; }
+  .ai-protect-card{ padding:24px 20px; }
+  .hero-service-grid,.ai-source-grid,.protect-money,.protect-guide,.protect-actions,.safety-rule-grid{ grid-template-columns:1fr; }
+  .problem-grid,.feat-grid,.block-grid{ grid-template-columns:1fr; }
+  .release-steps.four{ grid-template-columns:repeat(2,1fr); gap:18px 8px; }
+  .protect-sums{ grid-template-columns:1fr; }
+  .row{ flex-direction:column; }
+}
+@media(max-width:520px){
+  .hero h1{ font-size:32px; }
+  .hero p{ font-size:16px; }
+  .page-intro h2,.protect-hero h2{ font-size:27px; }
+  .money-card .amt{ font-size:28px; }
+  .sheet{ border-radius:20px; }
+  .sheet-h,.sheet-b{ padding-left:20px; padding-right:20px; }
+  .release-status-top,.release-summary,.release-steps,.release-status-actions{ padding-left:20px; padding-right:20px; }
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{ scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
+}
+
+
+
+/* =========================================================
+   최종 비율 보정 — 데스크톱 랜딩 일러스트 / 사이드바
+   ========================================================= */
+@media(min-width:861px){
+  /* 첫 화면 균형 보정: 좌우 영역은 반반, 일러스트 내부 배치는 유지하고 전체 묶음만 오른쪽으로 이동 */
+  .hero{
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+  }
+  .hero-art{
+    overflow:visible;
+  }
+  .hero-art svg{
+    width:145%;
+    max-width:none;
+    transform:translateX(-2%);
+    transform-origin:center center;
+  }
+
+  /* 내부 화면: 시니어도 메뉴를 더 쉽게 찾도록 사이드바와 조작 영역 확대 */
+  .dash{
+    grid-template-columns:235px 1fr;
+  }
+  .side{
+    padding:16px;
+  }
+  .side a{
+    min-height:52px;
+    padding:14px 16px;
+    gap:12px;
+    font-size:16px;
+  }
+  .side a svg{
+    width:20px;
+    height:20px;
+  }
+}
 </style>
 </head>
 <body>
 
 <!-- ===== 상단바 ===== -->
 <div class="topbar">
-  <div class="logo">
+  <div class="logo" onclick="go('landing')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();go('landing');}" role="button" tabindex="0" aria-label="이음 홈으로 이동" title="홈으로 이동" style="cursor:pointer;">
     <svg viewBox="0 0 64 40" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="lg" x1="6" y1="34" x2="58" y2="6">
@@ -907,7 +1183,7 @@ input,select,textarea{ font-family:inherit; }
 <!-- ============ ② 대시보드 ============ -->
 <section id="dash" class="screen">
   <div class="dash">
-    <nav class="side">
+    <nav class="side" aria-label="이음 서비스 메뉴">
       <a class="on" onclick="go('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l8-6 8 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg>대시보드</a>
       <a onclick="go('assets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>금융정보</a>
       <a onclick="go('protect')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/><path d="M8 13h8M12 9v8"/></svg>생전 보호</a>
@@ -980,7 +1256,7 @@ input,select,textarea{ font-family:inherit; }
 <!-- ============ ③ 금융정보 등록 ============ -->
 <section id="assets" class="screen">
   <div class="dash">
-    <nav class="side">
+    <nav class="side" aria-label="이음 서비스 메뉴">
       <a onclick="go('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l8-6 8 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg>대시보드</a>
       <a class="on" onclick="go('assets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>금융정보</a>
       <a onclick="go('protect')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/><path d="M8 13h8M12 9v8"/></svg>생전 보호</a>
@@ -1030,7 +1306,7 @@ input,select,textarea{ font-family:inherit; }
 <!-- ============ ④ 사후 전달 ============ -->
 <section id="message" class="screen">
   <div class="dash">
-    <nav class="side">
+    <nav class="side" aria-label="이음 서비스 메뉴">
       <a onclick="go('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l8-6 8 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg>대시보드</a>
       <a onclick="go('assets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>금융정보</a>
       <a onclick="go('protect')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/><path d="M8 13h8M12 9v8"/></svg>생전 보호</a>
@@ -1094,7 +1370,7 @@ input,select,textarea{ font-family:inherit; }
 <!-- ============ ⑤ 생전 보호 ============ -->
 <section id="protect" class="screen">
   <div class="dash">
-    <nav class="side">
+    <nav class="side" aria-label="이음 서비스 메뉴">
       <a onclick="go('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l8-6 8 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg>대시보드</a>
       <a onclick="go('assets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>금융정보</a>
       <a class="on" onclick="go('protect')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V7z"/><path d="M8 13h8M12 9v8"/></svg>생전 보호</a>
@@ -1551,7 +1827,7 @@ input,select,textarea{ font-family:inherit; }
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 /* ============ 상태 ============ */
