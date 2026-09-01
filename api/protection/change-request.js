@@ -1,28 +1,42 @@
-const { getClient, isBytes32, requireAccess, parseEvent } = require('../../lib/protection');
+const {
+  getClient,
+  isBytes32,
+  requireAccess
+} = require('../../lib/protection');
+
+const {
+  makeTxPollToken
+} = require('../../lib/tx');
 
 module.exports = async function handler(req, res) {
-
   if (req.method !== 'POST') {
-    return res.status(405).json({ error:'METHOD_NOT_ALLOWED' });
+    return res
+      .status(405)
+      .json({
+        error: 'METHOD_NOT_ALLOWED'
+      });
   }
 
   try {
-
     const {
       protectionId,
       accessToken,
       newRuleHash
     } = req.body || {};
 
-    const id = Number(protectionId);
+    const id =
+      Number(protectionId);
 
     if (
       !Number.isInteger(id) ||
       !isBytes32(newRuleHash)
     ) {
-      return res.status(400).json({
-        error:'요청값을 확인해주세요.'
-      });
+      return res
+        .status(400)
+        .json({
+          error:
+            '요청값을 확인해주세요.'
+        });
     }
 
     requireAccess(
@@ -30,32 +44,24 @@ module.exports = async function handler(req, res) {
       accessToken
     );
 
-    const { contract } = getClient();
+    const { contract } =
+      getClient();
 
-    const tx = await contract.requestChange(
-      id,
-      newRuleHash
-    );
+    const tx =
+      await contract.requestChange(
+        id,
+        newRuleHash
+      );
 
-    const receipt = await tx.wait();
-
-    const ev = parseEvent(
-      receipt,
-      contract,
-      'ProtectionChangeRequested'
-    );
-
-    return res.status(200).json({
-      ok:true,
-      txHash:receipt.hash || tx.hash,
-      executeAfter:
-        ev
-          ? Number(ev.args.executeAfter)
-          : null
+    return res.status(202).json({
+      ok: true,
+      status: 'pending',
+      txHash: tx.hash,
+      pollToken:
+        makeTxPollToken(tx.hash)
     });
 
-  } catch(e) {
-
+  } catch (e) {
     console.error(e);
 
     return res.status(500).json({
@@ -66,5 +72,4 @@ module.exports = async function handler(req, res) {
         '변경 요청 기록 실패'
     });
   }
-
 };

@@ -1,49 +1,49 @@
-const { getClient, isBytes32, makeAccessToken, parseEvent } = require('../../lib/protection');
+const {
+  getClient,
+  isBytes32
+} = require('../../lib/protection');
+
+const {
+  makeTxPollToken
+} = require('../../lib/tx');
 
 module.exports = async function handler(req, res) {
-
   if (req.method !== 'POST') {
-    return res.status(405).json({ error:'METHOD_NOT_ALLOWED' });
+    return res
+      .status(405)
+      .json({ error: 'METHOD_NOT_ALLOWED' });
   }
 
   try {
-
-    const { ruleHash } = req.body || {};
+    const { ruleHash } =
+      req.body || {};
 
     if (!isBytes32(ruleHash)) {
-      return res.status(400).json({
-        error:'ruleHash(bytes32)가 필요합니다.'
-      });
+      return res
+        .status(400)
+        .json({
+          error:
+            'ruleHash(bytes32)가 필요합니다.'
+        });
     }
 
-    const { contract } = getClient();
+    const { contract } =
+      getClient();
 
-    const tx = await contract.createProtection(ruleHash);
-    const receipt = await tx.wait();
+    const tx =
+      await contract.createProtection(
+        ruleHash
+      );
 
-    const ev = parseEvent(
-      receipt,
-      contract,
-      'ProtectionCreated'
-    );
-
-    if (!ev) {
-      throw new Error('ProtectionCreated 이벤트를 확인하지 못했습니다.');
-    }
-
-    const protectionId = Number(
-      ev.args.protectionId
-    );
-
-    return res.status(200).json({
-      ok:true,
-      protectionId,
-      txHash:receipt.hash || tx.hash,
-      accessToken:makeAccessToken(protectionId)
+    return res.status(202).json({
+      ok: true,
+      status: 'pending',
+      txHash: tx.hash,
+      pollToken:
+        makeTxPollToken(tx.hash)
     });
 
-  } catch(e) {
-
+  } catch (e) {
     console.error(e);
 
     return res.status(500).json({
@@ -54,5 +54,4 @@ module.exports = async function handler(req, res) {
         '보호 설정 기록 실패'
     });
   }
-
 };
