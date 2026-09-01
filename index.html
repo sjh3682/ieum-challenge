@@ -2008,18 +2008,21 @@ async function finish(){
     recipients:S.rcps.map(r=>({name:r.n, phone:r.p})),
     createdAt:new Date().toISOString()
   };
-  const dataHash = await hashPayload(payload);
+  const dataCommit=await hashPayload(payload);
+  const dataHash=dataCommit.dataHash;
+  saveHashRecord('after-life-vault',dataCommit,payload);
   S.dataHash=dataHash;
   let chainRegistered=false;
   try{
     if(isLocalPreview()) throw new Error('LOCAL_PREVIEW');
-    const r = await apiCall('/api/register', { dataHash });
-    BC.vaultId = Number(r.vaultId); BC.accessToken = r.accessToken; BC.registrationTx = r.txHash;
-    S.txRegister = r.txHash; S.dataHash = r.dataHash || dataHash; chainRegistered=true;
+    const r=await submitAndConfirm('/api/register',{dataHash},'register',{minMs:12000});
+    BC.vaultId=Number(r.vaultId); BC.accessToken=r.accessToken; BC.registrationTx=r.txHash;
+    S.txRegister=r.txHash; S.dataHash=r.dataHash||dataHash; chainRegistered=true;
   }catch(e){
     if(!isLocalPreview()){
       if(btn){ btn.disabled=false; btn.innerHTML='사후 전달 설정 저장하기'; }
-      toast('설정을 저장하지 못했습니다. 잠시 후 다시 시도해주세요.'); console.error(e); return;
+      const suffix=e.txHash?' · 거래는 이미 제출됨: '+BC.SCAN+e.txHash:'';
+      toast('설정 반영을 확인하지 못했습니다. 같은 요청을 다시 보내지 말고 잠시 후 확인해주세요.'+suffix); console.error(e); return;
     }
   }
 
@@ -2370,7 +2373,10 @@ async function enableProtection(){
   const protectionFlowStartedAt=Date.now();
   renderProtection();
   try{
-    const trustedContactHash=await hashPayload({name:safety.trustedName,phone:normalizePhone(safety.trustedPhone)});
+    const trustedPayload={name:safety.trustedName,phone:normalizePhone(safety.trustedPhone)};
+    const trustedCommit=await hashPayload(trustedPayload);
+    saveHashRecord('trusted-contact',trustedCommit,trustedPayload);
+    const trustedContactHash=trustedCommit.dataHash;
     if(!S.protectEnabled){
       const rulePayload={
         total:S.protectTotal, protected:requested, free:S.protectTotal-requested,
@@ -2379,9 +2385,11 @@ async function enableProtection(){
         medicalBasisHash:S.medicalBasisHash||null,
         createdAt:new Date().toISOString()
       };
-      const ruleHash=await hashPayload(rulePayload);
+      const ruleCommit=await hashPayload(rulePayload);
+      const ruleHash=ruleCommit.dataHash;
+      saveHashRecord('protection-rule',ruleCommit,rulePayload);
       let chainResult=null;
-      if(!isLocalPreview()) chainResult=await apiCall('/api/protection/create',{ruleHash});
+      if(!isLocalPreview()) chainResult=await submitAndConfirm('/api/protection/create',{ruleHash},'protection-create',{minMs:12000});
       if(chainResult){
         S.protectChain.connected=true;
         S.protectChain.protectionId=Number(chainResult.protectionId);
@@ -2409,10 +2417,12 @@ async function enableProtection(){
     renderProtectionChange();
 
     const changePayload={from:old,to:requested,total:S.protectTotal,transferSafety:{amountThresholdManwon:safety.amountThresholdManwon,ratioThresholdPercent:safety.ratioThresholdPercent,trustedContactHash},requestedAt:new Date().toISOString()};
-    const newRuleHash=await hashPayload(changePayload);
+    const changeCommit=await hashPayload(changePayload);
+    const newRuleHash=changeCommit.dataHash;
+    saveHashRecord('protection-change',changeCommit,changePayload);
     let chainResult=null;
     if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
-      chainResult=await apiCall('/api/protection/change-request',{protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,newRuleHash});
+      chainResult=await submitAndConfirm('/api/protection/change-request',{protectionId:S.protectChain.protectionId,accessToken:S.protectChain.accessToken,newRuleHash},'protection-change',{minMs:15000});
       S.protectChain.txChangeRequest=chainResult.txHash;
       S.protectChain.executeAfter=Number(chainResult.executeAfter||0)||null;
     }else if(isLocalPreview()){
@@ -2493,7 +2503,7 @@ let protectionUseBusy=false;
 // 최종 사용자 흐름용 최소 체감 처리시간
 const IEUM_FLOW_MS={
   medical:10000,          // 의료 전자문서 확인 + AI 분석: 약 10초
-  initialProtection:9000, // 최초 생전 보호 설정: 약 9초
+  initialProtection:12000,// 최초 생전 보호 설정: 약 12초
   changeRequest:15000,    // 보호 설정 변경 요청 처리 화면: 약 15초
   releaseRisk:4500,       // 사용 요청 → 수취 계좌 위험정보 확인
   releaseVerify:6000,     // 계좌 확인 → 본인/신뢰 연락처 확인
@@ -2578,14 +2588,17 @@ async function analyzeLinkedMedicalInfo(){
     S.medicalDocName='의료기관 전자문서';
     S.medicalCheckedAt=new Date().toLocaleString('ko-KR',{month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
     S.medicalSummary=analysis.summary||'정기적인 진료·관리 필요성을 의료 예비자금에 반영했습니다.';
-    S.medicalBasisHash=await hashPayload({
+    const medicalBasisPayload={
       source:'medical_e_document',
       careLevel:analysis.careLevel||'moderate',
       ongoingCare:!!analysis.ongoingCare,
       confidence:analysis.confidence||'medium',
       reserveAddMillionWon:Number(analysis.reserveAddMillionWon||10),
       checkedAt:new Date().toISOString()
-    });
+    };
+    const medicalCommit=await hashPayload(medicalBasisPayload);
+    saveHashRecord('medical-basis',medicalCommit,medicalBasisPayload);
+    S.medicalBasisHash=medicalCommit.dataHash;
 
     calculateAIRecommendation();
     if(!S.protectEnabled) S.protectDraft=S.aiRecommended;
@@ -2743,7 +2756,10 @@ async function submitProtectionUse(){
   const submitBtn=document.getElementById('protectUseSubmitBtn');
   if(submitBtn){ submitBtn.disabled=true; submitBtn.innerHTML='<span class="spinner"></span> 계좌 위험정보 확인 중'; }
   try{
-    const requestHash=await hashPayload({purpose,recipientType,bank,account:accountDigits,amountManwon:amount,requestedAt:new Date().toISOString()});
+    const releasePayload={purpose,recipientType,bank,account:accountDigits,amountManwon:amount,requestedAt:new Date().toISOString()};
+    const releaseCommit=await hashPayload(releasePayload);
+    saveHashRecord('protection-release',releaseCommit,releasePayload);
+    const requestHash=releaseCommit.dataHash;
     let chainResult=null;
     let risk=null;
     if(S.protectChain.protectionId!==null && S.protectChain.accessToken && !isLocalPreview()){
@@ -2809,7 +2825,10 @@ async function syncReleaseChainInBackground(requestHash,verificationHash){
 async function processReleaseVerification(){
   const r=S.protectRelease; if(!r.active || r.status!=='account') return;
   const method=r.risk?.requireTrustedContact?'trusted-contact-confirmation':'registered-phone-verification';
-  const verificationHash=await hashPayload({requestHash:r.requestHash,method,verifiedAt:new Date().toISOString()});
+  const verificationPayload={requestHash:r.requestHash,method,verifiedAt:new Date().toISOString()};
+  const verificationCommit=await hashPayload(verificationPayload);
+  saveHashRecord('release-verification',verificationCommit,verificationPayload);
+  const verificationHash=verificationCommit.dataHash;
   r.verificationHash=verificationHash;
   r.status='verified';
   S.protectLogs.unshift({text:r.risk?.requireTrustedContact?'신뢰 연락처 확인이 완료되었습니다.':'등록 전화번호 본인확인이 완료되었습니다.',sub:r.purpose+' · '+releaseDisplayAmount(r.amountManwon)+' · 금융기관 처리 진행 중'});
@@ -2895,7 +2914,7 @@ async function uploadCert(){
       await new Promise(r=>setTimeout(r,600));
     }else{
       if(BC.vaultId===null || !BC.accessToken || !BC.registrationTx){ throw new Error('등록 정보를 확인할 수 없습니다.'); }
-      const r = await apiCall('/api/confirm-death', { vaultId:BC.vaultId, registrationTx:BC.registrationTx, accessToken:BC.accessToken });
+      const r=await submitAndConfirm('/api/confirm-death',{vaultId:BC.vaultId,registrationTx:BC.registrationTx,accessToken:BC.accessToken},null,{minMs:10000});
       S.txDeath = r.txHash;
     }
     S.cert=true;
@@ -2996,11 +3015,28 @@ const BC = {
   registrationTx:null
 };
 
+function canonicalize(v){
+  if(v===null || typeof v!=='object') return JSON.stringify(v);
+  if(Array.isArray(v)) return '['+v.map(canonicalize).join(',')+']';
+  return '{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canonicalize(v[k])).join(',')+'}';
+}
+
 async function hashPayload(payload){
-  const canonical = JSON.stringify(payload);
-  const bytes = new TextEncoder().encode(canonical);
-  const digest = await crypto.subtle.digest('SHA-256', bytes);
-  return '0x' + Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  const scheme='IEUM-v1';
+  const saltBytes=crypto.getRandomValues(new Uint8Array(16));
+  const salt=Array.from(saltBytes).map(b=>b.toString(16).padStart(2,'0')).join('');
+  const preimage=`${scheme}|${salt}|${canonicalize(payload)}`;
+  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(preimage));
+  const dataHash='0x'+Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  return {dataHash,salt,scheme};
+}
+
+function saveHashRecord(scope,commit,payload){
+  try{
+    localStorage.setItem('ieum:sealed:'+commit.dataHash,JSON.stringify({
+      scope,scheme:commit.scheme,salt:commit.salt,payload,onchainDataHash:commit.dataHash
+    }));
+  }catch(_){}
 }
 
 async function apiCall(url, body){
@@ -3023,6 +3059,36 @@ async function apiCallRetry(url, body, attempts=12, delayMs=1500){
     }
   }
   throw lastError || new Error('서버 요청에 실패했습니다.');
+}
+async function confirmTx(txHash,kind,pollToken,{intervalMs=2500,timeoutMs=90000,minMs=12000}={}){
+  const started=Date.now();
+  let warned=false;
+  while(true){
+    const last=await apiCall('/api/health',{txHash,kind,pollToken});
+    if(last.status==='failed'){
+      const e=new Error('블록체인 처리가 실패했습니다.');
+      e.txHash=txHash;
+      throw e;
+    }
+    if(last.status==='success'){
+      await waitMs(minMs-(Date.now()-started));
+      return last;
+    }
+    if(!warned && Date.now()-started>=timeoutMs){
+      warned=true;
+      toast('블록체인 확정이 평소보다 늦어요. 거래는 이미 제출되었고 같은 거래를 계속 확인 중입니다.');
+      console.warn('IEUM tx confirmation delayed:',BC.SCAN+txHash);
+    }
+    await waitMs(warned?5000:intervalMs);
+  }
+}
+
+async function submitAndConfirm(url,body,kind,options={}){
+  const first=await apiCall(url,body);
+  if(first.status==='success' || first.vaultId!=null || first.protectionId!=null) return first;
+  if(!first.txHash || !first.pollToken) return first;
+  const confirmed=await confirmTx(first.txHash,kind,first.pollToken,options);
+  return {...first,...confirmed,status:'success'};
 }
 function isLocalPreview(){ return location.protocol==='file:' || location.hostname==='localhost' || location.hostname==='127.0.0.1'; }
 function escapeHtml(v){ return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])); }
